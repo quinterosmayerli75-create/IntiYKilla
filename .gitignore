@@ -1,0 +1,55 @@
+# ===== Unity: carpetas que Unity genera solo (NO se suben) =====
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Carpetas de assets descargados de la Asset Store que se reinstalan
+/[Aa]ssets/AssetStoreTools*
+/[Aa]ssets/Plugins/Editor/JetBrains*
+
+# ===== Archivos del editor de código =====
+.vs/
+.vscode/
+.idea/
+.gradle/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ===== Metadatos de depuración y crash =====
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+sysinfo.txt
+crashlytics-build.properties
+
+# ===== Builds =====
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+desktop.ini
