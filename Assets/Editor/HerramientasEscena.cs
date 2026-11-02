@@ -27,7 +27,13 @@ public static class HerramientasEscena
     public const string carpetaEscenas = "Assets/_Proyecto/00_Scenes";
     public const string carpetaNiveles = "Assets/_Proyecto/00_Scenes/Niveles";
     private const string carpetaSpritesTemporales = "Assets/_Proyecto/03_Sprites/Temporales";
+
+    // Carpetas del arte final (imágenes PNG dibujadas a mano).
+    private const string carpetaSprites = "Assets/_Proyecto/03_Sprites";
     private const string carpetaSpritesUyuni = "Assets/_Proyecto/03_Sprites/Fondos/Uyuni";
+    private const string carpetaSpritesPersonajes = "Assets/_Proyecto/03_Sprites/Personajes";
+    private const string carpetaSpritesNiveles = "Assets/_Proyecto/03_Sprites/Niveles";
+    private const string carpetaSpritesInterfaz = "Assets/_Proyecto/03_Sprites/Interfaz";
     private const string rutaMaterialFisico = "Assets/_Proyecto/Materiales/SinFriccion.physicsMaterial2D";
 
     // Altura de la superficie del suelo en todos los niveles.
@@ -52,19 +58,255 @@ public static class HerramientasEscena
     public static Sprite spriteCirculo;
     public static PhysicsMaterial2D materialSinFriccion;
 
+    // ================= Arte final (imágenes PNG) =================
+    // Cada pieza intenta usar su imagen. Si la imagen todavía no existe, la
+    // variable queda en null y la pieza se dibuja con la forma de respaldo
+    // (cuadrado o círculo de color), así el juego nunca se rompe.
+    public static Sprite imagenCielo;
+    public static Sprite imagenCordillera;
+    public static Sprite imagenMonticulo;
+    public static Sprite imagenSuelo;
+    public static Sprite imagenPlataforma;
+    public static Sprite imagenLava;
+    public static Sprite imagenAgua;
+    public static Sprite imagenVeneno;
+    public static Sprite imagenCristales;
+    public static Sprite imagenGema;
+    public static Sprite imagenPuertaSalida;
+    public static Sprite imagenBotonPresion;
+    public static Sprite imagenPalanca;
+    public static Sprite imagenAltar;
+    public static Sprite imagenCompuerta;
+    public static Sprite imagenInti;
+    public static Sprite imagenKilla;
+    public static Sprite imagenBotonInterfaz;
+
+    // Todas las imágenes usan la misma escala: 100 píxeles = 1 unidad de Unity.
+    // (Ejemplo: un personaje de 80 x 120 píxeles mide lo mismo que su collider.)
+    private const float pixelesPorUnidadArte = 100f;
+
+    // Listas para avisar en la Console qué imágenes se encontraron y cuáles faltan.
+    private static List<string> imagenesEncontradas = new List<string>();
+    private static List<string> imagenesFaltantes = new List<string>();
+
     // Debe llamarse antes de crear cualquier escena.
     public static void PrepararRecursos()
     {
         CrearCarpetaSiNoExiste("Assets/_Proyecto", "00_Scenes");
         CrearCarpetaSiNoExiste(carpetaEscenas, "Niveles");
-        CrearCarpetaSiNoExiste("Assets/_Proyecto/03_Sprites", "Temporales");
-        CrearCarpetaSiNoExiste("Assets/_Proyecto/03_Sprites", "Fondos");
-        CrearCarpetaSiNoExiste("Assets/_Proyecto/03_Sprites/Fondos", "Uyuni");
+        CrearCarpetaSiNoExiste(carpetaSprites, "Temporales");
+        CrearCarpetaSiNoExiste(carpetaSprites, "Fondos");
+        CrearCarpetaSiNoExiste(carpetaSprites + "/Fondos", "Uyuni");
+        CrearCarpetaSiNoExiste(carpetaSprites, "Personajes");
+        CrearCarpetaSiNoExiste(carpetaSprites, "Niveles");
+        CrearCarpetaSiNoExiste(carpetaSprites, "Interfaz");
         CrearCarpetaSiNoExiste("Assets/_Proyecto", "Materiales");
 
         spriteCuadrado = ObtenerSpriteBasico("Cuadrado", false);
         spriteCirculo = ObtenerSpriteBasico("Circulo", true);
         materialSinFriccion = ObtenerMaterialSinFriccion();
+
+        CargarArteFinal();
+    }
+
+    // Busca cada imagen por su nombre de archivo en su carpeta.
+    private static void CargarArteFinal()
+    {
+        imagenesEncontradas.Clear();
+        imagenesFaltantes.Clear();
+
+        imagenCielo = CargarImagenArte(carpetaSpritesUyuni, "Cielo");
+        imagenCordillera = CargarImagenArte(carpetaSpritesUyuni, "Cordillera");
+        imagenMonticulo = CargarImagenArte(carpetaSpritesUyuni, "Monticulo");
+
+        imagenInti = CargarImagenArte(carpetaSpritesPersonajes, "Inti");
+        imagenKilla = CargarImagenArte(carpetaSpritesPersonajes, "Killa");
+
+        imagenSuelo = CargarImagenArte(carpetaSpritesNiveles, "Suelo");
+        imagenPlataforma = CargarImagenArte(carpetaSpritesNiveles, "Plataforma");
+        imagenLava = CargarImagenArte(carpetaSpritesNiveles, "Lava");
+        imagenAgua = CargarImagenArte(carpetaSpritesNiveles, "Agua");
+        imagenVeneno = CargarImagenArte(carpetaSpritesNiveles, "Veneno");
+        imagenCristales = CargarImagenArte(carpetaSpritesNiveles, "Cristales");
+        imagenGema = CargarImagenArte(carpetaSpritesNiveles, "Gema");
+        imagenPuertaSalida = CargarImagenArte(carpetaSpritesNiveles, "PuertaSalida");
+        imagenBotonPresion = CargarImagenArte(carpetaSpritesNiveles, "Boton");
+        imagenPalanca = CargarImagenArte(carpetaSpritesNiveles, "Palanca");
+        imagenAltar = CargarImagenArte(carpetaSpritesNiveles, "Altar");
+        imagenCompuerta = CargarImagenArte(carpetaSpritesNiveles, "Compuerta");
+
+        imagenBotonInterfaz = CargarImagenArte(carpetaSpritesInterfaz, "Boton");
+
+        InformarImagenes();
+    }
+
+    // Devuelve el sprite de la imagen, o null si el archivo no existe.
+    private static Sprite CargarImagenArte(string carpeta, string nombreArchivo)
+    {
+        string ruta = carpeta + "/" + nombreArchivo + ".png";
+        if (File.Exists(ruta) == false)
+        {
+            imagenesFaltantes.Add(ruta);
+            return null;
+        }
+
+        ConfigurarImportacionArte(ruta);
+
+        Sprite imagen = AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
+        if (imagen == null)
+        {
+            imagenesFaltantes.Add(ruta + " (existe pero no se pudo importar como Sprite)");
+            return null;
+        }
+
+        imagenesEncontradas.Add(ruta);
+        return imagen;
+    }
+
+    // Deja la imagen lista para usarse como sprite de arte (sin pérdida de calidad).
+    // Solo reimporta si algo cambió, para que generar escenas siga siendo rápido.
+    private static void ConfigurarImportacionArte(string ruta)
+    {
+        TextureImporter importador = AssetImporter.GetAtPath(ruta) as TextureImporter;
+        if (importador == null)
+        {
+            // El archivo es nuevo y Unity todavía no lo conoce: se importa primero.
+            AssetDatabase.ImportAsset(ruta);
+            importador = AssetImporter.GetAtPath(ruta) as TextureImporter;
+            if (importador == null)
+            {
+                return;
+            }
+        }
+
+        bool hayCambios = false;
+
+        if (importador.textureType != TextureImporterType.Sprite)
+        {
+            importador.textureType = TextureImporterType.Sprite;
+            importador.spriteImportMode = SpriteImportMode.Single;
+            hayCambios = true;
+        }
+        if (importador.spritePixelsPerUnit != pixelesPorUnidadArte)
+        {
+            importador.spritePixelsPerUnit = pixelesPorUnidadArte;
+            hayCambios = true;
+        }
+        if (importador.filterMode != FilterMode.Bilinear)
+        {
+            importador.filterMode = FilterMode.Bilinear;
+            hayCambios = true;
+        }
+        if (importador.textureCompression != TextureImporterCompression.Uncompressed)
+        {
+            importador.textureCompression = TextureImporterCompression.Uncompressed;
+            hayCambios = true;
+        }
+        if (importador.mipmapEnabled == true)
+        {
+            importador.mipmapEnabled = false;
+            hayCambios = true;
+        }
+        if (importador.alphaIsTransparency == false)
+        {
+            importador.alphaIsTransparency = true;
+            hayCambios = true;
+        }
+
+        // El modo "Tiled" del SpriteRenderer necesita la malla rectangular
+        // completa (Full Rect); con la malla ajustada (Tight) la imagen no se repite.
+        // Los bordes 9-slice que se dibujen en el Sprite Editor NO se tocan.
+        TextureImporterSettings ajustes = new TextureImporterSettings();
+        importador.ReadTextureSettings(ajustes);
+        if (ajustes.spriteMeshType != SpriteMeshType.FullRect)
+        {
+            ajustes.spriteMeshType = SpriteMeshType.FullRect;
+            importador.SetTextureSettings(ajustes);
+            hayCambios = true;
+        }
+
+        if (hayCambios == true)
+        {
+            importador.SaveAndReimport();
+        }
+    }
+
+    // Escribe en la Console la lista de imágenes encontradas y faltantes.
+    private static void InformarImagenes()
+    {
+        string mensaje = "Inti y Killa - imágenes encontradas: " + imagenesEncontradas.Count + ", faltantes: " + imagenesFaltantes.Count;
+
+        foreach (string ruta in imagenesEncontradas)
+        {
+            mensaje = mensaje + "\n  [OK] " + ruta;
+        }
+        foreach (string ruta in imagenesFaltantes)
+        {
+            mensaje = mensaje + "\n  [FALTA, se usa la forma de respaldo] " + ruta;
+        }
+
+        Debug.Log(mensaje);
+    }
+
+    // ================= Cómo se coloca cada imagen =================
+
+    // Calcula la escala para que la imagen quepa dentro de la caja SIN deformarse.
+    private static float CalcularEscalaParaCaber(Sprite imagen, Vector2 caja)
+    {
+        Vector2 tamanoImagen = imagen.bounds.size;
+        float escalaAncho = caja.x / tamanoImagen.x;
+        float escalaAlto = caja.y / tamanoImagen.y;
+        return Mathf.Min(escalaAncho, escalaAlto);
+    }
+
+    // Para piezas que se estiran (suelo, plataformas, líquidos, compuertas):
+    // la imagen se escala para que su lado corto coincida con el lado corto de
+    // la pieza, y se REPITE a lo largo (modo Tiled), en vez de deformarse.
+    // Si la imagen tiene bordes 9-slice, Unity respeta las esquinas al repetir.
+    private static void AplicarImagenRepetida(GameObject objeto, Sprite imagen, Vector2 tamano)
+    {
+        Vector2 tamanoImagen = imagen.bounds.size;
+        float escala = tamano.y / tamanoImagen.y;
+        if (tamano.y > tamano.x)
+        {
+            // Pieza vertical (como la compuerta): se ajusta al ancho y se repite hacia arriba.
+            escala = tamano.x / tamanoImagen.x;
+        }
+
+        objeto.transform.localScale = new Vector3(escala, escala, 1f);
+
+        SpriteRenderer dibujo = objeto.GetComponent<SpriteRenderer>();
+        dibujo.sprite = imagen;
+        dibujo.drawMode = SpriteDrawMode.Tiled;
+        dibujo.tileMode = SpriteTileMode.Continuous;
+        dibujo.size = new Vector2(tamano.x / escala, tamano.y / escala);
+    }
+
+    // Para piezas de tamaño fijo (gemas, puertas, personajes, palanca...):
+    // la imagen se ajusta dentro de la caja sin deformarse.
+    private static void AplicarImagenAjustada(GameObject objeto, Sprite imagen, Vector2 caja)
+    {
+        float escala = CalcularEscalaParaCaber(imagen, caja);
+        objeto.transform.localScale = new Vector3(escala, escala, 1f);
+
+        SpriteRenderer dibujo = objeto.GetComponent<SpriteRenderer>();
+        dibujo.sprite = imagen;
+        dibujo.drawMode = SpriteDrawMode.Simple;
+    }
+
+    // El collider se define en unidades del objeto, así que se divide por la
+    // escala para que en el mundo mida exactamente lo mismo que antes.
+    private static void AjustarCajaDeColision(GameObject objeto, Vector2 tamanoEnMundo)
+    {
+        BoxCollider2D caja = objeto.GetComponent<BoxCollider2D>();
+        if (caja == null)
+        {
+            return;
+        }
+
+        Vector3 escala = objeto.transform.localScale;
+        caja.size = new Vector2(tamanoEnMundo.x / escala.x, tamanoEnMundo.y / escala.y);
+        caja.offset = Vector2.zero;
     }
 
     // ================= Objetos básicos de una escena =================
@@ -188,7 +430,7 @@ public static class HerramientasEscena
     public static Transform CrearSueloYParedes(Color colorSuelo)
     {
         GameObject escenario = new GameObject("Escenario");
-        CrearBloque("Suelo", new Vector2(0f, alturaSuelo - 0.5f), new Vector2(32f, 1f), colorSuelo, escenario.transform);
+        CrearBloque("Suelo", new Vector2(0f, alturaSuelo - 0.5f), new Vector2(32f, 1f), colorSuelo, imagenSuelo, escenario.transform);
 
         GameObject paredIzquierda = CrearBloque("Pared invisible izquierda", new Vector2(-15.5f, 3f), new Vector2(1f, 16f), colorSuelo, escenario.transform);
         paredIzquierda.GetComponent<SpriteRenderer>().enabled = false;
@@ -207,37 +449,66 @@ public static class HerramientasEscena
 
     // ================= Piezas del nivel =================
 
-    // Bloque sólido (se puede pisar).
+    // Bloque sólido de color (se puede pisar). Se usa para las paredes invisibles
+    // y para cualquier pieza que no tenga imagen propia.
     public static GameObject CrearBloque(string nombre, Vector2 posicion, Vector2 tamano, Color color, Transform padre)
+    {
+        return CrearBloque(nombre, posicion, tamano, color, null, padre);
+    }
+
+    // Bloque sólido con imagen. Si imagen es null, se dibuja el cuadrado de color.
+    // En los dos casos el BoxCollider2D mide exactamente "tamano" en el mundo.
+    public static GameObject CrearBloque(string nombre, Vector2 posicion, Vector2 tamano, Color color, Sprite imagen, Transform padre)
     {
         GameObject bloque = new GameObject(nombre);
         bloque.transform.SetParent(padre);
         bloque.transform.position = new Vector3(posicion.x, posicion.y, 0f);
-        bloque.transform.localScale = new Vector3(tamano.x, tamano.y, 1f);
 
         SpriteRenderer dibujo = bloque.AddComponent<SpriteRenderer>();
-        dibujo.sprite = spriteCuadrado;
-        dibujo.color = color;
+
+        if (imagen != null)
+        {
+            // Con imagen: se repite a lo largo y se ve con sus colores originales.
+            AplicarImagenRepetida(bloque, imagen, tamano);
+            dibujo.color = Color.white;
+        }
+        else
+        {
+            // Respaldo: cuadrado blanco de 1 x 1 estirado y pintado de color.
+            bloque.transform.localScale = new Vector3(tamano.x, tamano.y, 1f);
+            dibujo.sprite = spriteCuadrado;
+            dibujo.color = color;
+        }
 
         bloque.AddComponent<BoxCollider2D>();
+        AjustarCajaDeColision(bloque, tamano);
         return bloque;
+    }
+
+    // Plataforma flotante normal (los bloques de sal de cada nivel).
+    public static GameObject CrearPlataforma(string nombre, Vector2 posicion, Vector2 tamano, Color colorRespaldo, Transform padre)
+    {
+        return CrearBloque(nombre, posicion, tamano, colorRespaldo, imagenPlataforma, padre);
     }
 
     // Charco sobre el suelo: centroX y ancho, siempre a la altura del suelo.
     public static void CrearCharco(string nombre, TipoZona tipo, float centroX, float ancho, Transform padre)
     {
         Color color = colorLava;
+        Sprite imagen = imagenLava;
         if (tipo == TipoZona.Agua)
         {
             color = colorAgua;
+            imagen = imagenAgua;
         }
         else if (tipo == TipoZona.Veneno)
         {
             color = colorVeneno;
+            imagen = imagenVeneno;
         }
 
         Vector2 posicion = new Vector2(centroX, alturaSuelo + 0.15f);
-        GameObject charco = CrearBloque(nombre, posicion, new Vector2(ancho, 0.3f), color, padre);
+        GameObject charco = CrearBloque(nombre, posicion, new Vector2(ancho, 0.3f), color, imagen, padre);
         charco.GetComponent<SpriteRenderer>().sortingOrder = 1;
         charco.GetComponent<BoxCollider2D>().isTrigger = true;
 
@@ -250,15 +521,30 @@ public static class HerramientasEscena
         GameObject gema = new GameObject(nombre);
         gema.transform.SetParent(padre);
         gema.transform.position = new Vector3(posicion.x, posicion.y, 0f);
-        gema.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        float tamanoGema = 0.5f;
 
         SpriteRenderer dibujo = gema.AddComponent<SpriteRenderer>();
-        dibujo.sprite = spriteCirculo;
-        dibujo.color = ColoresElemento.ObtenerColor(elemento);
         dibujo.sortingOrder = 4;
 
+        // Hay una sola imagen de gema para los dos: se tiñe con el color del
+        // elemento (naranja para Inti, azul para Killa) para distinguirlas.
+        // Por eso conviene dibujar Gema.png en tonos claros o grises.
+        dibujo.color = ColoresElemento.ObtenerColor(elemento);
+        if (imagenGema != null)
+        {
+            AplicarImagenAjustada(gema, imagenGema, new Vector2(tamanoGema, tamanoGema));
+        }
+        else
+        {
+            gema.transform.localScale = new Vector3(tamanoGema, tamanoGema, 1f);
+            dibujo.sprite = spriteCirculo;
+        }
+
+        // El radio en el mundo sigue siendo la mitad del tamaño de la gema.
         CircleCollider2D colisionador = gema.AddComponent<CircleCollider2D>();
         colisionador.isTrigger = true;
+        colisionador.offset = Vector2.zero;
+        colisionador.radius = (tamanoGema / 2f) / gema.transform.localScale.x;
 
         Gema componenteGema = gema.AddComponent<Gema>();
         componenteGema.ConfigurarGema(elemento);
@@ -270,29 +556,48 @@ public static class HerramientasEscena
         Color colorElemento = ColoresElemento.ObtenerColor(elemento);
         Color colorPuerta = new Color(colorElemento.r, colorElemento.g, colorElemento.b, 0.65f);
 
+        Vector2 tamanoPuerta = new Vector2(1.2f, 2f);
         Vector2 centro = new Vector2(posicionSuelo.x, posicionSuelo.y + 1f);
-        GameObject puerta = CrearBloque(nombre, centro, new Vector2(1.2f, 2f), colorPuerta, padre);
+        GameObject puerta = CrearBloque(nombre, centro, tamanoPuerta, colorPuerta, padre);
         puerta.GetComponent<SpriteRenderer>().sortingOrder = -1;
         puerta.GetComponent<BoxCollider2D>().isTrigger = true;
+
+        // Con imagen: una sola puerta para los dos, teñida con el color del elemento.
+        if (imagenPuertaSalida != null)
+        {
+            AplicarImagenAjustada(puerta, imagenPuertaSalida, tamanoPuerta);
+            puerta.GetComponent<SpriteRenderer>().color = colorElemento;
+            AjustarCajaDeColision(puerta, tamanoPuerta);
+        }
 
         PuertaSalida componentePuerta = puerta.AddComponent<PuertaSalida>();
         componentePuerta.ConfigurarPuerta(elemento);
     }
 
     // posicionSuelo = punto donde el jugador toca el piso al empezar.
-    public static GameObject CrearJugador(string nombre, TipoElemento elemento, Key izquierda, Key derecha, Key saltar, Key habilidad, Vector2 posicionSuelo, Color colorMarca)
+    // imagenPersonaje puede ser null: entonces se dibuja el rectángulo de color.
+    public static GameObject CrearJugador(string nombre, TipoElemento elemento, Key izquierda, Key derecha, Key saltar, Key habilidad, Vector2 posicionSuelo, Color colorMarca, Sprite imagenPersonaje)
     {
         float anchoJugador = 0.8f;
         float altoJugador = 1.2f;
+        Vector2 tamanoJugador = new Vector2(anchoJugador, altoJugador);
 
         GameObject jugador = new GameObject(nombre);
         jugador.transform.position = new Vector3(posicionSuelo.x, posicionSuelo.y + altoJugador / 2f + 0.05f, 0f);
-        jugador.transform.localScale = new Vector3(anchoJugador, altoJugador, 1f);
 
         SpriteRenderer dibujo = jugador.AddComponent<SpriteRenderer>();
-        dibujo.sprite = spriteCuadrado;
         dibujo.color = ColoresElemento.ObtenerColor(elemento);
         dibujo.sortingOrder = 10;
+
+        if (imagenPersonaje != null)
+        {
+            AplicarImagenAjustada(jugador, imagenPersonaje, tamanoJugador);
+        }
+        else
+        {
+            jugador.transform.localScale = new Vector3(anchoJugador, altoJugador, 1f);
+            dibujo.sprite = spriteCuadrado;
+        }
 
         Rigidbody2D cuerpo = jugador.AddComponent<Rigidbody2D>();
         cuerpo.gravityScale = 3f;
@@ -303,6 +608,7 @@ public static class HerramientasEscena
         // Sin fricción, para que no se queden "pegados" a las paredes.
         BoxCollider2D colisionador = jugador.AddComponent<BoxCollider2D>();
         colisionador.sharedMaterial = materialSinFriccion;
+        AjustarCajaDeColision(jugador, tamanoJugador);
 
         ControladorJugador controlador = jugador.AddComponent<ControladorJugador>();
         controlador.ConfigurarJugador(nombre, elemento, izquierda, derecha, saltar, habilidad);
@@ -311,8 +617,13 @@ public static class HerramientasEscena
         // así siempre se sabe quién es Inti y quién es Killa.
         GameObject marca = new GameObject("Marca de identidad");
         marca.transform.SetParent(jugador.transform);
-        marca.transform.localPosition = new Vector3(0f, 0.72f, 0f);
-        marca.transform.localScale = new Vector3(0.35f / anchoJugador, 0.35f / altoJugador, 1f);
+        // Posición y tamaño se dividen por la escala del jugador para que la
+        // marca mida 0.35 unidades y flote igual, tenga imagen o no.
+        Vector3 escalaJugador = jugador.transform.localScale;
+        float alturaMarcaEnMundo = altoJugador * 0.72f;
+        float tamanoMarcaEnMundo = 0.35f;
+        marca.transform.localPosition = new Vector3(0f, alturaMarcaEnMundo / escalaJugador.y, 0f);
+        marca.transform.localScale = new Vector3(tamanoMarcaEnMundo / escalaJugador.x, tamanoMarcaEnMundo / escalaJugador.y, 1f);
         SpriteRenderer dibujoMarca = marca.AddComponent<SpriteRenderer>();
         dibujoMarca.sprite = spriteCirculo;
         dibujoMarca.color = colorMarca;
@@ -326,13 +637,28 @@ public static class HerramientasEscena
     public static GameObject CrearInti(Vector2 posicionSuelo)
     {
         Color colorSolDorado = new Color(1.00f, 0.95f, 0.45f);
-        return CrearJugador("Inti", TipoElemento.Fuego, Key.A, Key.D, Key.W, Key.S, posicionSuelo, colorSolDorado);
+        return CrearJugador("Inti", TipoElemento.Fuego, Key.A, Key.D, Key.W, Key.S, posicionSuelo, colorSolDorado, imagenInti);
     }
 
     public static GameObject CrearKilla(Vector2 posicionSuelo)
     {
         Color colorLunaPlateada = new Color(0.85f, 0.90f, 1.00f);
-        return CrearJugador("Killa", TipoElemento.Agua, Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow, posicionSuelo, colorLunaPlateada);
+        return CrearJugador("Killa", TipoElemento.Agua, Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow, posicionSuelo, colorLunaPlateada, imagenKilla);
+    }
+
+    // Figura quieta de un personaje (sin física ni controles), para el menú principal.
+    public static void CrearFiguraPersonaje(string nombre, Sprite imagenPersonaje, Color colorRespaldo, Vector2 centro, Transform padre)
+    {
+        Vector2 tamanoJugador = new Vector2(0.8f, 1.2f);
+        if (imagenPersonaje != null)
+        {
+            Vector2 tamanoSinDeformar = imagenPersonaje.bounds.size * CalcularEscalaParaCaber(imagenPersonaje, tamanoJugador);
+            CrearDecoracion(nombre, imagenPersonaje, centro, tamanoSinDeformar, Color.white, 10, false, padre);
+        }
+        else
+        {
+            CrearDecoracion(nombre, spriteCuadrado, centro, tamanoJugador, colorRespaldo, 10, false, padre);
+        }
     }
 
     // Púas de sal centradas en centroX, sobre el suelo. Matan a los dos.
@@ -349,6 +675,22 @@ public static class HerramientasEscena
         ZonaElemental componenteZona = zona.AddComponent<ZonaElemental>();
         componenteZona.ConfigurarZona(TipoZona.CristalesSal);
 
+        // Con imagen: una sola tira de cristales que se repite a lo ancho.
+        // Va en un hijo para no cambiar la escala de la zona (ni su collider).
+        if (imagenCristales != null)
+        {
+            Vector2 tamanoTira = new Vector2(ancho, 0.6f);
+            GameObject tira = new GameObject("Cristales");
+            tira.transform.SetParent(zona.transform);
+            tira.transform.position = new Vector3(centroX, alturaSuelo + 0.3f, 0f);
+
+            SpriteRenderer dibujoTira = tira.AddComponent<SpriteRenderer>();
+            dibujoTira.sortingOrder = 3;
+            AplicarImagenRepetida(tira, imagenCristales, tamanoTira);
+            return;
+        }
+
+        // Respaldo: una fila de triángulos generados por código.
         Sprite spriteCristal = ObtenerSpriteCristal();
         float anchoCristal = 0.5f;
         int cantidadCristales = Mathf.RoundToInt(ancho / anchoCristal);
@@ -363,14 +705,22 @@ public static class HerramientasEscena
 
     public static void CrearPlataformaQuebradiza(string nombre, Vector2 posicion, Vector2 tamano, Transform padre)
     {
-        GameObject plataforma = CrearBloque(nombre, posicion, tamano, colorSalQuebradiza, padre);
+        GameObject plataforma = CrearBloque(nombre, posicion, tamano, colorSalQuebradiza, imagenPlataforma, padre);
+
+        // Usa la misma imagen que las plataformas normales, pero un poco rojiza
+        // para que los jugadores sepan que se va a romper.
+        if (imagenPlataforma != null)
+        {
+            plataforma.GetComponent<SpriteRenderer>().color = new Color(1f, 0.78f, 0.72f);
+        }
+
         plataforma.AddComponent<PlataformaQuebradiza>();
     }
 
     // Compuerta de piedra que se abre con botones o palancas.
     public static PuertaMecanica CrearPuertaMecanica(string nombre, Vector2 posicion, Vector2 tamano, Vector2 desplazamientoAlAbrir, int senalesNecesarias, Transform padre)
     {
-        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorPiedra, padre);
+        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorPiedra, imagenCompuerta, padre);
         bloque.GetComponent<SpriteRenderer>().sortingOrder = 2;
 
         Rigidbody2D cuerpo = bloque.AddComponent<Rigidbody2D>();
@@ -385,7 +735,7 @@ public static class HerramientasEscena
     public static PlataformaMovil CrearPlataformaMovil(string nombre, Vector2 posicion, Vector2 tamano, Vector2 desplazamiento, float velocidad, bool moverseDesdeElInicio, Transform padre)
     {
         Color colorMadera = new Color(0.62f, 0.45f, 0.30f);
-        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorMadera, padre);
+        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorMadera, imagenPlataforma, padre);
 
         Rigidbody2D cuerpo = bloque.AddComponent<Rigidbody2D>();
         cuerpo.bodyType = RigidbodyType2D.Kinematic;
@@ -408,8 +758,21 @@ public static class HerramientasEscena
         zona.size = new Vector2(1.2f, 0.6f);
         zona.offset = new Vector2(0f, 0.3f);
 
-        CrearDibujoHijo("Base", boton.transform, new Vector2(0f, 0.05f), new Vector2(1.6f, 0.1f), new Color(0.30f, 0.28f, 0.32f), 2);
-        GameObject tapa = CrearDibujoHijo("Tapa", boton.transform, new Vector2(0f, 0.18f), new Vector2(1.1f, 0.18f), Color.yellow, 3);
+        GameObject tapa;
+        if (imagenBotonPresion != null)
+        {
+            // Con imagen: el botón completo es una sola imagen apoyada en el suelo.
+            // El script BotonPresion la tiñe (amarillo suelto / verde presionado),
+            // así que conviene dibujar Boton.png en tonos claros.
+            Vector2 cajaBoton = new Vector2(1.6f, 0.4f);
+            tapa = CrearDibujoHijo("Boton", boton.transform, new Vector2(0f, cajaBoton.y / 2f), Vector2.one, Color.yellow, 3);
+            AplicarImagenAjustada(tapa, imagenBotonPresion, cajaBoton);
+        }
+        else
+        {
+            CrearDibujoHijo("Base", boton.transform, new Vector2(0f, 0.05f), new Vector2(1.6f, 0.1f), new Color(0.30f, 0.28f, 0.32f), 2);
+            tapa = CrearDibujoHijo("Tapa", boton.transform, new Vector2(0f, 0.18f), new Vector2(1.1f, 0.18f), Color.yellow, 3);
+        }
 
         BotonPresion componente = boton.AddComponent<BotonPresion>();
         componente.Configurar(objetivos, tapa.GetComponent<SpriteRenderer>());
@@ -435,6 +798,15 @@ public static class HerramientasEscena
         pivote.transform.localPosition = new Vector3(0f, 0.2f, 0f);
 
         GameObject mango = CrearDibujoHijo("Mango", pivote.transform, new Vector2(0f, 0.4f), new Vector2(0.14f, 0.8f), Color.red, 2);
+
+        // Con imagen: Palanca.png es el mango (dibujado vertical). Gira con el
+        // pivote y el script Palanca lo tiñe (rojo apagada / verde encendida).
+        if (imagenPalanca != null)
+        {
+            Vector2 cajaMango = new Vector2(0.4f, 0.9f);
+            mango.transform.localPosition = new Vector3(0f, cajaMango.y / 2f, 0f);
+            AplicarImagenAjustada(mango, imagenPalanca, cajaMango);
+        }
 
         Palanca componente = palanca.AddComponent<Palanca>();
         componente.Configurar(objetivos, pivote.transform, mango.GetComponent<SpriteRenderer>());
@@ -464,7 +836,22 @@ public static class HerramientasEscena
         zona.size = new Vector2(1.2f, 0.8f);
         zona.offset = new Vector2(0f, 0.4f);
 
-        GameObject piso = CrearDibujoHijo("Piso del altar", placa.transform, new Vector2(0f, 0.07f), new Vector2(1.5f, 0.14f), colorAltar, 2);
+        GameObject piso;
+        if (imagenAltar != null)
+        {
+            // Con imagen: el altar completo (placa, columna y símbolo) es una
+            // sola imagen. PlacaAltar la tiñe con el color de su altar, así los
+            // dos altares de un nivel se distinguen, y se ilumina al pisarla.
+            Vector2 cajaAltar = new Vector2(1.5f, 2.6f);
+            piso = CrearDibujoHijo("Altar", placa.transform, new Vector2(0f, cajaAltar.y / 2f), Vector2.one, colorAltar, -5);
+            AplicarImagenAjustada(piso, imagenAltar, cajaAltar);
+
+            PlacaAltar componenteConImagen = placa.AddComponent<PlacaAltar>();
+            componenteConImagen.Configurar(piso.GetComponent<SpriteRenderer>(), colorAltar);
+            return componenteConImagen;
+        }
+
+        piso = CrearDibujoHijo("Piso del altar", placa.transform, new Vector2(0f, 0.07f), new Vector2(1.5f, 0.14f), colorAltar, 2);
 
         // Símbolo flotante (sol/luna) para que se vea desde lejos.
         GameObject simbolo = CrearDibujoHijo("Simbolo", placa.transform, new Vector2(0f, 2.3f), new Vector2(0.6f, 0.6f), colorAltar, -5);
@@ -515,26 +902,65 @@ public static class HerramientasEscena
     // posicionSolX permite que el sol cambie de lugar entre niveles.
     public static void CrearFondoUyuni(float posicionSolX)
     {
-        Sprite spriteCielo = ObtenerSpriteCielo("CieloAtardecer", false);
-        Sprite spriteReflejo = ObtenerSpriteCielo("ReflejoAtardecer", true);
-        Sprite spriteMonticulo = ObtenerSpriteMonticulo();
-        Sprite spriteCordillera = ObtenerSpriteCordillera();
-
         Transform fondo = CrearGrupo("Fondo");
 
-        CrearDecoracion("Cielo", spriteCielo, new Vector2(0f, 3f), new Vector2(36f, 13f), Color.white, -30, false, fondo);
-        CrearDecoracion("Reflejo del cielo", spriteReflejo, new Vector2(0f, -7f), new Vector2(36f, 5f), Color.white, -30, false, fondo);
+        // ----- Cielo y su reflejo en el salar (efecto espejo) -----
+        if (imagenCielo != null)
+        {
+            // El cielo se estira para cubrir todo el fondo: al ser un degradado
+            // o nubes suaves, no se nota la deformación. El reflejo es la misma
+            // imagen de cabeza y un poco más oscura.
+            CrearDecoracion("Cielo", imagenCielo, new Vector2(0f, 3f), new Vector2(36f, 13f), Color.white, -30, false, fondo);
+            CrearDecoracion("Reflejo del cielo", imagenCielo, new Vector2(0f, -7f), new Vector2(36f, 5f), new Color(0.85f, 0.8f, 0.85f), -30, true, fondo);
+        }
+        else
+        {
+            Sprite spriteCieloGenerado = ObtenerSpriteCielo("CieloGenerado", false);
+            Sprite spriteReflejoGenerado = ObtenerSpriteCielo("ReflejoCieloGenerado", true);
+            CrearDecoracion("Cielo", spriteCieloGenerado, new Vector2(0f, 3f), new Vector2(36f, 13f), Color.white, -30, false, fondo);
+            CrearDecoracion("Reflejo del cielo", spriteReflejoGenerado, new Vector2(0f, -7f), new Vector2(36f, 5f), Color.white, -30, false, fondo);
+        }
+
+        // El sol no está en la lista de imágenes: sigue siendo un círculo con brillo.
         CrearDecoracion("Brillo del sol", spriteCirculo, new Vector2(posicionSolX, alturaSuelo + 0.3f), new Vector2(7f, 7f), colorBrilloSol, -29, false, fondo);
         CrearDecoracion("Sol", spriteCirculo, new Vector2(posicionSolX, alturaSuelo + 0.3f), new Vector2(2.4f, 2.4f), colorSol, -28, false, fondo);
-        CrearDecoracion("Cordillera", spriteCordillera, new Vector2(0f, alturaSuelo + 0.55f), new Vector2(36f, 1.4f), colorCordillera, -27, false, fondo);
 
-        Color colorReflejoCordillera = new Color(colorCordillera.r, colorCordillera.g, colorCordillera.b, 0.35f);
-        CrearDecoracion("Reflejo cordillera", spriteCordillera, new Vector2(0f, alturaSuelo - 1.7f), new Vector2(36f, 1.4f), colorReflejoCordillera, -27, true, fondo);
+        // ----- Cordillera y su reflejo -----
+        Vector2 centroCordillera = new Vector2(0f, alturaSuelo + 0.55f);
+        Vector2 centroReflejoCordillera = new Vector2(0f, alturaSuelo - 1.7f);
+        Vector2 tamanoCordillera = new Vector2(36f, 1.4f);
 
-        CrearMonticulosDeSal(spriteMonticulo, fondo);
+        if (imagenCordillera != null)
+        {
+            // La imagen se repite a lo ancho (modo Tiled) para no deformar las montañas.
+            GameObject cordillera = CrearDecoracion("Cordillera", imagenCordillera, centroCordillera, tamanoCordillera, Color.white, -27, false, fondo);
+            AplicarImagenRepetida(cordillera, imagenCordillera, tamanoCordillera);
+
+            GameObject reflejo = CrearDecoracion("Reflejo cordillera", imagenCordillera, centroReflejoCordillera, tamanoCordillera, new Color(1f, 1f, 1f, 0.35f), -27, true, fondo);
+            AplicarImagenRepetida(reflejo, imagenCordillera, tamanoCordillera);
+        }
+        else
+        {
+            Sprite spriteCordilleraGenerada = ObtenerSpriteCordillera();
+            Color colorReflejoCordillera = new Color(colorCordillera.r, colorCordillera.g, colorCordillera.b, 0.35f);
+            CrearDecoracion("Cordillera", spriteCordilleraGenerada, centroCordillera, tamanoCordillera, colorCordillera, -27, false, fondo);
+            CrearDecoracion("Reflejo cordillera", spriteCordilleraGenerada, centroReflejoCordillera, tamanoCordillera, colorReflejoCordillera, -27, true, fondo);
+        }
+
+        // ----- Montículos de sal -----
+        if (imagenMonticulo != null)
+        {
+            CrearMonticulosDeSal(imagenMonticulo, Color.white, true, fondo);
+        }
+        else
+        {
+            CrearMonticulosDeSal(ObtenerSpriteMonticulo(), colorMonticulo, false, fondo);
+        }
     }
 
-    private static void CrearMonticulosDeSal(Sprite spriteMonticulo, Transform padre)
+    // sinDeformar = true para la imagen dibujada (respeta su proporción);
+    // la forma generada sí se estira porque es solo un cono de color.
+    private static void CrearMonticulosDeSal(Sprite spriteMonticulo, Color colorDibujo, bool sinDeformar, Transform padre)
     {
         // Cada dato: posición X y altura del montículo (los pequeños parecen lejanos).
         List<Vector2> listaMonticulos = new List<Vector2>();
@@ -558,11 +984,18 @@ public static class HerramientasEscena
             float altura = datos.y;
             float ancho = altura * 2.2f;
 
+            if (sinDeformar == true)
+            {
+                // Se mantiene la altura y el ancho sale de la proporción de la imagen.
+                Vector2 tamanoImagen = spriteMonticulo.bounds.size;
+                ancho = altura * (tamanoImagen.x / tamanoImagen.y);
+            }
+
             Vector2 centroMonticulo = new Vector2(posicionX, alturaSuelo + altura / 2f);
-            CrearDecoracion("Monticulo de sal " + numero, spriteMonticulo, centroMonticulo, new Vector2(ancho, altura), colorMonticulo, -20, false, padre);
+            CrearDecoracion("Monticulo de sal " + numero, spriteMonticulo, centroMonticulo, new Vector2(ancho, altura), colorDibujo, -20, false, padre);
 
             // Su reflejo de cabeza debajo del suelo, más transparente (efecto espejo).
-            Color colorReflejo = new Color(colorMonticulo.r, colorMonticulo.g, colorMonticulo.b, 0.35f);
+            Color colorReflejo = new Color(colorDibujo.r, colorDibujo.g, colorDibujo.b, 0.35f);
             Vector2 centroReflejo = new Vector2(posicionX, alturaSuelo - 1f - altura / 2f);
             CrearDecoracion("Reflejo monticulo " + numero, spriteMonticulo, centroReflejo, new Vector2(ancho, altura), colorReflejo, -20, true, padre);
 
@@ -644,6 +1077,22 @@ public static class HerramientasEscena
 
         Image imagen = objetoBoton.AddComponent<Image>();
         imagen.color = Color.white;
+
+        // Si existe Interfaz/Boton.png, el botón usa esa imagen. Los colores de
+        // abajo la tiñen, así cada botón conserva su color (naranja, morado...).
+        // Si la imagen tiene bordes 9-slice, se estira sin deformar las esquinas.
+        if (imagenBotonInterfaz != null)
+        {
+            imagen.sprite = imagenBotonInterfaz;
+            if (imagenBotonInterfaz.border != Vector4.zero)
+            {
+                imagen.type = Image.Type.Sliced;
+            }
+            else
+            {
+                imagen.type = Image.Type.Simple;
+            }
+        }
 
         Button boton = objetoBoton.AddComponent<Button>();
         boton.targetGraphic = imagen;
@@ -749,10 +1198,13 @@ public static class HerramientasEscena
         return GuardarComoSprite(ruta, textura);
     }
 
+    // Las formas generadas por código se guardan en Temporales con otro nombre,
+    // para que nunca se confundan con el arte final de Fondos/Uyuni.
+
     // Degradado vertical del atardecer. Si es reflejo, se invierte (horizonte arriba).
     private static Sprite ObtenerSpriteCielo(string nombre, bool esReflejo)
     {
-        string ruta = carpetaSpritesUyuni + "/" + nombre + ".png";
+        string ruta = carpetaSpritesTemporales + "/" + nombre + ".png";
         if (File.Exists(ruta) == true)
         {
             return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
@@ -815,7 +1267,7 @@ public static class HerramientasEscena
     // Montículo de sal: un cono con punta redondeada, con un lado en sombra.
     private static Sprite ObtenerSpriteMonticulo()
     {
-        string ruta = carpetaSpritesUyuni + "/MonticuloSal.png";
+        string ruta = carpetaSpritesTemporales + "/MonticuloGenerado.png";
         if (File.Exists(ruta) == true)
         {
             return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
@@ -856,7 +1308,7 @@ public static class HerramientasEscena
     // Cristal de sal: un triángulo puntiagudo con una cara más oscura.
     private static Sprite ObtenerSpriteCristal()
     {
-        string ruta = carpetaSpritesUyuni + "/CristalSal.png";
+        string ruta = carpetaSpritesTemporales + "/CristalGenerado.png";
         if (File.Exists(ruta) == true)
         {
             return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
@@ -894,7 +1346,7 @@ public static class HerramientasEscena
     // Silueta de montañas lejanas usando ondas (senos) sumadas.
     private static Sprite ObtenerSpriteCordillera()
     {
-        string ruta = carpetaSpritesUyuni + "/Cordillera.png";
+        string ruta = carpetaSpritesTemporales + "/CordilleraGenerada.png";
         if (File.Exists(ruta) == true)
         {
             return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);

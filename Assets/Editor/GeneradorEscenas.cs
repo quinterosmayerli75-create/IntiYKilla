@@ -150,9 +150,9 @@ public static class GeneradorEscenas
 
         // Suelo de sal y los dos protagonistas como decoración.
         Transform decoracion = HerramientasEscena.CrearGrupo("Decoracion");
-        HerramientasEscena.CrearBloque("Suelo de sal", new Vector2(0f, HerramientasEscena.alturaSuelo - 0.5f), new Vector2(32f, 1f), HerramientasEscena.colorSal, decoracion);
-        HerramientasEscena.CrearDecoracion("Inti", HerramientasEscena.spriteCuadrado, new Vector2(-1.2f, HerramientasEscena.alturaSuelo + 0.6f), new Vector2(0.8f, 1.2f), ColoresElemento.colorFuego, 10, false, decoracion);
-        HerramientasEscena.CrearDecoracion("Killa", HerramientasEscena.spriteCuadrado, new Vector2(1.2f, HerramientasEscena.alturaSuelo + 0.6f), new Vector2(0.8f, 1.2f), ColoresElemento.colorAgua, 10, false, decoracion);
+        HerramientasEscena.CrearBloque("Suelo de sal", new Vector2(0f, HerramientasEscena.alturaSuelo - 0.5f), new Vector2(32f, 1f), HerramientasEscena.colorSal, HerramientasEscena.imagenSuelo, decoracion);
+        HerramientasEscena.CrearFiguraPersonaje("Inti", HerramientasEscena.imagenInti, ColoresElemento.colorFuego, new Vector2(-1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
+        HerramientasEscena.CrearFiguraPersonaje("Killa", HerramientasEscena.imagenKilla, ColoresElemento.colorAgua, new Vector2(1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
 
         // ----- Interfaz -----
         Transform canvas = HerramientasEscena.CrearCanvas();
@@ -263,10 +263,10 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearFondoUyuni(5f);
 
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
-        HerramientasEscena.CrearBloque("Bloque de sal A", new Vector2(-6.5f, -1.3f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Bloque de sal A", new Vector2(-6.5f, -1.3f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
         HerramientasEscena.CrearPlataformaQuebradiza("Bloque que se rompe", new Vector2(-2f, 0.6f), new Vector2(2.5f, 0.5f), escenario);
-        HerramientasEscena.CrearBloque("Bloque de sal B", new Vector2(3.5f, 1.4f), new Vector2(4f, 0.5f), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearBloque("Bloque de sal C", new Vector2(9f, -1.2f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Bloque de sal B", new Vector2(3.5f, 1.4f), new Vector2(4f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Bloque de sal C", new Vector2(9f, -1.2f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         HerramientasEscena.CrearCharco("Lava", TipoZona.Lava, -8.5f, 2.5f, trampas);
@@ -312,7 +312,7 @@ public static class GeneradorEscenas
 
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
         // Repisa alta a la derecha, donde están las puertas de salida.
-        HerramientasEscena.CrearBloque("Repisa de salida", new Vector2(12.75f, 1.5f), new Vector2(5.5f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(12.75f, 1.5f), new Vector2(5.5f, 0.5f), HerramientasEscena.colorSal, escenario);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
 
@@ -370,8 +370,8 @@ public static class GeneradorEscenas
 
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
         // Plataforma en la isla del medio y repisa de salida al final.
-        HerramientasEscena.CrearBloque("Plataforma de la isla", new Vector2(1.75f, -1.2f), new Vector2(2.5f, 0.5f), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearBloque("Repisa de salida", new Vector2(13.5f, -1.0f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Plataforma de la isla", new Vector2(1.75f, -1.2f), new Vector2(2.5f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(13.5f, -1.0f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
 
         // Ríos de 7.5 unidades: demasiado anchos para saltarlos.
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
