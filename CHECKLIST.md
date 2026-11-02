@@ -16,7 +16,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD.
 - [x] Programar charcos de lava, agua y veneno
 - [x] Programar muerte y reinicio del nivel
 - [x] Programar gemas y puertas de salida
-- [ ] Configurar la cámara Cinemachine para los dos
+- [x] Configurar la cámara Cinemachine para los dos
 - [ ] Crear tileset base, paleta y Rule Tiles
 - [x] Armar niveles 1, 2 y 3
 

@@ -257,7 +257,7 @@ public static class GeneradorEscenas
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
-        HerramientasEscena.CrearCamara(colorCieloFondo);
+        Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(1f, 0.93f, 0.86f), 1f);
         HerramientasEscena.CrearGestorNivel("Lleguen cada uno a su puerta. Inti no toca el agua y Killa no toca la lava.");
         HerramientasEscena.CrearFondoUyuni(5f);
@@ -286,8 +286,11 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(12.2f, suelo), puertas);
         HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14.2f, suelo), puertas);
 
-        HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
-        HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+
+        // La cámara se crea al final porque necesita a los dos jugadores.
+        HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         string ruta = RutaNivel(1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -302,7 +305,7 @@ public static class GeneradorEscenas
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
-        HerramientasEscena.CrearCamara(colorCieloFondo);
+        Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(1f, 0.93f, 0.86f), 1f);
         HerramientasEscena.CrearGestorNivel("Uno pisa el botón para que el otro pase. La palanca se usa con S o Flecha abajo.");
         HerramientasEscena.CrearFondoUyuni(-6f);
@@ -340,8 +343,11 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(11.4f, 1.75f), puertas);
         HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(13.2f, 1.75f), puertas);
 
-        HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
-        HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+
+        // La cámara se crea al final porque necesita a los dos jugadores.
+        HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         string ruta = RutaNivel(2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -357,7 +363,7 @@ public static class GeneradorEscenas
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
-        HerramientasEscena.CrearCamara(colorCieloFondo);
+        Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(0.95f, 0.85f, 0.90f), 1f);
         HerramientasEscena.CrearGestorNivel("Párense cada uno en una placa del mismo altar a la vez para provocar un ECLIPSE.");
         HerramientasEscena.CrearFondoUyuni(1.75f);
@@ -388,8 +394,11 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(12.8f, -0.75f), puertas);
         HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14.3f, -0.75f), puertas);
 
-        HerramientasEscena.CrearInti(new Vector2(-13.8f, suelo));
-        HerramientasEscena.CrearKilla(new Vector2(-12.4f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.8f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12.4f, suelo));
+
+        // La cámara se crea al final porque necesita a los dos jugadores.
+        HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         string ruta = RutaNivel(3);
         EditorSceneManager.SaveScene(escena, ruta);

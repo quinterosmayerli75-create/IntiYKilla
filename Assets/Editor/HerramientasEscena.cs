@@ -12,6 +12,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -68,7 +69,8 @@ public static class HerramientasEscena
 
     // ================= Objetos básicos de una escena =================
 
-    public static void CrearCamara(Color colorFondo)
+    // Devuelve la cámara para que los niveles puedan agregarle el cerebro de Cinemachine.
+    public static Camera CrearCamara(Color colorFondo)
     {
         GameObject objetoCamara = new GameObject("Main Camera");
         objetoCamara.tag = "MainCamera";
@@ -81,6 +83,87 @@ public static class HerramientasEscena
         camara.backgroundColor = colorFondo;
 
         objetoCamara.AddComponent<AudioListener>();
+        return camara;
+    }
+
+    // ================= Cámara cooperativa (Cinemachine) =================
+    // Los dos jugadores comparten una sola pantalla, así que la cámara tiene
+    // que mirar el punto medio entre ambos y alejarse cuando se separan.
+    // Se arma solo con piezas de Cinemachine (sin script propio) para que
+    // todo se pueda ajustar desde el Inspector:
+    //   - CinemachineBrain en la cámara principal: la "mueve" cada frame.
+    //   - CinemachineTargetGroup: grupo con Inti y Killa (su centro es el punto a seguir).
+    //   - CinemachineCamera + PositionComposer: sigue al grupo con suavidad.
+    //   - CinemachineGroupFraming: hace zoom para que los dos quepan siempre.
+    //   - CinemachineConfiner2D: no deja que la cámara muestre fuera del nivel.
+
+    // Zoom = mitad de la altura visible, en unidades.
+    // El máximo (8.5) muestra el nivel completo, igual que la cámara fija anterior.
+    private const float zoomMinimoCamara = 7f;
+    private const float zoomMaximoCamara = 8.5f;
+
+    public static void CrearCamaraCooperativa(Camera camaraPrincipal, Transform jugadorUno, Transform jugadorDos)
+    {
+        // 1) Cerebro: sin él, las cámaras virtuales no controlan la cámara real.
+        camaraPrincipal.gameObject.AddComponent<CinemachineBrain>();
+
+        // 2) Grupo de seguimiento con los dos protagonistas.
+        //    El radio es el "espacio libre" que se deja alrededor de cada uno.
+        GameObject objetoGrupo = new GameObject("Grupo de jugadores (camara)");
+        CinemachineTargetGroup grupo = objetoGrupo.AddComponent<CinemachineTargetGroup>();
+        float pesoJugador = 1f;
+        float radioJugador = 1.5f;
+        grupo.AddMember(jugadorUno, pesoJugador, radioJugador);
+        grupo.AddMember(jugadorDos, pesoJugador, radioJugador);
+
+        // 3) Cámara virtual que sigue al grupo.
+        GameObject objetoCamaraVirtual = new GameObject("Camara cooperativa");
+        objetoCamaraVirtual.transform.position = camaraPrincipal.transform.position;
+
+        CinemachineCamera camaraVirtual = objetoCamaraVirtual.AddComponent<CinemachineCamera>();
+        camaraVirtual.Follow = objetoGrupo.transform;
+
+        // El lente empieza con el zoom máximo (todo el nivel a la vista).
+        LensSettings lente = camaraVirtual.Lens;
+        lente.OrthographicSize = zoomMaximoCamara;
+        camaraVirtual.Lens = lente;
+
+        // El compositor lleva la cámara hacia el grupo con un pequeño retraso
+        // (damping) para que la imagen no tiemble con cada salto.
+        CinemachinePositionComposer compositor = objetoCamaraVirtual.AddComponent<CinemachinePositionComposer>();
+        compositor.CameraDistance = 10f;
+        compositor.Damping = new Vector3(0.6f, 0.6f, 0f);
+
+        // 4) Zoom automático: solo cambia el tamaño ortográfico (no mueve la
+        //    cámara), siempre entre el zoom mínimo y el máximo.
+        CinemachineGroupFraming encuadreGrupo = objetoCamaraVirtual.AddComponent<CinemachineGroupFraming>();
+        encuadreGrupo.FramingMode = CinemachineGroupFraming.FramingModes.HorizontalAndVertical;
+        encuadreGrupo.SizeAdjustment = CinemachineGroupFraming.SizeAdjustmentModes.ZoomOnly;
+        encuadreGrupo.FramingSize = 0.8f;
+        encuadreGrupo.Damping = 1f;
+        encuadreGrupo.OrthoSizeRange = new Vector2(zoomMinimoCamara, zoomMaximoCamara);
+
+        // 5) Límites: un rectángulo del tamaño del nivel.
+        //    Es trigger para que nadie choque con él (el jugador ignora los
+        //    triggers al revisar si está en el suelo, así que no le afecta).
+        GameObject objetoLimites = new GameObject("Limites de la camara");
+        PolygonCollider2D formaLimites = objetoLimites.AddComponent<PolygonCollider2D>();
+        formaLimites.isTrigger = true;
+
+        float bordeIzquierdo = -16f;
+        float bordeDerecho = 16f;
+        float bordeInferior = alturaSuelo - 1f;
+        float bordeSuperior = bordeInferior + zoomMaximoCamara * 2f;
+
+        Vector2[] esquinas = new Vector2[4];
+        esquinas[0] = new Vector2(bordeIzquierdo, bordeInferior);
+        esquinas[1] = new Vector2(bordeDerecho, bordeInferior);
+        esquinas[2] = new Vector2(bordeDerecho, bordeSuperior);
+        esquinas[3] = new Vector2(bordeIzquierdo, bordeSuperior);
+        formaLimites.SetPath(0, esquinas);
+
+        CinemachineConfiner2D confinador = objetoCamaraVirtual.AddComponent<CinemachineConfiner2D>();
+        confinador.BoundingShape2D = formaLimites;
     }
 
     public static void CrearLuzGlobal(Color colorLuz, float intensidad)
@@ -197,7 +280,7 @@ public static class HerramientasEscena
     }
 
     // posicionSuelo = punto donde el jugador toca el piso al empezar.
-    public static void CrearJugador(string nombre, TipoElemento elemento, Key izquierda, Key derecha, Key saltar, Key habilidad, Vector2 posicionSuelo, Color colorMarca)
+    public static GameObject CrearJugador(string nombre, TipoElemento elemento, Key izquierda, Key derecha, Key saltar, Key habilidad, Vector2 posicionSuelo, Color colorMarca)
     {
         float anchoJugador = 0.8f;
         float altoJugador = 1.2f;
@@ -234,19 +317,22 @@ public static class HerramientasEscena
         dibujoMarca.sprite = spriteCirculo;
         dibujoMarca.color = colorMarca;
         dibujoMarca.sortingOrder = 11;
+
+        // Se devuelve para que la cámara cooperativa pueda seguirlo.
+        return jugador;
     }
 
     // Los dos protagonistas en su posición inicial.
-    public static void CrearInti(Vector2 posicionSuelo)
+    public static GameObject CrearInti(Vector2 posicionSuelo)
     {
         Color colorSolDorado = new Color(1.00f, 0.95f, 0.45f);
-        CrearJugador("Inti", TipoElemento.Fuego, Key.A, Key.D, Key.W, Key.S, posicionSuelo, colorSolDorado);
+        return CrearJugador("Inti", TipoElemento.Fuego, Key.A, Key.D, Key.W, Key.S, posicionSuelo, colorSolDorado);
     }
 
-    public static void CrearKilla(Vector2 posicionSuelo)
+    public static GameObject CrearKilla(Vector2 posicionSuelo)
     {
         Color colorLunaPlateada = new Color(0.85f, 0.90f, 1.00f);
-        CrearJugador("Killa", TipoElemento.Agua, Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow, posicionSuelo, colorLunaPlateada);
+        return CrearJugador("Killa", TipoElemento.Agua, Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow, posicionSuelo, colorLunaPlateada);
     }
 
     // Púas de sal centradas en centroX, sobre el suelo. Matan a los dos.
