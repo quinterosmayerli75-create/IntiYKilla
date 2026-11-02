@@ -191,6 +191,23 @@ public class ControladorJugador : MonoBehaviour
         return teclado[teclaHabilidad].wasPressedThisFrame;
     }
 
+    // La luz de Inti pregunta esto: mientras se mantiene la tecla, ilumina más lejos.
+    public bool MantieneHabilidadPresionada()
+    {
+        if (estaVivo == false || puedeMoverse == false)
+        {
+            return false;
+        }
+
+        Keyboard teclado = Keyboard.current;
+        if (teclado == null)
+        {
+            return false;
+        }
+
+        return teclado[teclaHabilidad].isPressed;
+    }
+
     private void ActualizarContadoresDeSalto()
     {
         if (EstaEnElSuelo() == true)

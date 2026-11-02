@@ -6,6 +6,7 @@
 //              - MenuPrincipal
 //              - SeleccionNivel (mapa con los 20 niveles por mundo)
 //              - Nivel01, Nivel02, Nivel03 (Mundo 1: Salar de Uyuni)
+//              - Nivel04 (Mundo 2: Minas de Potosí)
 //              Además ordena las escenas en Build Settings.
 // Uso: Menú superior de Unity -> Inti y Killa -> Generar todas las escenas
 // Ojo: volver a generar una escena la REEMPLAZA (se pierden los cambios
@@ -47,12 +48,13 @@ public static class GeneradorEscenas
         GenerarNivel01();
         GenerarNivel02();
         GenerarNivel03();
+        GenerarNivel04();
 
         HerramientasEscena.ActualizarBuildSettings();
 
         // Al terminar, dejamos abierto el menú principal para darle Play.
         EditorSceneManager.OpenScene(RutaEscena(DatosJuego.escenaMenuPrincipal));
-        Debug.Log("Inti y Killa: escenas generadas (Menú, Selección de nivel y Niveles 1 a 3). ¡Dale Play!");
+        Debug.Log("Inti y Killa: escenas generadas (Menú, Selección de nivel y Niveles 1 a 4). ¡Dale Play!");
     }
 
     [MenuItem("Inti y Killa/Escenas sueltas/Menú principal", false, 20)]
@@ -85,6 +87,12 @@ public static class GeneradorEscenas
         GenerarUnaSola(5);
     }
 
+    [MenuItem("Inti y Killa/Escenas sueltas/Nivel 4", false, 25)]
+    public static void MenuGenerarNivel04()
+    {
+        GenerarUnaSola(6);
+    }
+
     private static void GenerarUnaSola(int cual)
     {
         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
@@ -114,6 +122,10 @@ public static class GeneradorEscenas
         else if (cual == 5)
         {
             rutaGenerada = GenerarNivel03();
+        }
+        else if (cual == 6)
+        {
+            rutaGenerada = GenerarNivel04();
         }
 
         HerramientasEscena.ActualizarBuildSettings();
@@ -401,6 +413,82 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         string ruta = RutaNivel(3);
+        EditorSceneManager.SaveScene(escena, ruta);
+        return ruta;
+    }
+
+    // ================= Nivel 4: La luz de Inti (Minas de Potosí) =================
+    // La mina está a oscuras. Las plataformas de cristal solo se pueden pisar
+    // dentro de la luz de Inti.
+    // Parte 1: cruzar juntos un río de veneno por cristales (luz normal).
+    // Parte 2: Killa sube una escalera de cristal sobre la lava mientras Inti,
+    //          desde abajo (él sí pisa la lava), mantiene S para iluminar más
+    //          lejos. El último escalón queda fuera de la luz normal a propósito.
+
+    private static readonly Color colorFondoMina = new Color(0.07f, 0.05f, 0.05f);
+    private static readonly Color colorSueloMina = new Color(0.40f, 0.32f, 0.28f);
+
+    private static string GenerarNivel04()
+    {
+        Scene escena = CrearEscenaVacia();
+        float suelo = HerramientasEscena.alturaSuelo;
+
+        Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorFondoMina);
+        // Luz ambiental muy baja: lo que no toque una luz queda casi negro.
+        HerramientasEscena.CrearLuzGlobal(new Color(0.55f, 0.60f, 0.85f), 0.18f);
+        HerramientasEscena.CrearGestorNivel("La mina está oscura. Los cristales solo se pisan con la luz de Inti. Mantén S para iluminar más lejos.");
+        HerramientasEscena.CrearFondoMina();
+
+        Transform escenario = HerramientasEscena.CrearSueloYParedes(colorSueloMina);
+        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(12.75f, 1.5f), new Vector2(5.5f, 0.5f), colorSueloMina, escenario);
+
+        // Faroles fijos: marcan el inicio, el descanso del medio y la salida.
+        Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
+        HerramientasEscena.CrearFarol("Farol de la entrada", new Vector2(-13f, 1.5f), 4f, faroles);
+        HerramientasEscena.CrearFarol("Farol del medio", new Vector2(-0.8f, 1.5f), 3.5f, faroles);
+        HerramientasEscena.CrearFarol("Farol de la salida", new Vector2(13f, 4.5f), 4f, faroles);
+
+        Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
+        HerramientasEscena.CrearCharco("Rio de veneno", TipoZona.Veneno, -7f, 6f, trampas);
+        HerramientasEscena.CrearCharco("Lago de lava", TipoZona.Lava, 6f, 7f, trampas);
+
+        // Cristales sobre el veneno: separados para cruzarlos saltando.
+        Transform cristales = HerramientasEscena.CrearGrupo("Cristales de luz");
+        Vector2 tamanoCristal = new Vector2(1.4f, 0.4f);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 1", new Vector2(-9f, -2f), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 2", new Vector2(-7f, -2f), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 3", new Vector2(-5f, -2f), tamanoCristal, cristales);
+
+        // Escalera de cristal sobre la lava, hacia la repisa de Killa.
+        // El escalón 3 está a más de 3.5 unidades de Inti (en el suelo): solo
+        // aparece si Inti mantiene S y la luz crece a 5.5.
+        Vector2 tamanoEscalon = new Vector2(1.6f, 0.4f);
+        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 1", new Vector2(3.5f, -2f), tamanoEscalon, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 2", new Vector2(6f, -0.5f), tamanoEscalon, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 3", new Vector2(8.5f, 1f), tamanoEscalon, cristales);
+
+        Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-7f, -1.2f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(6f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6f, 0.5f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(12f, 2.6f), gemas);
+
+        // Inti sale por abajo (después de cruzar la lava); Killa por la repisa.
+        Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
+        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(11.5f, suelo), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14f, 1.75f), puertas);
+
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+
+        // Los dos llevan la luz; solo se enciende en quien tenga el fuego.
+        HerramientasEscena.AgregarLuzPersonaje(inti);
+        HerramientasEscena.AgregarLuzPersonaje(killa);
+
+        // La cámara se crea al final porque necesita a los dos jugadores.
+        HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        string ruta = RutaNivel(4);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }

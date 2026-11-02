@@ -649,6 +649,84 @@ public static class HerramientasEscena
         return CrearJugador("Killa", TipoElemento.Agua, Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow, posicionSuelo, colorLunaPlateada, imagenKilla);
     }
 
+    // ================= Piezas de las Minas de Potosí =================
+
+    public static readonly Color colorCristalMina = new Color(0.55f, 0.95f, 1.00f);
+    private static readonly Color colorParedMina = new Color(0.16f, 0.11f, 0.10f);
+    private static readonly Color colorVigaMadera = new Color(0.30f, 0.20f, 0.13f);
+
+    // Le pone a un jugador su luz 2D. Se agrega a los DOS jugadores: el script
+    // LuzPersonaje solo la enciende en quien tenga el fuego (cambia con el eclipse).
+    // Solo se usa en niveles oscuros; en los niveles con luz de día sobraría.
+    public static void AgregarLuzPersonaje(GameObject jugador)
+    {
+        GameObject objetoLuz = new GameObject("Luz del personaje");
+        objetoLuz.transform.SetParent(jugador.transform);
+        objetoLuz.transform.localPosition = Vector3.zero;
+        // La escala del jugador no debe deformar la luz.
+        Vector3 escalaJugador = jugador.transform.localScale;
+        objetoLuz.transform.localScale = new Vector3(1f / escalaJugador.x, 1f / escalaJugador.y, 1f);
+
+        Light2D luz = objetoLuz.AddComponent<Light2D>();
+        luz.lightType = Light2D.LightType.Point;
+        luz.enabled = false;
+
+        LuzPersonaje componente = jugador.AddComponent<LuzPersonaje>();
+        componente.Configurar(luz);
+    }
+
+    // Plataforma de cristal que solo se puede pisar dentro de la luz de Inti.
+    public static void CrearPlataformaOculta(string nombre, Vector2 posicion, Vector2 tamano, Transform padre)
+    {
+        GameObject plataforma = CrearBloque(nombre, posicion, tamano, colorCristalMina, imagenPlataforma, padre);
+
+        // Con imagen se tiñe de celeste para que se note que es de cristal.
+        plataforma.GetComponent<SpriteRenderer>().color = colorCristalMina;
+        plataforma.GetComponent<SpriteRenderer>().sortingOrder = 1;
+        plataforma.AddComponent<PlataformaOculta>();
+    }
+
+    // Farol colgado: una luz fija y cálida para que la mina no sea negra del todo.
+    public static void CrearFarol(string nombre, Vector2 posicion, float radio, Transform padre)
+    {
+        GameObject farol = new GameObject(nombre);
+        farol.transform.SetParent(padre);
+        farol.transform.position = new Vector3(posicion.x, posicion.y, 0f);
+
+        Light2D luz = farol.AddComponent<Light2D>();
+        luz.lightType = Light2D.LightType.Point;
+        luz.color = new Color(1f, 0.65f, 0.30f);
+        luz.intensity = 0.9f;
+        luz.pointLightOuterRadius = radio;
+        luz.pointLightInnerRadius = radio * 0.2f;
+
+        // La lámpara en sí: un círculo pequeño colgando de un cordel.
+        CrearDibujoHijo("Cordel", farol.transform, new Vector2(0f, 0.5f), new Vector2(0.05f, 0.8f), new Color(0.2f, 0.15f, 0.1f), -4);
+        GameObject lampara = CrearDibujoHijo("Lampara", farol.transform, Vector2.zero, new Vector2(0.3f, 0.3f), new Color(1f, 0.8f, 0.4f), -3);
+        lampara.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+    }
+
+    // Fondo de la mina: pared de roca oscura con vigas de madera que sostienen el techo.
+    public static void CrearFondoMina()
+    {
+        Transform fondo = CrearGrupo("Fondo");
+
+        CrearDecoracion("Pared de la mina", spriteCuadrado, new Vector2(0f, 3.5f), new Vector2(36f, 18f), colorParedMina, -30, false, fondo);
+        CrearDecoracion("Techo", spriteCuadrado, new Vector2(0f, 12.2f), new Vector2(36f, 1f), colorVigaMadera, -26, false, fondo);
+
+        // Un marco de vigas (dos postes + travesaño) cada 6 unidades.
+        int numero = 1;
+        for (float posicionX = -12f; posicionX <= 12f; posicionX = posicionX + 6f)
+        {
+            float alturaPoste = 12f - alturaSuelo;
+            float centroPosteY = alturaSuelo + alturaPoste / 2f;
+            CrearDecoracion("Poste " + numero + "a", spriteCuadrado, new Vector2(posicionX - 1.5f, centroPosteY), new Vector2(0.35f, alturaPoste), colorVigaMadera, -27, false, fondo);
+            CrearDecoracion("Poste " + numero + "b", spriteCuadrado, new Vector2(posicionX + 1.5f, centroPosteY), new Vector2(0.35f, alturaPoste), colorVigaMadera, -27, false, fondo);
+            CrearDecoracion("Travesano " + numero, spriteCuadrado, new Vector2(posicionX, 11.5f), new Vector2(3.6f, 0.35f), colorVigaMadera, -27, false, fondo);
+            numero = numero + 1;
+        }
+    }
+
     // Figura quieta de un personaje (sin física ni controles), para el menú principal.
     public static void CrearFiguraPersonaje(string nombre, Sprite imagenPersonaje, Color colorRespaldo, Vector2 centro, Transform padre)
     {

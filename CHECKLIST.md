@@ -23,7 +23,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD.
 ## Semana 2: mecánicas (4 – 10 nov)
 - [x] Botones y palancas
 - [x] Altar de eclipse (intercambio de poderes)
-- [ ] Luces 2D e iluminación de Inti
+- [x] Luces 2D e iluminación de Inti
 - [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
 - [ ] Cajas empujables
 - [ ] Niebla y lluvia
@@ -31,7 +31,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD.
 - [ ] Lianas, hojas trampolín y monos
 - [ ] Cuerdas de charango y puerta melódica
 - [ ] Eclipse automático
-- [ ] Armar niveles 4 a 9
+- [ ] Armar niveles 4 a 9 (nivel 4 listo)
 
 ## Semana 3: contenido (11 – 17 nov)
 - [ ] Armar niveles 10 a 13 (Trópico)
