@@ -40,6 +40,14 @@ public class ControladorJugador : MonoBehaviour
     [Header("Caída al vacío")]
     [SerializeField] private float alturaLimiteCaida = -12f;
 
+    [Header("Dibujo")]
+    // Activado: el personaje tiene su propia imagen y se ve con sus colores
+    // reales. Solo se tiñe un poco cuando el eclipse le cambia el elemento.
+    // Desactivado: es la forma de respaldo y se pinta entero del color del elemento.
+    [SerializeField] private bool usarColoresDeLaImagen = false;
+    // Qué tanto se tiñe la imagen después de un eclipse (0 = nada, 1 = todo).
+    [SerializeField] private float intensidadTinteEclipse = 0.5f;
+
     // Referencias a los componentes del mismo objeto.
     private Rigidbody2D cuerpoFisico;
     private BoxCollider2D colisionador;
@@ -51,6 +59,10 @@ public class ControladorJugador : MonoBehaviour
     private float contadorBufferSalto = 0f;
     private bool estaVivo = true;
     private bool puedeMoverse = true;
+
+    // Elemento con el que empezó el nivel; sirve para saber si el eclipse
+    // le cambió los poderes (y así teñir la imagen como aviso).
+    private TipoElemento elementoInicial = TipoElemento.Fuego;
 
     // Propiedades de solo lectura para que otros scripts consulten datos.
     public TipoElemento Elemento
@@ -80,7 +92,14 @@ public class ControladorJugador : MonoBehaviour
 
     private void Start()
     {
+        elementoInicial = elemento;
         ActualizarColorSegunElemento();
+    }
+
+    // Lo llama el generador de escenas cuando el personaje tiene imagen propia.
+    public void ConfigurarColoresDeLaImagen(bool nuevoValor)
+    {
+        usarColoresDeLaImagen = nuevoValor;
     }
 
     // Permite configurar al personaje desde el generador de escenas.
@@ -242,9 +261,28 @@ public class ControladorJugador : MonoBehaviour
 
     private void ActualizarColorSegunElemento()
     {
-        if (dibujo != null && estaVivo == true)
+        if (dibujo == null || estaVivo == false)
         {
-            dibujo.color = ColoresElemento.ObtenerColor(elemento);
+            return;
+        }
+
+        Color colorElemento = ColoresElemento.ObtenerColor(elemento);
+
+        if (usarColoresDeLaImagen == false)
+        {
+            // Forma de respaldo: todo el cuerpo del color del elemento.
+            dibujo.color = colorElemento;
+        }
+        else if (elemento == elementoInicial)
+        {
+            // Imagen con su elemento de siempre: colores originales (blanco = sin teñir).
+            dibujo.color = Color.white;
+        }
+        else
+        {
+            // Después de un eclipse: la imagen se tiñe un poco con el nuevo
+            // elemento para que los jugadores noten que cambiaron de poderes.
+            dibujo.color = Color.Lerp(Color.white, colorElemento, intensidadTinteEclipse);
         }
     }
 

@@ -591,7 +591,9 @@ public static class HerramientasEscena
 
         if (imagenPersonaje != null)
         {
+            // Con imagen propia se ve con sus colores reales (sin teñir).
             AplicarImagenAjustada(jugador, imagenPersonaje, tamanoJugador);
+            dibujo.color = Color.white;
         }
         else
         {
@@ -612,6 +614,7 @@ public static class HerramientasEscena
 
         ControladorJugador controlador = jugador.AddComponent<ControladorJugador>();
         controlador.ConfigurarJugador(nombre, elemento, izquierda, derecha, saltar, habilidad);
+        controlador.ConfigurarColoresDeLaImagen(imagenPersonaje != null);
 
         // Marca de identidad sobre la cabeza: NO cambia con el eclipse,
         // así siempre se sabe quién es Inti y quién es Killa.
