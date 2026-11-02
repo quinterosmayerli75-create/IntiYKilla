@@ -294,51 +294,68 @@ public class GestorNivel : MonoBehaviour
         return texto;
     }
 
+    // Resolución para la que se diseñó el HUD. En otras pantallas todo se
+    // escala en proporción, así el texto no se corta ni queda diminuto
+    // (importante en WebGL, donde cada jugador tiene un tamaño de ventana distinto).
+    private const float altoReferenciaHud = 1080f;
+    private const float margenHud = 30f;
+
     // HUD temporal: luego se reemplaza por la interfaz definitiva.
     private void OnGUI()
     {
+        // Todo lo que se dibuja abajo usa coordenadas "virtuales" de 1080 de alto;
+        // la matriz de GUI las convierte al tamaño real de la pantalla.
+        float escala = Screen.height / altoReferenciaHud;
+        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(escala, escala, 1f));
+        float anchoVirtual = Screen.width / escala;
+        float altoVirtual = altoReferenciaHud;
+        float anchoTexto = anchoVirtual - margenHud * 2f;
+
         GUIStyle estiloTexto = new GUIStyle(GUI.skin.label);
-        estiloTexto.fontSize = 22;
+        estiloTexto.fontSize = 32;
         estiloTexto.normal.textColor = Color.white;
+        estiloTexto.wordWrap = false;
 
-        GUI.Label(new Rect(20, 15, 1000, 30), tituloNivel, estiloTexto);
+        GUI.Label(new Rect(margenHud, margenHud, anchoTexto, 44), tituloNivel, estiloTexto);
         string textoGemas = "Gemas de fuego: " + gemasFuegoRecogidas + "/" + totalGemasFuego + "     Gemas de agua: " + gemasAguaRecogidas + "/" + totalGemasAgua;
-        GUI.Label(new Rect(20, 45, 1000, 30), textoGemas, estiloTexto);
-        GUI.Label(new Rect(20, 75, 1000, 30), "Tiempo: " + cronometro.ToString("0.0") + " s   (objetivo: " + tiempoObjetivo.ToString("0") + " s)", estiloTexto);
+        GUI.Label(new Rect(margenHud, margenHud + 44, anchoTexto, 44), textoGemas, estiloTexto);
+        GUI.Label(new Rect(margenHud, margenHud + 88, anchoTexto, 44), "Tiempo: " + cronometro.ToString("0.0") + " s   (objetivo: " + tiempoObjetivo.ToString("0") + " s)", estiloTexto);
 
+        // La ayuda de controles va centrada abajo, con margen para que no toque el borde.
         GUIStyle estiloAyuda = new GUIStyle(GUI.skin.label);
-        estiloAyuda.fontSize = 16;
+        estiloAyuda.fontSize = 22;
+        estiloAyuda.alignment = TextAnchor.MiddleCenter;
         estiloAyuda.normal.textColor = new Color(1f, 1f, 1f, 0.85f);
+        estiloAyuda.wordWrap = false;
         string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     R: reiniciar     Esc: mapa";
-        GUI.Label(new Rect(20, Screen.height - 35, 1400, 30), textoAyuda, estiloAyuda);
+        GUI.Label(new Rect(margenHud, altoVirtual - margenHud - 34, anchoTexto, 34), textoAyuda, estiloAyuda);
 
         GUIStyle estiloCentral = new GUIStyle(GUI.skin.label);
-        estiloCentral.fontSize = 34;
+        estiloCentral.fontSize = 48;
         estiloCentral.fontStyle = FontStyle.Bold;
         estiloCentral.alignment = TextAnchor.MiddleCenter;
         estiloCentral.normal.textColor = new Color(1f, 0.85f, 0.3f);
 
         if (tiempoRestanteAviso > 0f && avisoTemporal != "")
         {
-            GUI.Label(new Rect(0, Screen.height * 0.25f, Screen.width, 60), avisoTemporal, estiloCentral);
+            GUI.Label(new Rect(0, altoVirtual * 0.25f, anchoVirtual, 80), avisoTemporal, estiloCentral);
         }
 
         if (mensajeCentral != "")
         {
-            GUI.Label(new Rect(0, Screen.height / 2f - 60f, Screen.width, 60), mensajeCentral, estiloCentral);
+            GUI.Label(new Rect(0, altoVirtual / 2f - 80f, anchoVirtual, 80), mensajeCentral, estiloCentral);
         }
 
         if (nivelTerminado == true)
         {
             GUIStyle estiloEstrellas = new GUIStyle(estiloCentral);
-            estiloEstrellas.fontSize = 56;
-            GUI.Label(new Rect(0, Screen.height / 2f, Screen.width, 70), TextoEstrellas(estrellasGanadas), estiloEstrellas);
+            estiloEstrellas.fontSize = 80;
+            GUI.Label(new Rect(0, altoVirtual / 2f, anchoVirtual, 100), TextoEstrellas(estrellasGanadas), estiloEstrellas);
 
             GUIStyle estiloOpciones = new GUIStyle(estiloAyuda);
-            estiloOpciones.fontSize = 22;
-            estiloOpciones.alignment = TextAnchor.MiddleCenter;
+            estiloOpciones.fontSize = 30;
             string textoOpciones = "Tiempo: " + cronometro.ToString("0.0") + " s     Enter: siguiente nivel     R: repetir     Esc: mapa";
-            GUI.Label(new Rect(0, Screen.height / 2f + 80f, Screen.width, 40), textoOpciones, estiloOpciones);
+            GUI.Label(new Rect(0, altoVirtual / 2f + 110f, anchoVirtual, 50), textoOpciones, estiloOpciones);
         }
     }
 }
