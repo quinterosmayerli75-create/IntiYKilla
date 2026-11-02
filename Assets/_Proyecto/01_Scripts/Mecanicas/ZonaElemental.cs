@@ -1,12 +1,13 @@
 // =====================================================================
 // ZonaElemental.cs
 // Proyecto: Inti y Killa
-// Descripción: Charcos de lava, agua o veneno. Es un Trigger (zona
-//              invisible al choque) que decide quién muere al tocarlo:
-//              - Lava:   mata a quien tenga elemento Agua (Killa)
-//              - Agua:   mata a quien tenga elemento Fuego (Inti)
-//              - Veneno: mata a los dos
-// Uso: agregar a un objeto con BoxCollider2D marcado como "Is Trigger".
+// Descripción: Zonas peligrosas. Es un Trigger (zona que se atraviesa)
+//              que decide quién muere al tocarla:
+//              - Lava:         mata a quien tenga elemento Agua (Killa)
+//              - Agua:         mata a quien tenga elemento Fuego (Inti)
+//              - Veneno:       mata a los dos
+//              - CristalesSal: púas de sal del Salar de Uyuni, matan a los dos
+// Uso: agregar a un objeto con un Collider2D marcado como "Is Trigger".
 // =====================================================================
 
 using UnityEngine;
@@ -15,7 +16,8 @@ public enum TipoZona
 {
     Lava,
     Agua,
-    Veneno
+    Veneno,
+    CristalesSal
 }
 
 [RequireComponent(typeof(Collider2D))]
@@ -36,7 +38,7 @@ public class ZonaElemental : MonoBehaviour
     }
 
     // Se usa "Stay" y no solo "Enter" para que, cuando exista el eclipse
-    // (cambio de elemento), un jugador parado en el charco también muera.
+    // (cambio de elemento), un jugador parado en la zona también muera.
     private void OnTriggerStay2D(Collider2D otro)
     {
         ControladorJugador jugador = otro.GetComponent<ControladorJugador>();
@@ -47,13 +49,18 @@ public class ZonaElemental : MonoBehaviour
 
         if (EsPeligrosoPara(jugador.Elemento) == true)
         {
-            jugador.Morir("tocó " + tipoZona.ToString().ToLower());
+            jugador.Morir(ObtenerMotivoDeMuerte());
         }
     }
 
     private bool EsPeligrosoPara(TipoElemento elementoJugador)
     {
         if (tipoZona == TipoZona.Veneno)
+        {
+            return true;
+        }
+
+        if (tipoZona == TipoZona.CristalesSal)
         {
             return true;
         }
@@ -69,5 +76,25 @@ public class ZonaElemental : MonoBehaviour
         }
 
         return false;
+    }
+
+    private string ObtenerMotivoDeMuerte()
+    {
+        if (tipoZona == TipoZona.Lava)
+        {
+            return "tocó la lava";
+        }
+
+        if (tipoZona == TipoZona.Agua)
+        {
+            return "se apagó en el agua";
+        }
+
+        if (tipoZona == TipoZona.Veneno)
+        {
+            return "tocó el veneno";
+        }
+
+        return "se pinchó con los cristales de sal";
     }
 }

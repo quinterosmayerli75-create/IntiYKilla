@@ -3,28 +3,28 @@
 Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD.
 
 ## Semana 1: base (28 oct – 3 nov)
-- [ ] Instalar Unity 6 LTS con el módulo WebGL
-- [ ] Instalar VS Code y la extensión Claude Code
+- [x] Instalar Unity 6 LTS con el módulo WebGL
+- [x] Instalar VS Code y la extensión Claude Code
 - [ ] Instalar el plugin oficial de Unity para Claude Code
-- [ ] Crear el proyecto con la plantilla Universal 2D
-- [ ] Instalar los paquetes del GDD (sección 9)
-- [ ] Crear el repositorio en GitHub con .gitignore de Unity
-- [ ] Agregar GDD.md, CHECKLIST.md y CLAUDE.md al repositorio
-- [ ] Crear la estructura de carpetas
-- [ ] Configurar el Input System para 2 jugadores
-- [ ] Programar movimiento y salto de Inti y Killa
-- [ ] Programar charcos de lava, agua y veneno
-- [ ] Programar muerte y reinicio del nivel
-- [ ] Programar gemas y puertas de salida
+- [x] Crear el proyecto con la plantilla Universal 2D
+- [x] Instalar los paquetes del GDD (sección 9)
+- [x] Crear el repositorio en GitHub con .gitignore de Unity
+- [x] Agregar GDD.md, CHECKLIST.md y CLAUDE.md al repositorio
+- [x] Crear la estructura de carpetas
+- [x] Configurar el Input System para 2 jugadores
+- [x] Programar movimiento y salto de Inti y Killa
+- [x] Programar charcos de lava, agua y veneno
+- [x] Programar muerte y reinicio del nivel
+- [x] Programar gemas y puertas de salida
 - [ ] Configurar la cámara Cinemachine para los dos
 - [ ] Crear tileset base, paleta y Rule Tiles
-- [ ] Armar niveles 1, 2 y 3
+- [x] Armar niveles 1, 2 y 3
 
 ## Semana 2: mecánicas (4 – 10 nov)
-- [ ] Botones y palancas
-- [ ] Altar de eclipse (intercambio de poderes)
+- [x] Botones y palancas
+- [x] Altar de eclipse (intercambio de poderes)
 - [ ] Luces 2D e iluminación de Inti
-- [ ] Vagonetas y plataformas móviles
+- [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
 - [ ] Cajas empujables
 - [ ] Niebla y lluvia
 - [ ] Sistema de día y noche
@@ -37,12 +37,12 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD.
 - [ ] Armar niveles 10 a 13 (Trópico)
 - [ ] Armar niveles 14 a 17 (Aiquile)
 - [ ] Armar niveles 18 a 20 (Isla del Sol)
-- [ ] Menú principal
-- [ ] Selección de nivel con mapa de Bolivia
+- [x] Menú principal
+- [ ] Selección de nivel con mapa de Bolivia (versión simple lista; falta el mapa dibujado)
 - [ ] HUD con gemas y cronómetro
 - [ ] Pausa, opciones, victoria y derrota
-- [ ] Sistema de estrellas
-- [ ] Guardado con PlayerPrefs
+- [x] Sistema de estrellas
+- [x] Guardado con PlayerPrefs
 
 ## Semana 4: pulido y publicación (18 – 27 nov)
 - [ ] Animaciones finales de los personajes

@@ -1,11 +1,14 @@
 // =====================================================================
 // PuertaSalida.cs
 // Proyecto: Inti y Killa
-// Descripción: Puerta de salida de un personaje. Cada uno tiene la suya.
-//              El nivel se gana cuando los DOS están parados en su
-//              puerta al mismo tiempo (lo revisa el GestorNivel).
+// Descripción: Puerta de salida de un elemento (fuego o agua).
+//              Está "ocupada" cuando adentro hay un personaje que TIENE
+//              ese elemento en este momento (importante por el eclipse).
+//              El GestorNivel declara la victoria cuando todas las
+//              puertas están ocupadas a la vez.
 // =====================================================================
 
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -13,11 +16,21 @@ public class PuertaSalida : MonoBehaviour
 {
     [SerializeField] private TipoElemento elementoRequerido = TipoElemento.Fuego;
 
-    private bool estaOcupada = false;
+    private List<ControladorJugador> jugadoresDentro = new List<ControladorJugador>();
 
     public bool EstaOcupada
     {
-        get { return estaOcupada; }
+        get
+        {
+            foreach (ControladorJugador jugador in jugadoresDentro)
+            {
+                if (jugador != null && jugador.Elemento == elementoRequerido)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public void ConfigurarPuerta(TipoElemento nuevoElemento)
@@ -28,33 +41,18 @@ public class PuertaSalida : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D otro)
     {
         ControladorJugador jugador = otro.GetComponent<ControladorJugador>();
-        if (jugador == null)
+        if (jugador != null && jugadoresDentro.Contains(jugador) == false)
         {
-            return;
-        }
-
-        if (jugador.Elemento == elementoRequerido)
-        {
-            estaOcupada = true;
-
-            if (GestorNivel.Instancia != null)
-            {
-                GestorNivel.Instancia.RevisarVictoria();
-            }
+            jugadoresDentro.Add(jugador);
         }
     }
 
     private void OnTriggerExit2D(Collider2D otro)
     {
         ControladorJugador jugador = otro.GetComponent<ControladorJugador>();
-        if (jugador == null)
+        if (jugador != null)
         {
-            return;
-        }
-
-        if (jugador.Elemento == elementoRequerido)
-        {
-            estaOcupada = false;
+            jugadoresDentro.Remove(jugador);
         }
     }
 }

@@ -5,7 +5,8 @@
 //              el Input System nuevo. El MISMO script sirve para los dos
 //              jugadores: solo cambian las teclas y el elemento en el
 //              Inspector.
-// Mecánicas: caminar, saltar, coyote time, buffer de salto, morir.
+// Mecánicas: caminar, saltar, coyote time, buffer de salto, tecla de
+//            habilidad (palancas), cambio de elemento (eclipse), morir.
 // =====================================================================
 
 using UnityEngine;
@@ -23,6 +24,7 @@ public class ControladorJugador : MonoBehaviour
     [SerializeField] private Key teclaIzquierda = Key.A;
     [SerializeField] private Key teclaDerecha = Key.D;
     [SerializeField] private Key teclaSaltar = Key.W;
+    [SerializeField] private Key teclaHabilidad = Key.S;
 
     [Header("Movimiento")]
     [SerializeField] private float velocidadMovimiento = 6f;
@@ -76,14 +78,20 @@ public class ControladorJugador : MonoBehaviour
         cuerpoFisico.freezeRotation = true;
     }
 
-    // Permite configurar al personaje desde el script que arma el nivel.
-    public void ConfigurarJugador(string nuevoNombre, TipoElemento nuevoElemento, Key nuevaIzquierda, Key nuevaDerecha, Key nuevoSalto)
+    private void Start()
+    {
+        ActualizarColorSegunElemento();
+    }
+
+    // Permite configurar al personaje desde el generador de escenas.
+    public void ConfigurarJugador(string nuevoNombre, TipoElemento nuevoElemento, Key nuevaIzquierda, Key nuevaDerecha, Key nuevoSalto, Key nuevaHabilidad)
     {
         nombreJugador = nuevoNombre;
         elemento = nuevoElemento;
         teclaIzquierda = nuevaIzquierda;
         teclaDerecha = nuevaDerecha;
         teclaSaltar = nuevoSalto;
+        teclaHabilidad = nuevaHabilidad;
     }
 
     private void Update()
@@ -147,6 +155,23 @@ public class ControladorJugador : MonoBehaviour
         }
     }
 
+    // Las palancas preguntan esto para saber si el jugador quiere usarlas.
+    public bool PresionoHabilidadEsteFrame()
+    {
+        if (estaVivo == false || puedeMoverse == false)
+        {
+            return false;
+        }
+
+        Keyboard teclado = Keyboard.current;
+        if (teclado == null)
+        {
+            return false;
+        }
+
+        return teclado[teclaHabilidad].wasPressedThisFrame;
+    }
+
     private void ActualizarContadoresDeSalto()
     {
         if (EstaEnElSuelo() == true)
@@ -205,6 +230,21 @@ public class ControladorJugador : MonoBehaviour
         if (transform.position.y < alturaLimiteCaida)
         {
             Morir("cayó al vacío");
+        }
+    }
+
+    // Lo usa el altar de eclipse para intercambiar poderes.
+    public void CambiarElemento(TipoElemento nuevoElemento)
+    {
+        elemento = nuevoElemento;
+        ActualizarColorSegunElemento();
+    }
+
+    private void ActualizarColorSegunElemento()
+    {
+        if (dibujo != null && estaVivo == true)
+        {
+            dibujo.color = ColoresElemento.ObtenerColor(elemento);
         }
     }
 
