@@ -855,26 +855,20 @@ public static class HerramientasEscena
         controlador.ConfigurarJugador(nombre, elemento, izquierda, derecha, saltar, habilidad);
         controlador.ConfigurarColoresDeLaImagen(imagenPersonaje != null);
 
-        // Marca de identidad sobre la cabeza: NO cambia con el eclipse,
-        // así siempre se sabe quién es Inti y quién es Killa.
-        GameObject marca = new GameObject("Marca de identidad");
-        marca.transform.SetParent(jugador.transform);
-        // Posición y tamaño se dividen por la escala del jugador para que la
-        // marca mida 0.35 unidades y flote igual, tenga imagen o no.
-        Vector3 escalaJugador = jugador.transform.localScale;
-        float alturaMarcaEnMundo = altoJugador * 0.72f;
-        if (imagenPersonaje != null)
+        // Marca de identidad sobre la cabeza: solo hace falta en la forma de
+        // respaldo, que cambia de color con el eclipse y dejaría de saberse quién
+        // es quién. Con imagen propia, cada personaje ya se reconoce por su dibujo.
+        if (imagenPersonaje == null)
         {
-            // Con imagen, la marca flota por encima de la cabeza del dibujo.
-            alturaMarcaEnMundo = altoDibujoPersonaje - altoJugador / 2f + 0.2f;
+            GameObject marca = new GameObject("Marca de identidad");
+            marca.transform.SetParent(jugador.transform);
+            marca.transform.localPosition = new Vector3(0f, 0.72f, 0f);
+            marca.transform.localScale = new Vector3(0.35f / anchoJugador, 0.35f / altoJugador, 1f);
+            SpriteRenderer dibujoMarca = marca.AddComponent<SpriteRenderer>();
+            dibujoMarca.sprite = spriteCirculo;
+            dibujoMarca.color = colorMarca;
+            dibujoMarca.sortingOrder = 11;
         }
-        float tamanoMarcaEnMundo = 0.35f;
-        marca.transform.localPosition = new Vector3(0f, alturaMarcaEnMundo / escalaJugador.y, 0f);
-        marca.transform.localScale = new Vector3(tamanoMarcaEnMundo / escalaJugador.x, tamanoMarcaEnMundo / escalaJugador.y, 1f);
-        SpriteRenderer dibujoMarca = marca.AddComponent<SpriteRenderer>();
-        dibujoMarca.sprite = spriteCirculo;
-        dibujoMarca.color = colorMarca;
-        dibujoMarca.sortingOrder = 11;
 
         // Se devuelve para que la cámara cooperativa pueda seguirlo.
         return jugador;
