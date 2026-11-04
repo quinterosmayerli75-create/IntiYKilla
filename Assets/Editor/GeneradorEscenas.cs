@@ -336,7 +336,9 @@ public static class GeneradorEscenas
     }
 
     // ================= Nivel 2: Botones y compuertas =================
-    // Enseña: uno sostiene un botón para que el otro pase, palanca y elevador.
+    // Enseña a turnarse: nadie avanza solo. Cada uno empieza en su lado de un muro
+    // y el botón que abre la compuerta de uno está en el lado del otro.
+    // Arriba, la salida solo se abre cuando LOS DOS encendieron su palanca.
 
     private static string GenerarNivel02()
     {
@@ -346,44 +348,83 @@ public static class GeneradorEscenas
 
         Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(1f, 0.93f, 0.86f), 1f);
-        HerramientasEscena.CrearGestorNivel("Uno pisa el botón para que el otro pase. La palanca se usa con S o Flecha abajo.");
-        HerramientasEscena.CrearFondoUyuni(-6f);
+        HerramientasEscena.CrearGestorNivel("El botón de cada uno abre la compuerta del otro. Arriba, los dos deben encender su palanca (S o Flecha abajo).");
+        HerramientasEscena.CrearFondoUyuni(0f);
+
+        float pisoUno = -0.25f;
+        float pisoDos = 3f;
+        float pisoTres = 6.25f;
+        float pisoSalida = 9.5f;
+        float mitadGrosor = 0.25f;
+        float grosor = 0.5f;
 
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
-        // Repisa alta a la derecha, donde están las puertas de salida.
-        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(12.75f, 1.5f), new Vector2(5.5f, 0.5f), HerramientasEscena.colorSal, escenario);
+        // El muro central separa a los dos jugadores hasta el piso 2.
+        HerramientasEscena.CrearMuro("Muro central", 0f, suelo, pisoDos - grosor, HerramientasEscena.colorSal, escenario);
+        // El piso 1 llega hasta la pared: solo se sube por el hueco cercano al muro,
+        // que queda DETRÁS de la compuerta.
+        HerramientasEscena.CrearPlataforma("Piso 1 izquierda", new Vector2(-10f, pisoUno - mitadGrosor), new Vector2(10f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 1 derecha", new Vector2(10f, pisoUno - mitadGrosor), new Vector2(10f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 2 central", new Vector2(0f, pisoDos - mitadGrosor), new Vector2(7f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3 izquierda", new Vector2(-9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3 derecha", new Vector2(9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso de salida", new Vector2(0f, pisoSalida - mitadGrosor), new Vector2(7f, grosor), HerramientasEscena.colorSal, escenario);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
 
-        // Compuerta en el centro: la abren DOS botones (uno a cada lado).
-        PuertaMecanica compuerta = HerramientasEscena.CrearPuertaMecanica("Compuerta central", new Vector2(0f, -1.25f), new Vector2(0.7f, 4.5f), new Vector2(0f, 4.6f), 1, mecanismos);
-        List<ObjetoActivable> objetivosCompuerta = new List<ObjetoActivable>();
-        objetivosCompuerta.Add(compuerta);
-        HerramientasEscena.CrearBotonPresion("Boton izquierdo", new Vector2(-5f, suelo), objetivosCompuerta, mecanismos);
-        HerramientasEscena.CrearBotonPresion("Boton derecho", new Vector2(4.5f, suelo), objetivosCompuerta, mecanismos);
+        // Compuertas de la planta baja: se abren hundiéndose en el suelo, porque
+        // subiendo atravesarían el piso 1 y estorbarían arriba.
+        Vector2 tamanoCompuerta = new Vector2(0.7f, 2.75f);
+        Vector2 hundirse = new Vector2(0f, -2.85f);
+        float centroCompuertaY = suelo + tamanoCompuerta.y / 2f;
+        PuertaMecanica compuertaInti = HerramientasEscena.CrearPuertaMecanica("Compuerta de Inti", new Vector2(-8f, centroCompuertaY), tamanoCompuerta, hundirse, 1, mecanismos);
+        PuertaMecanica compuertaKilla = HerramientasEscena.CrearPuertaMecanica("Compuerta de Killa", new Vector2(8f, centroCompuertaY), tamanoCompuerta, hundirse, 1, mecanismos);
+        compuertaInti.GetComponent<SpriteRenderer>().sortingOrder = -1;
+        compuertaKilla.GetComponent<SpriteRenderer>().sortingOrder = -1;
 
-        // Elevador que sube a la repisa: se enciende con la palanca.
-        PlataformaMovil elevador = HerramientasEscena.CrearPlataformaMovil("Elevador", new Vector2(8.5f, -2.9f), new Vector2(2f, 0.4f), new Vector2(0f, 4.65f), 2.5f, false, mecanismos);
-        List<ObjetoActivable> objetivosPalanca = new List<ObjetoActivable>();
-        objetivosPalanca.Add(elevador);
-        HerramientasEscena.CrearPalanca("Palanca del elevador", new Vector2(6.4f, suelo), objetivosPalanca, mecanismos);
+        // Killa abre desde abajo el paso de Inti; Inti, ya en el piso 1, abre el de Killa.
+        List<ObjetoActivable> abreCompuertaInti = new List<ObjetoActivable>();
+        abreCompuertaInti.Add(compuertaInti);
+        HerramientasEscena.CrearBotonPresion("Boton de Killa", new Vector2(11.5f, suelo), abreCompuertaInti, mecanismos);
+
+        List<ObjetoActivable> abreCompuertaKilla = new List<ObjetoActivable>();
+        abreCompuertaKilla.Add(compuertaKilla);
+        HerramientasEscena.CrearBotonPresion("Boton de Inti", new Vector2(-10f, pisoUno), abreCompuertaKilla, mecanismos);
+
+        // Salida: dos compuertas altas, cada una a un lado del piso de salida. Son
+        // tan altas que no se pueden saltar, y necesitan las DOS palancas encendidas.
+        Vector2 tamanoCierre = new Vector2(0.7f, 4.5f);
+        Vector2 subir = new Vector2(0f, 4.6f);
+        float centroCierreY = pisoSalida + tamanoCierre.y / 2f;
+        PuertaMecanica cierreIzquierdo = HerramientasEscena.CrearPuertaMecanica("Cierre izquierdo", new Vector2(-3.15f, centroCierreY), tamanoCierre, subir, 2, mecanismos);
+        PuertaMecanica cierreDerecho = HerramientasEscena.CrearPuertaMecanica("Cierre derecho", new Vector2(3.15f, centroCierreY), tamanoCierre, subir, 2, mecanismos);
+
+        List<ObjetoActivable> abreSalida = new List<ObjetoActivable>();
+        abreSalida.Add(cierreIzquierdo);
+        abreSalida.Add(cierreDerecho);
+        HerramientasEscena.CrearPalanca("Palanca izquierda", new Vector2(-11.5f, pisoTres), abreSalida, mecanismos);
+        HerramientasEscena.CrearPalanca("Palanca derecha", new Vector2(11.5f, pisoTres), abreSalida, mecanismos);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
-        HerramientasEscena.CrearCharco("Lava", TipoZona.Lava, -9f, 2.5f, trampas);
-        HerramientasEscena.CrearCharco("Agua", TipoZona.Agua, 2f, 1.8f, trampas);
+        // Bajo techo el salto es corto: estos charcos piden un salto preciso.
+        HerramientasEscena.CrearCharco("Agua de la planta baja", TipoZona.Agua, -6f, 1.4f, trampas);
+        HerramientasEscena.CrearCharco("Lava de la planta baja", TipoZona.Lava, 6f, 1.4f, trampas);
+        HerramientasEscena.CrearCharco("Lava del piso 3", TipoZona.Lava, -9f, 3f, pisoTres, trampas);
+        HerramientasEscena.CrearCharco("Agua del piso 3", TipoZona.Agua, 9f, 3f, pisoTres, trampas);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
-        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-9f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(2f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(8.5f, 3.7f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(14.6f, 2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-6f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-9f, 6.75f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(9f, 6.75f), gemas);
 
+        // Cada puerta queda del lado contrario: también se cruzan al final.
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
-        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(11.4f, 1.75f), puertas);
-        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(13.2f, 1.75f), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(1.2f, pisoSalida), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(-1.2f, pisoSalida), puertas);
 
-        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
-        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-14f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(14f, suelo));
 
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
@@ -394,8 +435,11 @@ public static class GeneradorEscenas
     }
 
     // ================= Nivel 3: El primer eclipse =================
-    // Dos ríos imposibles de saltar: uno de lava y otro de agua.
-    // Solo se cruzan usando los altares para intercambiar poderes.
+    // Cuatro pisos que se suben en zigzag. Tres ríos imposibles de saltar: lava,
+    // agua y lava. Quien puede cruzar va primero y se para en la placa del otro
+    // lado; el eclipse intercambia los poderes y entonces cruza el compañero.
+    // Después de tres eclipses los poderes quedan cambiados: cada uno entra por
+    // la puerta del poder que tiene en ese momento.
 
     private static string GenerarNivel03()
     {
@@ -405,39 +449,50 @@ public static class GeneradorEscenas
 
         Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(0.95f, 0.85f, 0.90f), 1f);
-        HerramientasEscena.CrearGestorNivel("Párense cada uno en una placa del mismo altar a la vez para provocar un ECLIPSE.");
-        HerramientasEscena.CrearFondoUyuni(1.75f);
+        HerramientasEscena.CrearGestorNivel("Párense cada uno en una placa del mismo color para provocar un ECLIPSE. Al final, cada uno entra por la puerta del poder que tenga.");
+        HerramientasEscena.CrearFondoUyuni(0f);
 
+        float pisoUno = -0.25f;
+        float pisoDos = 3f;
+        float pisoTres = 6.25f;
+        float mitadGrosor = 0.25f;
+        float grosor = 0.5f;
+
+        // Cada piso deja un solo hueco para subir, alternando de lado (el zigzag).
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
-        // Plataforma en la isla del medio y repisa de salida al final.
-        HerramientasEscena.CrearPlataforma("Plataforma de la isla", new Vector2(1.75f, -1.2f), new Vector2(2.5f, 0.5f), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(13.5f, -1.0f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 1", new Vector2(-1.5f, pisoUno - mitadGrosor), new Vector2(27f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 2", new Vector2(2f, pisoDos - mitadGrosor), new Vector2(26f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3", new Vector2(-1.75f, pisoTres - mitadGrosor), new Vector2(26.5f, grosor), HerramientasEscena.colorSal, escenario);
 
-        // Ríos de 7.5 unidades: demasiado anchos para saltarlos.
+        // Ríos de 16 unidades: demasiado anchos para saltarlos.
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
-        HerramientasEscena.CrearCharco("Rio de lava", TipoZona.Lava, -4.75f, 7.5f, trampas);
-        HerramientasEscena.CrearCharco("Rio de agua", TipoZona.Agua, 8.25f, 7.5f, trampas);
+        HerramientasEscena.CrearCharco("Rio de lava de abajo", TipoZona.Lava, 0f, 16f, trampas);
+        HerramientasEscena.CrearCharco("Rio de agua", TipoZona.Agua, 0f, 16f, pisoUno, trampas);
+        HerramientasEscena.CrearCharco("Rio de lava de arriba", TipoZona.Lava, 0f, 16f, pisoDos, trampas);
+        // Último piso: prueba de saltos con los poderes ya cambiados.
+        HerramientasEscena.CrearCharco("Agua final", TipoZona.Agua, 6f, 2f, pisoTres, trampas);
+        HerramientasEscena.CrearCharco("Lava final", TipoZona.Lava, 2f, 2f, pisoTres, trampas);
+        HerramientasEscena.CrearCharco("Veneno final", TipoZona.Veneno, -2f, 2f, pisoTres, trampas);
+        HerramientasEscena.CrearCristalesDeSal("Cristales finales", -6f, 2f, pisoTres, trampas);
 
-        // Altar 1: una placa antes del río de lava y otra en la isla.
-        // Altar 2: una placa en la isla y otra ENCIMA de la repisa de salida. Si
-        // estuviera en el suelo, el personaje quedaría con fuego debajo de la repisa
-        // y no podría salir sin tocar el agua, y el nivel no se podría terminar.
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
-        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-10.5f, suelo), new Vector2(0.3f, suelo), colorAltarUno, altares);
-        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(3.2f, suelo), new Vector2(13.5f, -0.75f), colorAltarDos, altares);
+        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-12f, suelo), new Vector2(12f, suelo), colorAltarUno, altares);
+        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(10f, pisoUno), new Vector2(-10f, pisoUno), colorAltarDos, altares);
+        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 3", new Vector2(-9.5f, pisoDos), new Vector2(10f, pisoDos), colorAltarUno, altares);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
-        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-4.75f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(1.75f, -0.1f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(8.25f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(13.55f, 0.2f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(0f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(0f, 0.85f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(0f, 4.1f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(-6f, 8.6f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(-2f, 8.6f), gemas);
 
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
-        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(12.8f, -0.75f), puertas);
-        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14.3f, -0.75f), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(-10f, pisoTres), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(-12.5f, pisoTres), puertas);
 
-        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.8f, suelo));
-        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12.4f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-10.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-13.5f, suelo));
 
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
@@ -448,12 +503,13 @@ public static class GeneradorEscenas
     }
 
     // ================= Nivel 4: La luz de Inti (Minas de Potosí) =================
-    // La mina está a oscuras. Las plataformas de cristal solo se pueden pisar
-    // dentro de la luz de Inti.
-    // Parte 1: cruzar juntos un río de veneno por cristales (luz normal).
-    // Parte 2: Killa sube una escalera de cristal sobre la lava mientras Inti,
-    //          desde abajo (él sí pisa la lava), mantiene S para iluminar más
-    //          lejos. El último escalón queda fuera de la luz normal a propósito.
+    // La mina está a oscuras y se recorre subiendo. Los cristales solo se pisan
+    // dentro de la luz de Inti, así que él alumbra el camino de Killa:
+    // 1) Cruzan juntos el veneno por cristales, con Inti delante manteniendo S.
+    // 2) Killa sube sobre la lava mientras Inti alumbra desde abajo. El último
+    //    escalón está fuera de la luz normal: Inti tiene que mantener S.
+    // 3) Killa, ya arriba, enciende la palanca que abre el paso de Inti.
+    // 4) En el piso alto cruzan otro río de veneno, y otra vez dependen de la luz.
 
     private static readonly Color colorFondoMina = new Color(0.07f, 0.05f, 0.05f);
     private static readonly Color colorSueloMina = new Color(0.40f, 0.32f, 0.28f);
@@ -470,47 +526,70 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearGestorNivel("La mina está oscura. Los cristales solo se pisan con la luz de Inti. Mantén S para iluminar más lejos.");
         HerramientasEscena.CrearFondoMina();
 
+        float pisoMedio = 1.2f;
+        float pisoAlto = 4.45f;
+        float mitadGrosor = 0.25f;
+        float grosor = 0.5f;
+
         Transform escenario = HerramientasEscena.CrearSueloYParedes(colorSueloMina);
-        HerramientasEscena.CrearPlataforma("Repisa de salida", new Vector2(12.75f, 1.5f), new Vector2(5.5f, 0.5f), colorSueloMina, escenario);
+        HerramientasEscena.CrearPlataforma("Repisa media", new Vector2(11.25f, pisoMedio - mitadGrosor), new Vector2(2.5f, grosor), colorSueloMina, escenario);
+        HerramientasEscena.CrearPlataforma("Piso alto", new Vector2(-3f, pisoAlto - mitadGrosor), new Vector2(24f, grosor), colorSueloMina, escenario);
 
         // Faroles fijos: marcan el inicio, el descanso del medio y la salida.
         Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
         HerramientasEscena.CrearFarol("Farol de la entrada", new Vector2(-13f, 1.5f), 4f, faroles);
-        HerramientasEscena.CrearFarol("Farol del medio", new Vector2(-0.8f, 1.5f), 3.5f, faroles);
-        HerramientasEscena.CrearFarol("Farol de la salida", new Vector2(13f, 4.5f), 4f, faroles);
+        HerramientasEscena.CrearFarol("Farol del medio", new Vector2(0.5f, 1.5f), 3.5f, faroles);
+        HerramientasEscena.CrearFarol("Farol de la salida", new Vector2(-12f, 8.5f), 4f, faroles);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
-        HerramientasEscena.CrearCharco("Rio de veneno", TipoZona.Veneno, -7f, 6f, trampas);
-        HerramientasEscena.CrearCharco("Lago de lava", TipoZona.Lava, 6f, 7f, trampas);
+        HerramientasEscena.CrearCharco("Rio de veneno", TipoZona.Veneno, -6f, 8f, trampas);
+        HerramientasEscena.CrearCharco("Lago de lava", TipoZona.Lava, 6.5f, 7f, trampas);
+        HerramientasEscena.CrearCharco("Rio de veneno alto", TipoZona.Veneno, -2f, 8f, pisoAlto, trampas);
 
-        // Cristales sobre el veneno: separados para cruzarlos saltando.
         Transform cristales = HerramientasEscena.CrearGrupo("Cristales de luz");
         Vector2 tamanoCristal = new Vector2(1.4f, 0.4f);
-        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 1", new Vector2(-9f, -2f), tamanoCristal, cristales);
-        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 2", new Vector2(-7f, -2f), tamanoCristal, cristales);
-        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 3", new Vector2(-5f, -2f), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 1", new Vector2(-8.5f, -2f), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 2", new Vector2(-6f, -2f), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal veneno 3", new Vector2(-3.5f, -2f), tamanoCristal, cristales);
 
-        // Escalera de cristal sobre la lava, hacia la repisa de Killa.
-        // El escalón 3 está a más de 3.5 unidades de Inti (en el suelo): solo
-        // aparece si Inti mantiene S y la luz crece a 5.5.
+        // Escalera sobre la lava. El escalón 3 está a más de 3.5 unidades de Inti
+        // (en el suelo): solo aparece si mantiene S y la luz crece a 5.5.
         Vector2 tamanoEscalon = new Vector2(1.6f, 0.4f);
-        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 1", new Vector2(3.5f, -2f), tamanoEscalon, cristales);
-        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 2", new Vector2(6f, -0.5f), tamanoEscalon, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 1", new Vector2(4.5f, -2f), tamanoEscalon, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 2", new Vector2(6.5f, -0.2f), tamanoEscalon, cristales);
         HerramientasEscena.CrearPlataformaOculta("Escalon de cristal 3", new Vector2(8.5f, 1f), tamanoEscalon, cristales);
 
+        // Pozo por donde sube Inti cuando Killa le abre la compuerta.
+        HerramientasEscena.CrearPlataformaOculta("Cristal del pozo", new Vector2(14f, -1.5f), tamanoEscalon, cristales);
+
+        // Cristales sobre el río alto.
+        float alturaCristalAlto = pisoAlto + 1.5f;
+        HerramientasEscena.CrearPlataformaOculta("Cristal alto 1", new Vector2(0f, alturaCristalAlto), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal alto 2", new Vector2(-2f, alturaCristalAlto), tamanoCristal, cristales);
+        HerramientasEscena.CrearPlataformaOculta("Cristal alto 3", new Vector2(-4f, alturaCristalAlto), tamanoCristal, cristales);
+
+        Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
+        // Llega hasta la repisa, para que Inti no pueda pasar por encima. Se hunde al abrir.
+        Vector2 tamanoCompuerta = new Vector2(0.7f, pisoMedio - grosor - suelo);
+        PuertaMecanica compuerta = HerramientasEscena.CrearPuertaMecanica("Compuerta del pozo", new Vector2(10.65f, suelo + tamanoCompuerta.y / 2f), tamanoCompuerta, new Vector2(0f, -tamanoCompuerta.y - 0.1f), 1, mecanismos);
+        compuerta.GetComponent<SpriteRenderer>().sortingOrder = -1;
+
+        List<ObjetoActivable> abreCompuerta = new List<ObjetoActivable>();
+        abreCompuerta.Add(compuerta);
+        HerramientasEscena.CrearPalanca("Palanca de la repisa", new Vector2(11f, pisoMedio), abreCompuerta, mecanismos);
+
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
-        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-7f, -1.2f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(6f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6f, 0.5f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(12f, 2.6f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(6.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-2f, 6.9f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6.5f, 0.7f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(11.9f, 2.1f), gemas);
 
-        // Inti sale por abajo (después de cruzar la lava); Killa por la repisa.
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
-        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(11.5f, suelo), puertas);
-        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14f, 1.75f), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(-13.2f, pisoAlto), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(-10.5f, pisoAlto), puertas);
 
-        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
-        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-11.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-13.5f, suelo));
 
         // Los dos llevan la luz; solo se enciende en quien tenga el fuego.
         HerramientasEscena.AgregarLuzPersonaje(inti);

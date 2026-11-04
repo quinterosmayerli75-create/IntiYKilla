@@ -113,8 +113,8 @@ public static class DatosJuego
 
         // Mundo 1: Salar de Uyuni (tutorial)
         listaNiveles.Add(new DatosNivel(1, "Primeros pasos", 1, 35f));
-        listaNiveles.Add(new DatosNivel(2, "Botones y compuertas", 1, 50f));
-        listaNiveles.Add(new DatosNivel(3, "El primer eclipse", 1, 60f));
+        listaNiveles.Add(new DatosNivel(2, "Botones y compuertas", 1, 45f));
+        listaNiveles.Add(new DatosNivel(3, "El primer eclipse", 1, 70f));
 
         // Mundo 2: Minas de Potosí
         listaNiveles.Add(new DatosNivel(4, "La luz de Inti", 2, 60f));

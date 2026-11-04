@@ -617,6 +617,35 @@ public static class HerramientasEscena
         }
     }
 
+    // Muro vertical que separa zonas del nivel, de 1 unidad de ancho. En el Salar
+    // se ven los bloques apilados; en los demás mundos, un rectángulo de color.
+    public static void CrearMuro(string nombre, float posicionX, float alturaInferior, float alturaSuperior, Color colorRespaldo, Transform padre)
+    {
+        float altura = alturaSuperior - alturaInferior;
+        Vector2 centro = new Vector2(posicionX, alturaInferior + altura / 2f);
+        Vector2 tamano = new Vector2(1f, altura);
+
+        if (usarTilesetSal == false || bloquesParedSal.Count == 0)
+        {
+            CrearBloque(nombre, centro, tamano, colorRespaldo, padre);
+            return;
+        }
+
+        GameObject muro = CrearSoloColision(nombre, centro, tamano, padre);
+
+        // Los bloques se ajustan al alto exacto del muro para que no sobresalgan.
+        int cantidadBloques = Mathf.Max(1, Mathf.RoundToInt(altura / 1f));
+        float altoBloque = altura / cantidadBloques;
+
+        for (int indice = 0; indice < cantidadBloques; indice++)
+        {
+            Sprite bloque = bloquesParedSal[indice % bloquesParedSal.Count];
+            Vector2 centroBloque = new Vector2(posicionX, alturaInferior + altoBloque * (indice + 0.5f));
+            Vector2 tamanoBloque = new Vector2(1.1f, altoBloque + solapeEntreBloques);
+            CrearDecoracion("Bloque de muro " + (indice + 1), bloque, centroBloque, tamanoBloque, Color.white, 0, false, muro.transform);
+        }
+    }
+
     // Objeto con collider pero sin dibujo propio: lo que se ve son sus hijos.
     // Tiene escala 1 para que los bloques hijos no se deformen.
     private static GameObject CrearSoloColision(string nombre, Vector2 centro, Vector2 tamano, Transform padre)
@@ -1247,14 +1276,14 @@ public static class HerramientasEscena
             // El cielo se estira para cubrir todo el fondo: al ser un degradado
             // o nubes suaves, no se nota la deformación. El reflejo es la misma
             // imagen de cabeza y un poco más oscura.
-            CrearDecoracion("Cielo", imagenCielo, new Vector2(0f, 3f), new Vector2(36f, 13f), Color.white, -30, false, fondo);
+            CrearDecoracion("Cielo", imagenCielo, new Vector2(0f, 4.75f), new Vector2(36f, 16.5f), Color.white, -30, false, fondo);
             CrearDecoracion("Reflejo del cielo", imagenCielo, new Vector2(0f, -7f), new Vector2(36f, 5f), new Color(0.85f, 0.8f, 0.85f), -30, true, fondo);
         }
         else
         {
             Sprite spriteCieloGenerado = ObtenerSpriteCielo("CieloGenerado", false);
             Sprite spriteReflejoGenerado = ObtenerSpriteCielo("ReflejoCieloGenerado", true);
-            CrearDecoracion("Cielo", spriteCieloGenerado, new Vector2(0f, 3f), new Vector2(36f, 13f), Color.white, -30, false, fondo);
+            CrearDecoracion("Cielo", spriteCieloGenerado, new Vector2(0f, 4.75f), new Vector2(36f, 16.5f), Color.white, -30, false, fondo);
             CrearDecoracion("Reflejo del cielo", spriteReflejoGenerado, new Vector2(0f, -7f), new Vector2(36f, 5f), Color.white, -30, false, fondo);
         }
 
