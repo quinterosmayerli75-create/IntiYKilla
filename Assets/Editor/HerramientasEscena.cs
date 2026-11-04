@@ -160,12 +160,26 @@ public static class HerramientasEscena
 
         imagenBotonInterfaz = CargarImagenArte(carpetaSpritesInterfaz, "Boton");
 
-        bloquesSueloSal = CargarSerieDeBloques("BloqueSalCristales_", 5);
+        // El suelo usa bloques planos: las puntas de cristal se reservan para las
+        // trampas, así el jugador no confunde el piso con algo que lo puede matar.
+        bloquesSueloSal = new List<Sprite>();
+        AgregarBloqueSiExiste(bloquesSueloSal, "BloqueSalPlano");
+        AgregarBloqueSiExiste(bloquesSueloSal, "BloqueSalPequeno");
+
         bloquesParedSal = CargarSerieDeBloques("BloqueSalPared_", 3);
         plataformaSalLarga = CargarImagenArte(carpetaTilesetSal, "PlataformaSalLarga", pixelesPorUnidadTileset);
         plataformaSalPequena = CargarImagenArte(carpetaTilesetSal, "PlataformaSalPequena", pixelesPorUnidadTileset);
 
         InformarImagenes();
+    }
+
+    private static void AgregarBloqueSiExiste(List<Sprite> lista, string nombreArchivo)
+    {
+        Sprite bloque = CargarImagenArte(carpetaTilesetSal, nombreArchivo, pixelesPorUnidadTileset);
+        if (bloque != null)
+        {
+            lista.Add(bloque);
+        }
     }
 
     // Carga prefijo_1, prefijo_2... y devuelve solo los que existen. Si falta
@@ -177,11 +191,7 @@ public static class HerramientasEscena
 
         for (int numero = 1; numero <= cantidad; numero++)
         {
-            Sprite bloque = CargarImagenArte(carpetaTilesetSal, prefijo + numero, pixelesPorUnidadTileset);
-            if (bloque != null)
-            {
-                bloques.Add(bloque);
-            }
+            AgregarBloqueSiExiste(bloques, prefijo + numero);
         }
 
         return bloques;
@@ -489,7 +499,7 @@ public static class HerramientasEscena
         return escenario.transform;
     }
 
-    // Suelo de lado a lado. Con el tileset son bloques con cristales alternados;
+    // Suelo de lado a lado. Con el tileset son bloques planos alternados;
     // sin él, la imagen Suelo.png o el rectángulo de color.
     public static void CrearSuelo(Color colorRespaldo, Transform padre)
     {
@@ -505,7 +515,6 @@ public static class HerramientasEscena
         GameObject suelo = CrearSoloColision("Suelo", centro, tamano, padre);
 
         float bordeDerecho = centro.x + tamano.x / 2f;
-        float parteInferior = centro.y - tamano.y / 2f;
         float posicionX = centro.x - tamano.x / 2f;
         int indiceBloque = 0;
 
@@ -515,9 +524,9 @@ public static class HerramientasEscena
             Sprite bloque = bloquesSueloSal[indiceBloque % bloquesSueloSal.Count];
             Vector2 tamanoBloque = bloque.bounds.size;
 
-            // Todos se apoyan abajo: así la parte plana de cada bloque queda a la
-            // altura del collider y solo las puntas de cristal sobresalen.
-            Vector2 centroBloque = new Vector2(posicionX + tamanoBloque.x / 2f, parteInferior + tamanoBloque.y / 2f);
+            // Se alinean por arriba, justo donde termina el collider, para que
+            // los pies pisen el borde del dibujo aunque los bloques midan distinto.
+            Vector2 centroBloque = new Vector2(posicionX + tamanoBloque.x / 2f, alturaSuelo - tamanoBloque.y / 2f);
             CrearDecoracion("Bloque de sal " + (indiceBloque + 1), bloque, centroBloque, tamanoBloque, Color.white, 0, false, suelo.transform);
 
             posicionX = posicionX + tamanoBloque.x - solapeEntreBloques;
