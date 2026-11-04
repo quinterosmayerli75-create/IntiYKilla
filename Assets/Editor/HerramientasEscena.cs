@@ -85,6 +85,29 @@ public static class HerramientasEscena
     // (Ejemplo: un personaje de 80 x 120 píxeles mide lo mismo que su collider.)
     private const float pixelesPorUnidadArte = 100f;
 
+    // ================= Bloques del Salar (TilesetSal) =================
+    // Son piezas sueltas con borde propio, así que no se repiten con el modo
+    // Tiled: cada bloque es un objeto hijo colocado al lado o encima del anterior.
+    // Miden unos 230 píxeles; con 200 píxeles por unidad quedan de 1 unidad aprox.
+    private const string carpetaTilesetSal = "Assets/_Proyecto/03_Sprites/Niveles/TilesetSal";
+    private const float pixelesPorUnidadTileset = 200f;
+
+    // Cuánto se monta un bloque sobre el siguiente, para que no queden huecos
+    // entre sus esquinas redondeadas.
+    private const float solapeEntreBloques = 0.06f;
+
+    // Las plataformas más angostas que esto usan la pieza pequeña.
+    private const float anchoLimitePiezaPequena = 2.3f;
+
+    private static List<Sprite> bloquesSueloSal = new List<Sprite>();
+    private static List<Sprite> bloquesParedSal = new List<Sprite>();
+    private static Sprite plataformaSalLarga;
+    private static Sprite plataformaSalPequena;
+
+    // El generador lo activa en las escenas del Salar y lo apaga en los demás
+    // mundos, para que la sal no aparezca, por ejemplo, en las Minas de Potosí.
+    public static bool usarTilesetSal = false;
+
     // Listas para avisar en la Console qué imágenes se encontraron y cuáles faltan.
     private static List<string> imagenesEncontradas = new List<string>();
     private static List<string> imagenesFaltantes = new List<string>();
@@ -137,11 +160,40 @@ public static class HerramientasEscena
 
         imagenBotonInterfaz = CargarImagenArte(carpetaSpritesInterfaz, "Boton");
 
+        bloquesSueloSal = CargarSerieDeBloques("BloqueSalCristales_", 5);
+        bloquesParedSal = CargarSerieDeBloques("BloqueSalPared_", 3);
+        plataformaSalLarga = CargarImagenArte(carpetaTilesetSal, "PlataformaSalLarga", pixelesPorUnidadTileset);
+        plataformaSalPequena = CargarImagenArte(carpetaTilesetSal, "PlataformaSalPequena", pixelesPorUnidadTileset);
+
         InformarImagenes();
     }
 
-    // Devuelve el sprite de la imagen, o null si el archivo no existe.
+    // Carga prefijo_1, prefijo_2... y devuelve solo los que existen. Si falta
+    // alguno se alterna entre los demás; si faltan todos, la lista queda vacía
+    // y la pieza usa el cuadrado de respaldo.
+    private static List<Sprite> CargarSerieDeBloques(string prefijo, int cantidad)
+    {
+        List<Sprite> bloques = new List<Sprite>();
+
+        for (int numero = 1; numero <= cantidad; numero++)
+        {
+            Sprite bloque = CargarImagenArte(carpetaTilesetSal, prefijo + numero, pixelesPorUnidadTileset);
+            if (bloque != null)
+            {
+                bloques.Add(bloque);
+            }
+        }
+
+        return bloques;
+    }
+
     private static Sprite CargarImagenArte(string carpeta, string nombreArchivo)
+    {
+        return CargarImagenArte(carpeta, nombreArchivo, pixelesPorUnidadArte);
+    }
+
+    // Devuelve el sprite de la imagen, o null si el archivo no existe.
+    private static Sprite CargarImagenArte(string carpeta, string nombreArchivo, float pixelesPorUnidad)
     {
         string ruta = carpeta + "/" + nombreArchivo + ".png";
         if (File.Exists(ruta) == false)
@@ -150,7 +202,7 @@ public static class HerramientasEscena
             return null;
         }
 
-        ConfigurarImportacionArte(ruta);
+        ConfigurarImportacionArte(ruta, pixelesPorUnidad);
 
         Sprite imagen = AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
         if (imagen == null)
@@ -165,7 +217,7 @@ public static class HerramientasEscena
 
     // Deja la imagen lista para usarse como sprite de arte (sin pérdida de calidad).
     // Solo reimporta si algo cambió, para que generar escenas siga siendo rápido.
-    private static void ConfigurarImportacionArte(string ruta)
+    private static void ConfigurarImportacionArte(string ruta, float pixelesPorUnidad)
     {
         TextureImporter importador = AssetImporter.GetAtPath(ruta) as TextureImporter;
         if (importador == null)
@@ -187,9 +239,9 @@ public static class HerramientasEscena
             importador.spriteImportMode = SpriteImportMode.Single;
             hayCambios = true;
         }
-        if (importador.spritePixelsPerUnit != pixelesPorUnidadArte)
+        if (importador.spritePixelsPerUnit != pixelesPorUnidad)
         {
-            importador.spritePixelsPerUnit = pixelesPorUnidadArte;
+            importador.spritePixelsPerUnit = pixelesPorUnidad;
             hayCambios = true;
         }
         if (importador.filterMode != FilterMode.Bilinear)
@@ -430,15 +482,140 @@ public static class HerramientasEscena
     public static Transform CrearSueloYParedes(Color colorSuelo)
     {
         GameObject escenario = new GameObject("Escenario");
-        CrearBloque("Suelo", new Vector2(0f, alturaSuelo - 0.5f), new Vector2(32f, 1f), colorSuelo, imagenSuelo, escenario.transform);
-
-        GameObject paredIzquierda = CrearBloque("Pared invisible izquierda", new Vector2(-15.5f, 3f), new Vector2(1f, 16f), colorSuelo, escenario.transform);
-        paredIzquierda.GetComponent<SpriteRenderer>().enabled = false;
-
-        GameObject paredDerecha = CrearBloque("Pared invisible derecha", new Vector2(15.5f, 3f), new Vector2(1f, 16f), colorSuelo, escenario.transform);
-        paredDerecha.GetComponent<SpriteRenderer>().enabled = false;
+        CrearSuelo(colorSuelo, escenario.transform);
+        CrearParedLateral("Pared izquierda", -15.5f, colorSuelo, escenario.transform);
+        CrearParedLateral("Pared derecha", 15.5f, colorSuelo, escenario.transform);
 
         return escenario.transform;
+    }
+
+    // Suelo de lado a lado. Con el tileset son bloques con cristales alternados;
+    // sin él, la imagen Suelo.png o el rectángulo de color.
+    public static void CrearSuelo(Color colorRespaldo, Transform padre)
+    {
+        Vector2 centro = new Vector2(0f, alturaSuelo - 0.5f);
+        Vector2 tamano = new Vector2(32f, 1f);
+
+        if (usarTilesetSal == false || bloquesSueloSal.Count == 0)
+        {
+            CrearBloque("Suelo", centro, tamano, colorRespaldo, imagenSuelo, padre);
+            return;
+        }
+
+        GameObject suelo = CrearSoloColision("Suelo", centro, tamano, padre);
+
+        float bordeDerecho = centro.x + tamano.x / 2f;
+        float parteInferior = centro.y - tamano.y / 2f;
+        float posicionX = centro.x - tamano.x / 2f;
+        int indiceBloque = 0;
+
+        while (posicionX < bordeDerecho)
+        {
+            // Se alternan las imágenes para que el suelo no se vea repetido.
+            Sprite bloque = bloquesSueloSal[indiceBloque % bloquesSueloSal.Count];
+            Vector2 tamanoBloque = bloque.bounds.size;
+
+            // Todos se apoyan abajo: así la parte plana de cada bloque queda a la
+            // altura del collider y solo las puntas de cristal sobresalen.
+            Vector2 centroBloque = new Vector2(posicionX + tamanoBloque.x / 2f, parteInferior + tamanoBloque.y / 2f);
+            CrearDecoracion("Bloque de sal " + (indiceBloque + 1), bloque, centroBloque, tamanoBloque, Color.white, 0, false, suelo.transform);
+
+            posicionX = posicionX + tamanoBloque.x - solapeEntreBloques;
+            indiceBloque = indiceBloque + 1;
+        }
+    }
+
+    // Pared que impide salirse del nivel. Con el tileset se ven los bloques
+    // apilados; sin él es invisible, como antes. El collider mide siempre 1 x 16.
+    private static void CrearParedLateral(string nombre, float posicionX, Color colorRespaldo, Transform padre)
+    {
+        Vector2 centro = new Vector2(posicionX, 3f);
+        Vector2 tamano = new Vector2(1f, 16f);
+
+        if (usarTilesetSal == false || bloquesParedSal.Count == 0)
+        {
+            GameObject paredInvisible = CrearBloque(nombre + " invisible", centro, tamano, colorRespaldo, padre);
+            paredInvisible.GetComponent<SpriteRenderer>().enabled = false;
+            return;
+        }
+
+        GameObject pared = CrearSoloColision(nombre, centro, tamano, padre);
+
+        // La pila empieza sobre el suelo y llega hasta el borde superior de la
+        // cámara, para que nunca se vea el final de la pared.
+        float limiteSuperior = alturaSuelo - 1f + zoomMaximoCamara * 2f;
+        float posicionY = alturaSuelo;
+        int indiceBloque = 0;
+
+        while (posicionY < limiteSuperior)
+        {
+            Sprite bloque = bloquesParedSal[indiceBloque % bloquesParedSal.Count];
+            Vector2 tamanoBloque = bloque.bounds.size;
+
+            Vector2 centroBloque = new Vector2(posicionX, posicionY + tamanoBloque.y / 2f);
+            CrearDecoracion("Bloque de pared " + (indiceBloque + 1), bloque, centroBloque, tamanoBloque, Color.white, 0, false, pared.transform);
+
+            posicionY = posicionY + tamanoBloque.y - solapeEntreBloques;
+            indiceBloque = indiceBloque + 1;
+        }
+    }
+
+    // Objeto con collider pero sin dibujo propio: lo que se ve son sus hijos.
+    // Tiene escala 1 para que los bloques hijos no se deformen.
+    private static GameObject CrearSoloColision(string nombre, Vector2 centro, Vector2 tamano, Transform padre)
+    {
+        GameObject objeto = new GameObject(nombre);
+        objeto.transform.SetParent(padre);
+        objeto.transform.position = new Vector3(centro.x, centro.y, 0f);
+
+        BoxCollider2D colisionador = objeto.AddComponent<BoxCollider2D>();
+        colisionador.size = tamano;
+        return objeto;
+    }
+
+    // ¿Se pueden armar plataformas con el tileset en esta escena?
+    private static bool HayPlataformasDeSal()
+    {
+        return usarTilesetSal == true && (plataformaSalLarga != null || plataformaSalPequena != null);
+    }
+
+    // Plataforma armada con piezas del tileset, una al lado de la otra.
+    private static GameObject CrearPlataformaDeSal(string nombre, Vector2 centro, Vector2 tamano, Transform padre)
+    {
+        GameObject plataforma = CrearSoloColision(nombre, centro, tamano, padre);
+
+        // Elige la pieza según el ancho; si falta una, usa la otra.
+        Sprite pieza = plataformaSalLarga;
+        if (pieza == null || (tamano.x < anchoLimitePiezaPequena && plataformaSalPequena != null))
+        {
+            pieza = plataformaSalPequena;
+        }
+
+        Vector2 tamanoPieza = pieza.bounds.size;
+        float pasoPieza = tamanoPieza.x - solapeEntreBloques;
+
+        // Cuántas piezas caben, y un ajuste leve del ancho para llenar justo la
+        // plataforma: así el dibujo coincide con el collider de lado a lado.
+        int cantidadPiezas = Mathf.Max(1, Mathf.RoundToInt(tamano.x / pasoPieza));
+        float anchoSinAjustar = cantidadPiezas * tamanoPieza.x - (cantidadPiezas - 1) * solapeEntreBloques;
+        float ajusteAncho = tamano.x / anchoSinAjustar;
+
+        float anchoFinal = tamanoPieza.x * ajusteAncho;
+        float pasoFinal = pasoPieza * ajusteAncho;
+        float inicioX = centro.x - tamano.x / 2f + anchoFinal / 2f;
+
+        // La imagen es más alta que el collider: se alinea por arriba para que
+        // los pies toquen el borde del dibujo, y lo que sobra cuelga hacia abajo.
+        float centroY = centro.y + tamano.y / 2f - tamanoPieza.y / 2f;
+
+        for (int indice = 0; indice < cantidadPiezas; indice++)
+        {
+            Vector2 centroPieza = new Vector2(inicioX + indice * pasoFinal, centroY);
+            Vector2 tamanoFinal = new Vector2(anchoFinal, tamanoPieza.y);
+            CrearDecoracion("Pieza " + (indice + 1), pieza, centroPieza, tamanoFinal, Color.white, 0, false, plataforma.transform);
+        }
+
+        return plataforma;
     }
 
     public static Transform CrearGrupo(string nombre)
@@ -488,6 +665,11 @@ public static class HerramientasEscena
     // Plataforma flotante normal (los bloques de sal de cada nivel).
     public static GameObject CrearPlataforma(string nombre, Vector2 posicion, Vector2 tamano, Color colorRespaldo, Transform padre)
     {
+        if (HayPlataformasDeSal() == true)
+        {
+            return CrearPlataformaDeSal(nombre, posicion, tamano, padre);
+        }
+
         return CrearBloque(nombre, posicion, tamano, colorRespaldo, imagenPlataforma, padre);
     }
 
@@ -786,13 +968,18 @@ public static class HerramientasEscena
 
     public static void CrearPlataformaQuebradiza(string nombre, Vector2 posicion, Vector2 tamano, Transform padre)
     {
-        GameObject plataforma = CrearBloque(nombre, posicion, tamano, colorSalQuebradiza, imagenPlataforma, padre);
+        GameObject plataforma = CrearPlataforma(nombre, posicion, tamano, colorSalQuebradiza, padre);
 
         // Usa la misma imagen que las plataformas normales, pero un poco rojiza
-        // para que los jugadores sepan que se va a romper.
-        if (imagenPlataforma != null)
+        // para que los jugadores sepan que se va a romper. La forma de respaldo
+        // ya tiene su propio color, así que no se toca.
+        if (HayPlataformasDeSal() == true || imagenPlataforma != null)
         {
-            plataforma.GetComponent<SpriteRenderer>().color = new Color(1f, 0.78f, 0.72f);
+            SpriteRenderer[] dibujos = plataforma.GetComponentsInChildren<SpriteRenderer>();
+            foreach (SpriteRenderer dibujo in dibujos)
+            {
+                dibujo.color = new Color(1f, 0.78f, 0.72f);
+            }
         }
 
         plataforma.AddComponent<PlataformaQuebradiza>();
@@ -816,7 +1003,7 @@ public static class HerramientasEscena
     public static PlataformaMovil CrearPlataformaMovil(string nombre, Vector2 posicion, Vector2 tamano, Vector2 desplazamiento, float velocidad, bool moverseDesdeElInicio, Transform padre)
     {
         Color colorMadera = new Color(0.62f, 0.45f, 0.30f);
-        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorMadera, imagenPlataforma, padre);
+        GameObject bloque = CrearPlataforma(nombre, posicion, tamano, colorMadera, padre);
 
         Rigidbody2D cuerpo = bloque.AddComponent<Rigidbody2D>();
         cuerpo.bodyType = RigidbodyType2D.Kinematic;

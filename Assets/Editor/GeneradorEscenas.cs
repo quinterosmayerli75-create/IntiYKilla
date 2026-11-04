@@ -154,6 +154,7 @@ public static class GeneradorEscenas
 
     private static string GenerarMenuPrincipal()
     {
+        HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
 
         HerramientasEscena.CrearCamara(colorCieloFondo);
@@ -162,7 +163,7 @@ public static class GeneradorEscenas
 
         // Suelo de sal y los dos protagonistas como decoración.
         Transform decoracion = HerramientasEscena.CrearGrupo("Decoracion");
-        HerramientasEscena.CrearBloque("Suelo de sal", new Vector2(0f, HerramientasEscena.alturaSuelo - 0.5f), new Vector2(32f, 1f), HerramientasEscena.colorSal, HerramientasEscena.imagenSuelo, decoracion);
+        HerramientasEscena.CrearSuelo(HerramientasEscena.colorSal, decoracion);
         HerramientasEscena.CrearFiguraPersonaje("Inti", HerramientasEscena.imagenInti, ColoresElemento.colorFuego, new Vector2(-1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
         HerramientasEscena.CrearFiguraPersonaje("Killa", HerramientasEscena.imagenKilla, ColoresElemento.colorAgua, new Vector2(1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
 
@@ -266,6 +267,7 @@ public static class GeneradorEscenas
 
     private static string GenerarNivel01()
     {
+        HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
@@ -314,6 +316,7 @@ public static class GeneradorEscenas
 
     private static string GenerarNivel02()
     {
+        HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
@@ -372,6 +375,7 @@ public static class GeneradorEscenas
 
     private static string GenerarNivel03()
     {
+        HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 
@@ -430,6 +434,7 @@ public static class GeneradorEscenas
 
     private static string GenerarNivel04()
     {
+        HerramientasEscena.usarTilesetSal = false;
         Scene escena = CrearEscenaVacia();
         float suelo = HerramientasEscena.alturaSuelo;
 

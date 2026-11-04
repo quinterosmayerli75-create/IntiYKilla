@@ -20,14 +20,23 @@ public class PlataformaQuebradiza : MonoBehaviour
 
     private Vector3 posicionOriginal;
     private Collider2D colisionador;
-    private SpriteRenderer dibujo;
+    // Pueden ser varios: la plataforma puede estar armada con piezas hijas.
+    private SpriteRenderer[] dibujos;
     private bool estaRompiendose = false;
 
     private void Awake()
     {
         posicionOriginal = transform.position;
         colisionador = GetComponent<Collider2D>();
-        dibujo = GetComponent<SpriteRenderer>();
+        dibujos = GetComponentsInChildren<SpriteRenderer>();
+    }
+
+    private void CambiarVisibilidad(bool esVisible)
+    {
+        foreach (SpriteRenderer dibujo in dibujos)
+        {
+            dibujo.enabled = esVisible;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D choque)
@@ -71,19 +80,13 @@ public class PlataformaQuebradiza : MonoBehaviour
         // 2) Desaparece.
         transform.position = posicionOriginal;
         colisionador.enabled = false;
-        if (dibujo != null)
-        {
-            dibujo.enabled = false;
-        }
+        CambiarVisibilidad(false);
 
         // 3) Espera y vuelve a aparecer.
         yield return new WaitForSeconds(tiempoParaReaparecer);
 
         colisionador.enabled = true;
-        if (dibujo != null)
-        {
-            dibujo.enabled = true;
-        }
+        CambiarVisibilidad(true);
 
         estaRompiendose = false;
     }
