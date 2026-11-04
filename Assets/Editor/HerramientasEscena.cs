@@ -730,8 +730,14 @@ public static class HerramientasEscena
         return CrearBloque(nombre, posicion, tamano, colorRespaldo, imagenPlataforma, padre);
     }
 
-    // Charco sobre el suelo: centroX y ancho, siempre a la altura del suelo.
+    // Charco sobre el suelo: centroX y ancho, a la altura del suelo.
     public static void CrearCharco(string nombre, TipoZona tipo, float centroX, float ancho, Transform padre)
+    {
+        CrearCharco(nombre, tipo, centroX, ancho, alturaSuelo, padre);
+    }
+
+    // Charco sobre cualquier piso: alturaPiso es donde los pies tocan la plataforma.
+    public static void CrearCharco(string nombre, TipoZona tipo, float centroX, float ancho, float alturaPiso, Transform padre)
     {
         Color color = colorLava;
         Sprite imagen = imagenLava;
@@ -746,7 +752,7 @@ public static class HerramientasEscena
             imagen = imagenVeneno;
         }
 
-        Vector2 posicion = new Vector2(centroX, alturaSuelo + 0.15f);
+        Vector2 posicion = new Vector2(centroX, alturaPiso + 0.15f);
         GameObject charco = CrearBloque(nombre, posicion, new Vector2(ancho, 0.3f), color, imagen, padre);
         charco.GetComponent<SpriteRenderer>().sortingOrder = 1;
         charco.GetComponent<BoxCollider2D>().isTrigger = true;
@@ -984,9 +990,15 @@ public static class HerramientasEscena
     // Púas de sal centradas en centroX, sobre el suelo. Matan a los dos.
     public static void CrearCristalesDeSal(string nombre, float centroX, float ancho, Transform padre)
     {
+        CrearCristalesDeSal(nombre, centroX, ancho, alturaSuelo, padre);
+    }
+
+    // Púas de sal sobre cualquier piso: alturaPiso es donde se apoyan.
+    public static void CrearCristalesDeSal(string nombre, float centroX, float ancho, float alturaPiso, Transform padre)
+    {
         GameObject zona = new GameObject(nombre);
         zona.transform.SetParent(padre);
-        zona.transform.position = new Vector3(centroX, alturaSuelo + 0.25f, 0f);
+        zona.transform.position = new Vector3(centroX, alturaPiso + 0.25f, 0f);
 
         BoxCollider2D colisionador = zona.AddComponent<BoxCollider2D>();
         colisionador.isTrigger = true;
@@ -1002,7 +1014,7 @@ public static class HerramientasEscena
             Vector2 tamanoTira = new Vector2(ancho, 0.6f);
             GameObject tira = new GameObject("Cristales");
             tira.transform.SetParent(zona.transform);
-            tira.transform.position = new Vector3(centroX, alturaSuelo + 0.3f, 0f);
+            tira.transform.position = new Vector3(centroX, alturaPiso + 0.3f, 0f);
 
             SpriteRenderer dibujoTira = tira.AddComponent<SpriteRenderer>();
             dibujoTira.sortingOrder = 3;
@@ -1018,7 +1030,7 @@ public static class HerramientasEscena
         for (int indice = 0; indice < cantidadCristales; indice++)
         {
             float posicionX = centroX - ancho / 2f + anchoCristal / 2f + indice * anchoCristal;
-            Vector2 centroCristal = new Vector2(posicionX, alturaSuelo + 0.3f);
+            Vector2 centroCristal = new Vector2(posicionX, alturaPiso + 0.3f);
             CrearDecoracion("Cristal " + (indice + 1), spriteCristal, centroCristal, new Vector2(anchoCristal, 0.6f), colorCristal, 3, false, zona.transform);
         }
     }

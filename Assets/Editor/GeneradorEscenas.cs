@@ -264,6 +264,10 @@ public static class GeneradorEscenas
 
     // ================= Nivel 1: Primeros pasos =================
     // Enseña: moverse, saltar, gemas, lava/agua, púas y un bloque que se rompe.
+    // No es un pasillo: son tres pisos que se suben en zigzag. Empiezan juntos en
+    // el centro y cada uno se va por su lado, porque el camino del otro lo mata.
+    // Se reencuentran en el piso central y ahí se CRUZAN: la puerta de cada uno
+    // está arriba, en el lado contrario al que subió.
 
     private static string GenerarNivel01()
     {
@@ -273,35 +277,55 @@ public static class GeneradorEscenas
 
         Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorCieloFondo);
         HerramientasEscena.CrearLuzGlobal(new Color(1f, 0.93f, 0.86f), 1f);
-        HerramientasEscena.CrearGestorNivel("Lleguen cada uno a su puerta. Inti no toca el agua y Killa no toca la lava.");
-        HerramientasEscena.CrearFondoUyuni(5f);
+        HerramientasEscena.CrearGestorNivel("Suban hasta su puerta. Inti va por la izquierda y Killa por la derecha, y arriba se cruzan.");
+        HerramientasEscena.CrearFondoUyuni(0f);
+
+        // Altura de cada piso: separados 3.25 unidades, un poco menos que el salto (3.8).
+        float pisoUno = -0.25f;
+        float pisoDos = 3f;
+        float pisoTres = 6.25f;
+        float mitadGrosor = 0.25f;
+        float grosor = 0.5f;
 
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSal);
-        HerramientasEscena.CrearPlataforma("Bloque de sal A", new Vector2(-6.5f, -1.3f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearPlataformaQuebradiza("Bloque que se rompe", new Vector2(-2f, 0.6f), new Vector2(2.5f, 0.5f), escenario);
-        HerramientasEscena.CrearPlataforma("Bloque de sal B", new Vector2(3.5f, 1.4f), new Vector2(4f, 0.5f), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearPlataforma("Bloque de sal C", new Vector2(9f, -1.2f), new Vector2(3f, 0.5f), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 1 izquierda", new Vector2(-8f, pisoUno - mitadGrosor), new Vector2(6f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 1 derecha", new Vector2(8f, pisoUno - mitadGrosor), new Vector2(6f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 2 central", new Vector2(0f, pisoDos - mitadGrosor), new Vector2(6f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3 izquierda", new Vector2(-9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3 derecha", new Vector2(9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
+
+        // Premio arriesgado: dos gemas sobre un bloque que se rompe, justo encima
+        // del veneno. Quien se suba tiene que saltar enseguida o cae al charco.
+        HerramientasEscena.CrearPlataformaQuebradiza("Bloque que se rompe", new Vector2(0f, pisoTres - mitadGrosor), new Vector2(2f, grosor), escenario);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
-        HerramientasEscena.CrearCharco("Lava", TipoZona.Lava, -8.5f, 2.5f, trampas);
-        HerramientasEscena.CrearCharco("Agua", TipoZona.Agua, -4f, 2.5f, trampas);
-        HerramientasEscena.CrearCristalesDeSal("Cristales de sal", 0.5f, 2f, trampas);
-        HerramientasEscena.CrearCharco("Veneno", TipoZona.Veneno, 4f, 3f, trampas);
+        // Planta baja: el lado izquierdo es de Inti y el derecho es de Killa.
+        HerramientasEscena.CrearCharco("Lava de la entrada", TipoZona.Lava, -5.5f, 5f, trampas);
+        HerramientasEscena.CrearCharco("Agua de la entrada", TipoZona.Agua, 5.5f, 5f, trampas);
+        // Piso 1: cada uno tiene que saltar lo que al otro no le hace daño.
+        HerramientasEscena.CrearCharco("Agua del piso 1", TipoZona.Agua, -8f, 2f, pisoUno, trampas);
+        HerramientasEscena.CrearCharco("Lava del piso 1", TipoZona.Lava, 8f, 2f, pisoUno, trampas);
+        // Piso 2: lugar del cruce, con veneno que mata a los dos.
+        HerramientasEscena.CrearCharco("Veneno del cruce", TipoZona.Veneno, 0f, 2f, pisoDos, trampas);
+        // Piso 3: la última prueba antes de cada puerta.
+        HerramientasEscena.CrearCristalesDeSal("Cristales izquierda", -8.5f, 2f, pisoTres, trampas);
+        HerramientasEscena.CrearCristalesDeSal("Cristales derecha", 8.5f, 2f, pisoTres, trampas);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
-        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-8.5f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(-4f, -2.4f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(0.5f, -1.6f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-2f, 1.6f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(3.5f, 2.6f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(9f, -0.2f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-5.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(5.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-0.6f, 7.2f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(0.6f, 7.2f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(8.5f, 8.6f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(-8.5f, 8.6f), gemas);
 
+        // Cada puerta está en el lado contrario al que subió cada personaje.
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
-        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(12.2f, suelo), puertas);
-        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(14.2f, suelo), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(11.5f, pisoTres), puertas);
+        HerramientasEscena.CrearPuertaSalida("Puerta agua", TipoElemento.Agua, new Vector2(-11.5f, pisoTres), puertas);
 
-        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
-        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-12f, suelo));
+        GameObject inti = HerramientasEscena.CrearInti(new Vector2(-1.5f, suelo));
+        GameObject killa = HerramientasEscena.CrearKilla(new Vector2(1.5f, suelo));
 
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
