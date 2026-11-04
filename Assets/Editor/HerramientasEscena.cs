@@ -85,6 +85,15 @@ public static class HerramientasEscena
     // (Ejemplo: un personaje de 80 x 120 píxeles mide lo mismo que su collider.)
     private const float pixelesPorUnidadArte = 100f;
 
+    // Tamaño de los personajes, en unidades. El collider no cambia para que los
+    // saltos de los niveles sigan funcionando; el dibujo es más alto para que se
+    // aprecien los detalles (la cabeza sobresale del collider hacia arriba).
+    private const float anchoColisionPersonaje = 0.8f;
+    private const float altoColisionPersonaje = 1.2f;
+    private const float altoDibujoPersonaje = 1.6f;
+    // Ancho máximo del dibujo: holgado, porque el que manda es el alto.
+    private const float anchoMaximoDibujoPersonaje = 1.2f;
+
     // ================= Bloques del Salar (TilesetSal) =================
     // Son piezas sueltas con borde propio, así que no se repiten con el modo
     // Tiled: cada bloque es un objeto hijo colocado al lado o encima del anterior.
@@ -142,8 +151,8 @@ public static class HerramientasEscena
         imagenCordillera = CargarImagenArte(carpetaSpritesUyuni, "Cordillera");
         imagenMonticulo = CargarImagenArte(carpetaSpritesUyuni, "Monticulo");
 
-        imagenInti = CargarImagenArte(carpetaSpritesPersonajes, "Inti");
-        imagenKilla = CargarImagenArte(carpetaSpritesPersonajes, "Killa");
+        imagenInti = CargarImagenPersonaje("Inti");
+        imagenKilla = CargarImagenPersonaje("Killa");
 
         imagenSuelo = CargarImagenArte(carpetaSpritesNiveles, "Suelo");
         imagenPlataforma = CargarImagenArte(carpetaSpritesNiveles, "Plataforma");
@@ -195,6 +204,38 @@ public static class HerramientasEscena
         }
 
         return bloques;
+    }
+
+    // El dibujo mide más que el collider, pero el jugador sigue con su centro en
+    // el centro del collider. Para que los pies no se hundan en el suelo, el pivote
+    // del sprite se coloca a la altura de ese centro: lo que sobra crece hacia arriba.
+    private static Sprite CargarImagenPersonaje(string nombreArchivo)
+    {
+        Sprite imagen = CargarImagenArte(carpetaSpritesPersonajes, nombreArchivo);
+        if (imagen == null)
+        {
+            return null;
+        }
+
+        string ruta = carpetaSpritesPersonajes + "/" + nombreArchivo + ".png";
+        float alturaPivote = (altoColisionPersonaje / 2f) / altoDibujoPersonaje;
+        Vector2 pivote = new Vector2(0.5f, alturaPivote);
+
+        TextureImporter importador = AssetImporter.GetAtPath(ruta) as TextureImporter;
+        TextureImporterSettings ajustes = new TextureImporterSettings();
+        importador.ReadTextureSettings(ajustes);
+
+        bool pivoteCambio = ajustes.spriteAlignment != (int)SpriteAlignment.Custom || ajustes.spritePivot != pivote;
+        if (pivoteCambio == true)
+        {
+            ajustes.spriteAlignment = (int)SpriteAlignment.Custom;
+            ajustes.spritePivot = pivote;
+            importador.SetTextureSettings(ajustes);
+            importador.SaveAndReimport();
+            imagen = AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
+        }
+
+        return imagen;
     }
 
     private static Sprite CargarImagenArte(string carpeta, string nombreArchivo)
@@ -776,8 +817,8 @@ public static class HerramientasEscena
     // imagenPersonaje puede ser null: entonces se dibuja el rectángulo de color.
     public static GameObject CrearJugador(string nombre, TipoElemento elemento, Key izquierda, Key derecha, Key saltar, Key habilidad, Vector2 posicionSuelo, Color colorMarca, Sprite imagenPersonaje)
     {
-        float anchoJugador = 0.8f;
-        float altoJugador = 1.2f;
+        float anchoJugador = anchoColisionPersonaje;
+        float altoJugador = altoColisionPersonaje;
         Vector2 tamanoJugador = new Vector2(anchoJugador, altoJugador);
 
         GameObject jugador = new GameObject(nombre);
@@ -790,7 +831,7 @@ public static class HerramientasEscena
         if (imagenPersonaje != null)
         {
             // Con imagen propia se ve con sus colores reales (sin teñir).
-            AplicarImagenAjustada(jugador, imagenPersonaje, tamanoJugador);
+            AplicarImagenAjustada(jugador, imagenPersonaje, new Vector2(anchoMaximoDibujoPersonaje, altoDibujoPersonaje));
             dibujo.color = Color.white;
         }
         else
@@ -822,6 +863,11 @@ public static class HerramientasEscena
         // marca mida 0.35 unidades y flote igual, tenga imagen o no.
         Vector3 escalaJugador = jugador.transform.localScale;
         float alturaMarcaEnMundo = altoJugador * 0.72f;
+        if (imagenPersonaje != null)
+        {
+            // Con imagen, la marca flota por encima de la cabeza del dibujo.
+            alturaMarcaEnMundo = altoDibujoPersonaje - altoJugador / 2f + 0.2f;
+        }
         float tamanoMarcaEnMundo = 0.35f;
         marca.transform.localPosition = new Vector3(0f, alturaMarcaEnMundo / escalaJugador.y, 0f);
         marca.transform.localScale = new Vector3(tamanoMarcaEnMundo / escalaJugador.x, tamanoMarcaEnMundo / escalaJugador.y, 1f);
@@ -931,7 +977,8 @@ public static class HerramientasEscena
         Vector2 tamanoJugador = new Vector2(0.8f, 1.2f);
         if (imagenPersonaje != null)
         {
-            Vector2 tamanoSinDeformar = imagenPersonaje.bounds.size * CalcularEscalaParaCaber(imagenPersonaje, tamanoJugador);
+            Vector2 cajaDibujo = new Vector2(anchoMaximoDibujoPersonaje, altoDibujoPersonaje);
+            Vector2 tamanoSinDeformar = imagenPersonaje.bounds.size * CalcularEscalaParaCaber(imagenPersonaje, cajaDibujo);
             CrearDecoracion(nombre, imagenPersonaje, centro, tamanoSinDeformar, Color.white, 10, false, padre);
         }
         else
