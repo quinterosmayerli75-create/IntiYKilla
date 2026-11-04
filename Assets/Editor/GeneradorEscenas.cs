@@ -395,10 +395,12 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearCharco("Rio de agua", TipoZona.Agua, 8.25f, 7.5f, trampas);
 
         // Altar 1: una placa antes del río de lava y otra en la isla.
-        // Altar 2: una placa en la isla y otra después del río de agua.
+        // Altar 2: una placa en la isla y otra ENCIMA de la repisa de salida. Si
+        // estuviera en el suelo, el personaje quedaría con fuego debajo de la repisa
+        // y no podría salir sin tocar el agua, y el nivel no se podría terminar.
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-10.5f, suelo), new Vector2(0.3f, suelo), colorAltarUno, altares);
-        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(3.2f, suelo), new Vector2(13.5f, suelo), colorAltarDos, altares);
+        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(3.2f, suelo), new Vector2(13.5f, -0.75f), colorAltarDos, altares);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-4.75f, -2.4f), gemas);
