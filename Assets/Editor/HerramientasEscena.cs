@@ -246,6 +246,13 @@ public static class HerramientasEscena
         if (importador.textureType != TextureImporterType.Sprite)
         {
             importador.textureType = TextureImporterType.Sprite;
+            hayCambios = true;
+        }
+        // Cada archivo es un solo dibujo. En modo Multiple, Unity cortaría una
+        // imagen con partes separadas (como una fila de cristales) y solo se
+        // vería la primera parte.
+        if (importador.spriteImportMode != SpriteImportMode.Single)
+        {
             importador.spriteImportMode = SpriteImportMode.Single;
             hayCambios = true;
         }
