@@ -9,19 +9,22 @@ EditorBuildSettings:
     path: Assets/_Proyecto/00_Scenes/MenuPrincipal.unity
     guid: f824e855efb4eff448419011436bf182
   - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/SeleccionMundo.unity
+    guid: 4d27265d504830647bb4a34779ccf232
+  - enabled: 1
     path: Assets/_Proyecto/00_Scenes/SeleccionNivel.unity
     guid: e9a127e0f8d21d5468904680aa1d76b7
   - enabled: 1
-    path: Assets/_Proyecto/00_Scenes/Niveles/Nivel01.unity
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel1.unity
     guid: df7250172545637478a53d0da7fa3d59
   - enabled: 1
-    path: Assets/_Proyecto/00_Scenes/Niveles/Nivel02.unity
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel2.unity
     guid: 4863529bf3b0b2740bbabba378ff7506
   - enabled: 1
-    path: Assets/_Proyecto/00_Scenes/Niveles/Nivel03.unity
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel3.unity
     guid: 6d664b76f292e4443b14dfffa9b8680e
   - enabled: 1
-    path: Assets/_Proyecto/00_Scenes/Niveles/Nivel04.unity
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo2_Nivel1.unity
     guid: c96d9f68a8be96b4298166c47ca36103
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

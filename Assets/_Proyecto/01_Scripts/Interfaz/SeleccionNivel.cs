@@ -1,17 +1,36 @@
 // =====================================================================
 // SeleccionNivel.cs
 // Proyecto: Inti y Killa
-// Descripción: Pantalla del mapa de niveles.
-//              - Esc: volver al menú principal.
-//              - F1: desbloquear todos los niveles (modo prueba / defensa).
+// Descripción: Pantalla con los 5 niveles del mundo elegido. Es una sola
+//              escena para todos los mundos: al abrirse lee cuál se eligió
+//              y cada botón muestra el nivel que le corresponde.
+//              - Esc o "Volver": regresar a la pantalla de mundos.
+//              - F1: desbloquear todo (modo prueba / defensa).
 // =====================================================================
 
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SeleccionNivel : MonoBehaviour
 {
+    [SerializeField] private Text textoTitulo;
+
+    public void Configurar(Text nuevoTextoTitulo)
+    {
+        textoTitulo = nuevoTextoTitulo;
+    }
+
+    private void Start()
+    {
+        if (textoTitulo != null)
+        {
+            int numeroMundo = GestorProgreso.MundoElegido;
+            textoTitulo.text = "Mundo " + numeroMundo + ": " + DatosJuego.ObtenerNombreMundo(numeroMundo);
+        }
+    }
+
     private void Update()
     {
         Keyboard teclado = Keyboard.current;
@@ -22,7 +41,7 @@ public class SeleccionNivel : MonoBehaviour
 
         if (teclado.escapeKey.wasPressedThisFrame == true)
         {
-            VolverAlMenu();
+            VolverAMundos();
         }
 
         if (teclado.f1Key.wasPressedThisFrame == true)
@@ -32,14 +51,14 @@ public class SeleccionNivel : MonoBehaviour
         }
     }
 
-    public void VolverAlMenu()
+    public void VolverAMundos()
     {
-        SceneManager.LoadScene(DatosJuego.escenaMenuPrincipal);
+        SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
     }
 
     private void RefrescarBotones()
     {
-        BotonNivel[] botones = FindObjectsByType<BotonNivel>(FindObjectsSortMode.None);
+        BotonNivel[] botones = FindObjectsByType<BotonNivel>();
         foreach (BotonNivel boton in botones)
         {
             boton.ActualizarEstado();

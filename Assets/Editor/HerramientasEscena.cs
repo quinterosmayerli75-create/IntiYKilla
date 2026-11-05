@@ -1486,6 +1486,7 @@ public static class HerramientasEscena
         List<EditorBuildSettingsScene> listaEscenas = new List<EditorBuildSettingsScene>();
 
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaMenuPrincipal + ".unity");
+        AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionMundo + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionNivel + ".unity");
 
         foreach (DatosNivel nivel in DatosJuego.ObtenerTodosLosNiveles())

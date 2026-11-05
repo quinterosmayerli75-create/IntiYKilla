@@ -3,72 +3,159 @@
 // Proyecto: Inti y Killa
 // Descripción: Guarda el avance del jugador con PlayerPrefs (una pequeña
 //              "libreta" que Unity guarda en la computadora o navegador):
-//              - Hasta qué nivel está desbloqueado.
+//              - Hasta qué mundo está desbloqueado.
+//              - Hasta qué nivel está desbloqueado en cada mundo.
 //              - Cuántas estrellas se ganaron en cada nivel (la mejor marca).
+// Reglas:      - Al inicio solo está abierto el Mundo 1, Nivel 1.
+//              - Ganar un nivel desbloquea el siguiente de su mundo.
+//              - Un mundo se abre SOLO al ganar el nivel 5 del anterior.
 // =====================================================================
 
 using UnityEngine;
 
 public static class GestorProgreso
 {
-    private const string claveNivelDesbloqueado = "IntiYKilla_NivelDesbloqueado";
+    private const string claveMundosDesbloqueados = "IntiYKilla_MundosDesbloqueados";
+    private const string prefijoNivelesDesbloqueados = "IntiYKilla_NivelesDesbloqueados_Mundo";
     private const string prefijoEstrellas = "IntiYKilla_Estrellas_";
 
-    public static int ObtenerNivelDesbloqueado()
+    // Mundo que se está viendo en la pantalla SeleccionNivel. No se guarda en
+    // PlayerPrefs porque solo sirve para pasar el dato de una escena a otra.
+    private static int mundoElegido = 1;
+
+    public static int MundoElegido
     {
-        // Si nunca se guardó nada, el nivel 1 está desbloqueado.
-        return PlayerPrefs.GetInt(claveNivelDesbloqueado, 1);
+        get { return mundoElegido; }
+        set { mundoElegido = value; }
     }
 
-    public static bool EstaDesbloqueado(int numeroNivel)
+    // ================= Mundos =================
+
+    public static int ObtenerMundosDesbloqueados()
     {
-        return numeroNivel <= ObtenerNivelDesbloqueado();
+        // Si nunca se guardó nada, solo está abierto el Mundo 1.
+        return PlayerPrefs.GetInt(claveMundosDesbloqueados, 1);
     }
 
-    public static int ObtenerEstrellas(int numeroNivel)
+    public static bool MundoEstaDesbloqueado(int numeroMundo)
     {
-        return PlayerPrefs.GetInt(prefijoEstrellas + numeroNivel, 0);
+        return numeroMundo <= ObtenerMundosDesbloqueados();
     }
+
+    // ================= Niveles =================
+
+    private static string ClaveNivelesDesbloqueados(int numeroMundo)
+    {
+        return prefijoNivelesDesbloqueados + numeroMundo;
+    }
+
+    private static string ClaveEstrellas(int numeroMundo, int numeroEnMundo)
+    {
+        return prefijoEstrellas + "Mundo" + numeroMundo + "_Nivel" + numeroEnMundo;
+    }
+
+    public static int ObtenerNivelesDesbloqueados(int numeroMundo)
+    {
+        // En un mundo recién abierto, el nivel 1 ya se puede jugar.
+        return PlayerPrefs.GetInt(ClaveNivelesDesbloqueados(numeroMundo), 1);
+    }
+
+    // Un nivel solo está abierto si también lo está su mundo.
+    public static bool NivelEstaDesbloqueado(int numeroMundo, int numeroEnMundo)
+    {
+        if (MundoEstaDesbloqueado(numeroMundo) == false)
+        {
+            return false;
+        }
+
+        return numeroEnMundo <= ObtenerNivelesDesbloqueados(numeroMundo);
+    }
+
+    // ================= Estrellas =================
+
+    public static int ObtenerEstrellas(int numeroMundo, int numeroEnMundo)
+    {
+        return PlayerPrefs.GetInt(ClaveEstrellas(numeroMundo, numeroEnMundo), 0);
+    }
+
+    // Suma las estrellas de los 5 niveles (lo que muestra el botón del mundo).
+    public static int ObtenerEstrellasDelMundo(int numeroMundo)
+    {
+        int total = 0;
+
+        for (int numeroEnMundo = 1; numeroEnMundo <= DatosJuego.nivelesPorMundo; numeroEnMundo++)
+        {
+            total = total + ObtenerEstrellas(numeroMundo, numeroEnMundo);
+        }
+
+        return total;
+    }
+
+    public static int ObtenerEstrellasMaximasPorMundo()
+    {
+        return DatosJuego.nivelesPorMundo * DatosJuego.estrellasPorNivel;
+    }
+
+    // ================= Guardar =================
 
     // Se llama al ganar un nivel.
-    public static void GuardarResultado(int numeroNivel, int estrellasGanadas)
+    public static void GuardarResultado(int numeroMundo, int numeroEnMundo, int estrellasGanadas)
     {
-        if (numeroNivel <= 0)
-        {
-            return; // No es un nivel del catálogo (por ejemplo, una escena de prueba).
-        }
-
         // Solo se guarda si es mejor que la marca anterior.
-        int estrellasAnteriores = ObtenerEstrellas(numeroNivel);
+        int estrellasAnteriores = ObtenerEstrellas(numeroMundo, numeroEnMundo);
         if (estrellasGanadas > estrellasAnteriores)
         {
-            PlayerPrefs.SetInt(prefijoEstrellas + numeroNivel, estrellasGanadas);
+            PlayerPrefs.SetInt(ClaveEstrellas(numeroMundo, numeroEnMundo), estrellasGanadas);
         }
 
-        // Ganar un nivel desbloquea el siguiente.
-        int siguienteNivel = numeroNivel + 1;
-        if (siguienteNivel > ObtenerNivelDesbloqueado())
+        if (numeroEnMundo < DatosJuego.nivelesPorMundo)
         {
-            PlayerPrefs.SetInt(claveNivelDesbloqueado, siguienteNivel);
+            // Dentro del mundo: se abre el siguiente nivel.
+            int siguienteNivel = numeroEnMundo + 1;
+            if (siguienteNivel > ObtenerNivelesDesbloqueados(numeroMundo))
+            {
+                PlayerPrefs.SetInt(ClaveNivelesDesbloqueados(numeroMundo), siguienteNivel);
+            }
+        }
+        else
+        {
+            // Último nivel del mundo: se abre el mundo siguiente, si existe.
+            int siguienteMundo = numeroMundo + 1;
+            bool existeSiguienteMundo = siguienteMundo <= DatosJuego.CantidadDeMundos();
+            if (existeSiguienteMundo == true && siguienteMundo > ObtenerMundosDesbloqueados())
+            {
+                PlayerPrefs.SetInt(claveMundosDesbloqueados, siguienteMundo);
+            }
         }
 
         PlayerPrefs.Save();
     }
 
-    // Útil para la defensa o para probar: abre todos los niveles.
+    // Útil para la defensa o para probar: abre todos los mundos y niveles.
     public static void DesbloquearTodo()
     {
-        PlayerPrefs.SetInt(claveNivelDesbloqueado, DatosJuego.CantidadDeNiveles());
+        PlayerPrefs.SetInt(claveMundosDesbloqueados, DatosJuego.CantidadDeMundos());
+
+        for (int numeroMundo = 1; numeroMundo <= DatosJuego.CantidadDeMundos(); numeroMundo++)
+        {
+            PlayerPrefs.SetInt(ClaveNivelesDesbloqueados(numeroMundo), DatosJuego.nivelesPorMundo);
+        }
+
         PlayerPrefs.Save();
     }
 
     public static void BorrarProgreso()
     {
-        PlayerPrefs.DeleteKey(claveNivelDesbloqueado);
+        PlayerPrefs.DeleteKey(claveMundosDesbloqueados);
 
-        for (int numero = 1; numero <= DatosJuego.CantidadDeNiveles(); numero++)
+        for (int numeroMundo = 1; numeroMundo <= DatosJuego.CantidadDeMundos(); numeroMundo++)
         {
-            PlayerPrefs.DeleteKey(prefijoEstrellas + numero);
+            PlayerPrefs.DeleteKey(ClaveNivelesDesbloqueados(numeroMundo));
+
+            for (int numeroEnMundo = 1; numeroEnMundo <= DatosJuego.nivelesPorMundo; numeroEnMundo++)
+            {
+                PlayerPrefs.DeleteKey(ClaveEstrellas(numeroMundo, numeroEnMundo));
+            }
         }
 
         PlayerPrefs.Save();

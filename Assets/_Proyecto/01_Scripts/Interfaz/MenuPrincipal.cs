@@ -38,7 +38,7 @@ public class MenuPrincipal : MonoBehaviour
 
     public void Jugar()
     {
-        SceneManager.LoadScene(DatosJuego.escenaSeleccionNivel);
+        SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
     }
 
     public void BorrarProgreso()

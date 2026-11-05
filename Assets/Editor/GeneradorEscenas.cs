@@ -4,9 +4,10 @@
 // Descripción: Script de EDITOR que arma todas las escenas del juego con
 //              un solo clic, usando las piezas de HerramientasEscena:
 //              - MenuPrincipal
-//              - SeleccionNivel (mapa con los 20 niveles por mundo)
-//              - Nivel01, Nivel02, Nivel03 (Mundo 1: Salar de Uyuni)
-//              - Nivel04 (Mundo 2: Minas de Potosí)
+//              - SeleccionMundo (los 6 mundos)
+//              - SeleccionNivel (los 5 niveles del mundo elegido)
+//              - Mundo1_Nivel1, Mundo1_Nivel2, Mundo1_Nivel3 (Salar de Uyuni)
+//              - Mundo2_Nivel1 (Minas de Potosí)
 //              Además ordena las escenas en Build Settings.
 // Uso: Menú superior de Unity -> Inti y Killa -> Generar todas las escenas
 // Ojo: volver a generar una escena la REEMPLAZA (se pierden los cambios
@@ -44,17 +45,18 @@ public static class GeneradorEscenas
         HerramientasEscena.PrepararRecursos();
 
         GenerarMenuPrincipal();
+        GenerarSeleccionMundo();
         GenerarSeleccionNivel();
-        GenerarNivel01();
-        GenerarNivel02();
-        GenerarNivel03();
-        GenerarNivel04();
+        GenerarMundo1Nivel1();
+        GenerarMundo1Nivel2();
+        GenerarMundo1Nivel3();
+        GenerarMundo2Nivel1();
 
         HerramientasEscena.ActualizarBuildSettings();
 
         // Al terminar, dejamos abierto el menú principal para darle Play.
         EditorSceneManager.OpenScene(RutaEscena(DatosJuego.escenaMenuPrincipal));
-        Debug.Log("Inti y Killa: escenas generadas (Menú, Selección de nivel y Niveles 1 a 4). ¡Dale Play!");
+        Debug.Log("Inti y Killa: escenas generadas (menús, Mundo 1 niveles 1 a 3 y Mundo 2 nivel 1). ¡Dale Play!");
     }
 
     [MenuItem("Inti y Killa/Escenas sueltas/Menú principal", false, 20)]
@@ -63,32 +65,38 @@ public static class GeneradorEscenas
         GenerarUnaSola(1);
     }
 
-    [MenuItem("Inti y Killa/Escenas sueltas/Selección de nivel", false, 21)]
+    [MenuItem("Inti y Killa/Escenas sueltas/Selección de mundo", false, 21)]
+    public static void MenuGenerarSeleccionMundo()
+    {
+        GenerarUnaSola(7);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Selección de nivel", false, 22)]
     public static void MenuGenerarSeleccion()
     {
         GenerarUnaSola(2);
     }
 
-    [MenuItem("Inti y Killa/Escenas sueltas/Nivel 1", false, 22)]
-    public static void MenuGenerarNivel01()
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 1 - Nivel 1", false, 23)]
+    public static void MenuGenerarMundo1Nivel1()
     {
         GenerarUnaSola(3);
     }
 
-    [MenuItem("Inti y Killa/Escenas sueltas/Nivel 2", false, 23)]
-    public static void MenuGenerarNivel02()
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 1 - Nivel 2", false, 24)]
+    public static void MenuGenerarMundo1Nivel2()
     {
         GenerarUnaSola(4);
     }
 
-    [MenuItem("Inti y Killa/Escenas sueltas/Nivel 3", false, 24)]
-    public static void MenuGenerarNivel03()
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 1 - Nivel 3", false, 25)]
+    public static void MenuGenerarMundo1Nivel3()
     {
         GenerarUnaSola(5);
     }
 
-    [MenuItem("Inti y Killa/Escenas sueltas/Nivel 4", false, 25)]
-    public static void MenuGenerarNivel04()
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 2 - Nivel 1", false, 26)]
+    public static void MenuGenerarMundo2Nivel1()
     {
         GenerarUnaSola(6);
     }
@@ -113,19 +121,23 @@ public static class GeneradorEscenas
         }
         else if (cual == 3)
         {
-            rutaGenerada = GenerarNivel01();
+            rutaGenerada = GenerarMundo1Nivel1();
         }
         else if (cual == 4)
         {
-            rutaGenerada = GenerarNivel02();
+            rutaGenerada = GenerarMundo1Nivel2();
         }
         else if (cual == 5)
         {
-            rutaGenerada = GenerarNivel03();
+            rutaGenerada = GenerarMundo1Nivel3();
         }
         else if (cual == 6)
         {
-            rutaGenerada = GenerarNivel04();
+            rutaGenerada = GenerarMundo2Nivel1();
+        }
+        else if (cual == 7)
+        {
+            rutaGenerada = GenerarSeleccionMundo();
         }
 
         HerramientasEscena.ActualizarBuildSettings();
@@ -139,9 +151,9 @@ public static class GeneradorEscenas
         return HerramientasEscena.carpetaEscenas + "/" + nombre + ".unity";
     }
 
-    private static string RutaNivel(int numero)
+    private static string RutaNivel(int numeroMundo, int numeroEnMundo)
     {
-        DatosNivel datos = DatosJuego.ObtenerNivel(numero);
+        DatosNivel datos = DatosJuego.ObtenerNivel(numeroMundo, numeroEnMundo);
         return HerramientasEscena.carpetaNiveles + "/" + datos.nombreEscena + ".unity";
     }
 
@@ -197,7 +209,72 @@ public static class GeneradorEscenas
         return ruta;
     }
 
+    // ================= Selección de mundo =================
+
+    private static string GenerarSeleccionMundo()
+    {
+        Scene escena = CrearEscenaVacia();
+
+        HerramientasEscena.CrearCamara(colorCieloFondo);
+        HerramientasEscena.CrearLuzGlobal(new Color(0.75f, 0.70f, 0.85f), 1f);
+        HerramientasEscena.CrearFondoUyuni(9f);
+
+        Transform canvas = HerramientasEscena.CrearCanvas();
+        HerramientasEscena.CrearEventSystem();
+
+        GameObject objetoSeleccion = new GameObject("SeleccionMundo");
+        SeleccionMundo seleccion = objetoSeleccion.AddComponent<SeleccionMundo>();
+
+        HerramientasEscena.CrearTexto(canvas, "Titulo", "Elige un mundo", 72, new Vector2(0f, 455f), new Vector2(1200f, 100f), new Color(1f, 0.92f, 0.70f));
+
+        Button botonVolver = HerramientasEscena.CrearBoton(canvas, "Boton Volver", "< Volver", new Vector2(-780f, 455f), new Vector2(240f, 70f), colorBotonSalir, 30);
+        UnityEventTools.AddPersistentListener(botonVolver.onClick, new UnityAction(seleccion.VolverAlMenu));
+
+        // Dos filas de tres mundos.
+        int columnasPorFila = 3;
+        float separacionX = 540f;
+        float separacionY = 330f;
+        float inicioX = -separacionX;
+        float inicioY = 150f;
+
+        for (int numeroMundo = 1; numeroMundo <= DatosJuego.CantidadDeMundos(); numeroMundo++)
+        {
+            int columna = (numeroMundo - 1) % columnasPorFila;
+            int fila = (numeroMundo - 1) / columnasPorFila;
+            Vector2 posicion = new Vector2(inicioX + columna * separacionX, inicioY - fila * separacionY);
+            CrearBotonDeMundo(canvas, numeroMundo, posicion);
+        }
+
+        string textoAyuda = "Esc: volver al menú     F1: desbloquear todo (modo prueba)";
+        HerramientasEscena.CrearTexto(canvas, "Ayuda", textoAyuda, 24, new Vector2(0f, -500f), new Vector2(1600f, 40f), new Color(1f, 1f, 1f, 0.85f));
+
+        string ruta = RutaEscena(DatosJuego.escenaSeleccionMundo);
+        EditorSceneManager.SaveScene(escena, ruta);
+        return ruta;
+    }
+
+    private static void CrearBotonDeMundo(Transform canvas, int numeroMundo, Vector2 posicion)
+    {
+        Vector2 tamanoBoton = new Vector2(500f, 280f);
+        Button boton = HerramientasEscena.CrearBoton(canvas, "Boton Mundo " + numeroMundo, "Mundo " + numeroMundo, posicion, tamanoBoton, colorBotonSecundario, 48);
+
+        // "Mundo 1" arriba, el nombre en el medio y el estado abajo.
+        RectTransform rectanguloNumero = boton.transform.Find("Texto").GetComponent<RectTransform>();
+        rectanguloNumero.anchoredPosition = new Vector2(0f, 80f);
+
+        Text textoNombre = HerramientasEscena.CrearTexto(boton.transform, "Nombre", DatosJuego.ObtenerNombreMundo(numeroMundo), 38, new Vector2(0f, 0f), new Vector2(tamanoBoton.x, 50f), Color.white);
+        textoNombre.raycastTarget = false;
+
+        Text textoEstado = HerramientasEscena.CrearTexto(boton.transform, "Estado", "", 36, new Vector2(0f, -85f), new Vector2(tamanoBoton.x, 50f), new Color(1f, 0.90f, 0.45f));
+        textoEstado.raycastTarget = false;
+
+        BotonMundo botonMundo = boton.gameObject.AddComponent<BotonMundo>();
+        botonMundo.Configurar(numeroMundo, textoEstado);
+    }
+
     // ================= Selección de nivel =================
+    // Una sola escena para los 6 mundos: el título y los botones se llenan al
+    // abrirla, según el mundo elegido en la pantalla anterior.
 
     private static string GenerarSeleccionNivel()
     {
@@ -213,33 +290,22 @@ public static class GeneradorEscenas
         GameObject objetoSeleccion = new GameObject("SeleccionNivel");
         SeleccionNivel seleccion = objetoSeleccion.AddComponent<SeleccionNivel>();
 
-        HerramientasEscena.CrearTexto(canvas, "Titulo", "Elige un nivel", 72, new Vector2(0f, 455f), new Vector2(1200f, 100f), new Color(1f, 0.92f, 0.70f));
+        Text textoTitulo = HerramientasEscena.CrearTexto(canvas, "Titulo", "Elige un nivel", 64, new Vector2(100f, 455f), new Vector2(1400f, 100f), new Color(1f, 0.92f, 0.70f));
+        seleccion.Configurar(textoTitulo);
 
         Button botonVolver = HerramientasEscena.CrearBoton(canvas, "Boton Volver", "< Volver", new Vector2(-780f, 455f), new Vector2(240f, 70f), colorBotonSalir, 30);
-        UnityEventTools.AddPersistentListener(botonVolver.onClick, new UnityAction(seleccion.VolverAlMenu));
+        UnityEventTools.AddPersistentListener(botonVolver.onClick, new UnityAction(seleccion.VolverAMundos));
 
-        // Una fila por mundo, con sus niveles a la derecha.
-        float posicionYFila = 310f;
-        for (int numeroMundo = 1; numeroMundo <= DatosJuego.nombresMundos.Length; numeroMundo++)
+        float separacionX = 355f;
+        float inicioX = -2f * separacionX;
+
+        for (int numeroEnMundo = 1; numeroEnMundo <= DatosJuego.nivelesPorMundo; numeroEnMundo++)
         {
-            string textoMundo = "Mundo " + numeroMundo + ": " + DatosJuego.ObtenerNombreMundo(numeroMundo);
-            Text etiqueta = HerramientasEscena.CrearTexto(canvas, "Etiqueta Mundo " + numeroMundo, textoMundo, 34, new Vector2(-560f, posicionYFila), new Vector2(520f, 100f), Color.white);
-            etiqueta.alignment = TextAnchor.MiddleRight;
-
-            float posicionXBoton = -170f;
-            foreach (DatosNivel nivel in DatosJuego.ObtenerTodosLosNiveles())
-            {
-                if (nivel.numeroMundo == numeroMundo)
-                {
-                    CrearBotonDeNivel(canvas, nivel, new Vector2(posicionXBoton, posicionYFila));
-                    posicionXBoton = posicionXBoton + 200f;
-                }
-            }
-
-            posicionYFila = posicionYFila - 125f;
+            Vector2 posicion = new Vector2(inicioX + (numeroEnMundo - 1) * separacionX, 40f);
+            CrearBotonDeNivel(canvas, numeroEnMundo, posicion);
         }
 
-        string textoAyuda = "Esc: volver al menú     F1: desbloquear todos los niveles (modo prueba)";
+        string textoAyuda = "Esc: volver a los mundos     F1: desbloquear todo (modo prueba)";
         HerramientasEscena.CrearTexto(canvas, "Ayuda", textoAyuda, 24, new Vector2(0f, -500f), new Vector2(1600f, 40f), new Color(1f, 1f, 1f, 0.85f));
 
         string ruta = RutaEscena(DatosJuego.escenaSeleccionNivel);
@@ -247,29 +313,35 @@ public static class GeneradorEscenas
         return ruta;
     }
 
-    private static void CrearBotonDeNivel(Transform canvas, DatosNivel nivel, Vector2 posicion)
+    private static void CrearBotonDeNivel(Transform canvas, int numeroEnMundo, Vector2 posicion)
     {
-        Button boton = HerramientasEscena.CrearBoton(canvas, "Boton Nivel " + nivel.numero, nivel.numero.ToString(), posicion, new Vector2(180f, 105f), colorBotonSecundario, 44);
+        Vector2 tamanoBoton = new Vector2(330f, 320f);
+        Button boton = HerramientasEscena.CrearBoton(canvas, "Boton Nivel " + numeroEnMundo, numeroEnMundo.ToString(), posicion, tamanoBoton, colorBotonSecundario, 72);
 
-        // El número va arriba y el estado (estrellas / bloqueado) abajo.
+        // El número va arriba, el título en el medio y el estado abajo.
         RectTransform rectanguloNumero = boton.transform.Find("Texto").GetComponent<RectTransform>();
-        rectanguloNumero.anchoredPosition = new Vector2(0f, 16f);
+        rectanguloNumero.anchoredPosition = new Vector2(0f, 95f);
 
-        Text textoEstado = HerramientasEscena.CrearTexto(boton.transform, "Estado", "", 24, new Vector2(0f, -30f), new Vector2(180f, 30f), new Color(1f, 0.90f, 0.45f));
+        // El título puede ser largo: se deja bajar a una segunda línea dentro del botón.
+        Text textoTitulo = HerramientasEscena.CrearTexto(boton.transform, "Titulo", "", 32, new Vector2(0f, -5f), new Vector2(tamanoBoton.x - 30f, 90f), Color.white);
+        textoTitulo.horizontalOverflow = HorizontalWrapMode.Wrap;
+        textoTitulo.raycastTarget = false;
+
+        Text textoEstado = HerramientasEscena.CrearTexto(boton.transform, "Estado", "", 36, new Vector2(0f, -110f), new Vector2(tamanoBoton.x, 50f), new Color(1f, 0.90f, 0.45f));
         textoEstado.raycastTarget = false;
 
         BotonNivel botonNivel = boton.gameObject.AddComponent<BotonNivel>();
-        botonNivel.Configurar(nivel.numero, textoEstado);
+        botonNivel.Configurar(numeroEnMundo, textoEstado, textoTitulo);
     }
 
-    // ================= Nivel 1: Primeros pasos =================
+    // ================= Mundo 1, Nivel 1: Primeros pasos =================
     // Enseña: moverse, saltar, gemas, lava/agua, púas y un bloque que se rompe.
     // No es un pasillo: son tres pisos que se suben en zigzag. Empiezan juntos en
     // el centro y cada uno se va por su lado, porque el camino del otro lo mata.
     // Se reencuentran en el piso central y ahí se CRUZAN: la puerta de cada uno
     // está arriba, en el lado contrario al que subió.
 
-    private static string GenerarNivel01()
+    private static string GenerarMundo1Nivel1()
     {
         HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
@@ -330,17 +402,17 @@ public static class GeneradorEscenas
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
-        string ruta = RutaNivel(1);
+        string ruta = RutaNivel(1, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }
 
-    // ================= Nivel 2: Botones y compuertas =================
+    // ================= Mundo 1, Nivel 2: Botones y compuertas =================
     // Enseña a turnarse: nadie avanza solo. Cada uno empieza en su lado de un muro
     // y el botón que abre la compuerta de uno está en el lado del otro.
     // Arriba, la salida solo se abre cuando LOS DOS encendieron su palanca.
 
-    private static string GenerarNivel02()
+    private static string GenerarMundo1Nivel2()
     {
         HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
@@ -429,19 +501,19 @@ public static class GeneradorEscenas
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
-        string ruta = RutaNivel(2);
+        string ruta = RutaNivel(1, 2);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }
 
-    // ================= Nivel 3: El primer eclipse =================
+    // ================= Mundo 1, Nivel 3: El primer eclipse =================
     // Cuatro pisos que se suben en zigzag. Tres ríos imposibles de saltar: lava,
     // agua y lava. Quien puede cruzar va primero y se para en la placa del otro
     // lado; el eclipse intercambia los poderes y entonces cruza el compañero.
     // Después de tres eclipses los poderes quedan cambiados: cada uno entra por
     // la puerta del poder que tiene en ese momento.
 
-    private static string GenerarNivel03()
+    private static string GenerarMundo1Nivel3()
     {
         HerramientasEscena.usarTilesetSal = true;
         Scene escena = CrearEscenaVacia();
@@ -497,12 +569,12 @@ public static class GeneradorEscenas
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
-        string ruta = RutaNivel(3);
+        string ruta = RutaNivel(1, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }
 
-    // ================= Nivel 4: La luz de Inti (Minas de Potosí) =================
+    // ================= Mundo 2, Nivel 1: La luz de Inti (Minas de Potosí) =================
     // La mina está a oscuras y se recorre subiendo. Los cristales solo se pisan
     // dentro de la luz de Inti, así que él alumbra el camino de Killa:
     // 1) Cruzan juntos el veneno por cristales, con Inti delante manteniendo S.
@@ -514,7 +586,7 @@ public static class GeneradorEscenas
     private static readonly Color colorFondoMina = new Color(0.07f, 0.05f, 0.05f);
     private static readonly Color colorSueloMina = new Color(0.40f, 0.32f, 0.28f);
 
-    private static string GenerarNivel04()
+    private static string GenerarMundo2Nivel1()
     {
         HerramientasEscena.usarTilesetSal = false;
         Scene escena = CrearEscenaVacia();
@@ -598,7 +670,7 @@ public static class GeneradorEscenas
         // La cámara se crea al final porque necesita a los dos jugadores.
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
-        string ruta = RutaNivel(4);
+        string ruta = RutaNivel(2, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }

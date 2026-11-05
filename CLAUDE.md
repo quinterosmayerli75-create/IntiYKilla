@@ -1,9 +1,9 @@
 # Instrucciones para el agente – Inti y Killa
 
-Proyecto final individual: juego de plataformas y puzzles cooperativo 2D para 2 jugadores en el mismo teclado, en Unity 6 LTS (Universal 2D / URP), para publicar en itch.io (WebGL). Plazo: 27 de noviembre de 2026.
+Proyecto final individual: juego de plataformas y puzzles cooperativo 2D para 2 jugadores en el mismo teclado, en Unity 6 LTS (Universal 2D / URP), para publicar en itch.io (WebGL). Plazo: 15 de diciembre de 2026.
 
 ## Lee primero
-- `GDD.md`: diseño completo del juego (personajes, mecánicas, 20 niveles, escenas, tecnología). Es la fuente de verdad.
+- `GDD.md`: diseño completo del juego (personajes, mecánicas, 6 mundos con 5 niveles cada uno, escenas, tecnología). Es la fuente de verdad.
 - `CHECKLIST.md`: tareas por semana. Al terminar una tarea, márcala con [x].
 
 ## Reglas de código (importante: hay defensa académica)
@@ -18,7 +18,7 @@ Proyecto final individual: juego de plataformas y puzzles cooperativo 2D para 2 
 ## Estructura
 - Todo el contenido propio va en `Assets/_Proyecto/` con: `00_Scenes`, `01_Scripts`, `02_Prefabs`, `03_Sprites`, `Animations`, `Audio`, `Input`, `Materiales`, `Tiles`, `UI`. Respetar estos nombres exactos.
 - No volver a ejecutar el menú "Inti y Killa → Crear carpetas del proyecto": crearía carpetas duplicadas con los nombres antiguos.
-- Escenas: `Intro`, `MenuPrincipal`, `SeleccionNivel`, `Nivel01` … `Nivel20`, `Final`.
+- Escenas: `Intro`, `MenuPrincipal`, `SeleccionMundo`, `SeleccionNivel`, `Mundo1_Nivel1` … `Mundo6_Nivel5`, `Final`.
 - Guardado con PlayerPrefs.
 
 ## Flujo de trabajo

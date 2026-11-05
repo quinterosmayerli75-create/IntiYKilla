@@ -36,7 +36,8 @@ public class GestorNivel : MonoBehaviour
     [SerializeField] private float duracionPista = 6f;
 
     // Datos del nivel actual (se leen de DatosJuego según el nombre de la escena).
-    private int numeroNivel = 0;
+    // Queda en null si la escena no está en el catálogo (por ejemplo, una de prueba).
+    private DatosNivel datosNivel = null;
     private string tituloNivel = "Nivel de prueba";
     private float tiempoObjetivo = 60f;
 
@@ -50,6 +51,10 @@ public class GestorNivel : MonoBehaviour
     private bool nivelTerminado = false;
     private bool reinicioEnCurso = false;
     private int estrellasGanadas = 0;
+
+    // True si se acaba de ganar el último nivel del mundo.
+    private bool mundoCompletado = false;
+    [SerializeField] private float segundosMensajeMundoCompletado = 4f;
 
     private string mensajeCentral = "";
     private string avisoTemporal = "";
@@ -82,14 +87,16 @@ public class GestorNivel : MonoBehaviour
     private void CargarDatosDelNivel()
     {
         string nombreEscena = SceneManager.GetActiveScene().name;
-        numeroNivel = DatosJuego.ObtenerNumeroPorEscena(nombreEscena);
+        datosNivel = DatosJuego.ObtenerNivelPorEscena(nombreEscena);
 
-        DatosNivel datos = DatosJuego.ObtenerNivel(numeroNivel);
-        if (datos != null)
+        if (datosNivel != null)
         {
-            string nombreMundo = DatosJuego.ObtenerNombreMundo(datos.numeroMundo);
-            tituloNivel = "Nivel " + datos.numero + " - " + nombreMundo + ": " + datos.titulo;
-            tiempoObjetivo = datos.tiempoObjetivo;
+            string nombreMundo = DatosJuego.ObtenerNombreMundo(datosNivel.numeroMundo);
+            tituloNivel = "Mundo " + datosNivel.numeroMundo + " - Nivel " + datosNivel.numeroEnMundo + " (" + nombreMundo + "): " + datosNivel.titulo;
+            tiempoObjetivo = datosNivel.tiempoObjetivo;
+
+            // Así, al volver al mapa se muestran los niveles de este mundo.
+            GestorProgreso.MundoElegido = datosNivel.numeroMundo;
         }
     }
 
@@ -218,14 +225,28 @@ public class GestorNivel : MonoBehaviour
     {
         nivelTerminado = true;
         estrellasGanadas = CalcularEstrellas();
-        GestorProgreso.GuardarResultado(numeroNivel, estrellasGanadas);
+
+        if (datosNivel != null)
+        {
+            GestorProgreso.GuardarResultado(datosNivel.numeroMundo, datosNivel.numeroEnMundo, estrellasGanadas);
+            mundoCompletado = datosNivel.numeroEnMundo == DatosJuego.nivelesPorMundo;
+        }
 
         foreach (ControladorJugador jugador in listaJugadores)
         {
             jugador.DetenerMovimiento();
         }
 
-        mensajeCentral = "¡Nivel completado!";
+        if (mundoCompletado == true)
+        {
+            // Se deja ver el mensaje y las estrellas antes de volver a los mundos.
+            mensajeCentral = "¡Mundo completado!";
+            Invoke(nameof(VolverAMundos), segundosMensajeMundoCompletado);
+        }
+        else
+        {
+            mensajeCentral = "¡Nivel completado!";
+        }
     }
 
     // 1 estrella por terminar, +1 por todas las gemas, +1 por llegar a tiempo.
@@ -262,9 +283,24 @@ public class GestorNivel : MonoBehaviour
         }
     }
 
+    public void VolverAMundos()
+    {
+        SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
+    }
+
     public void IrAlSiguienteNivel()
     {
-        DatosNivel siguiente = DatosJuego.ObtenerNivel(numeroNivel + 1);
+        if (mundoCompletado == true)
+        {
+            VolverAMundos();
+            return;
+        }
+
+        DatosNivel siguiente = null;
+        if (datosNivel != null)
+        {
+            siguiente = DatosJuego.ObtenerNivel(datosNivel.numeroMundo, datosNivel.numeroEnMundo + 1);
+        }
 
         if (siguiente != null && Application.CanStreamedLevelBeLoaded(siguiente.nombreEscena) == true)
         {
@@ -355,6 +391,10 @@ public class GestorNivel : MonoBehaviour
             GUIStyle estiloOpciones = new GUIStyle(estiloAyuda);
             estiloOpciones.fontSize = 30;
             string textoOpciones = "Tiempo: " + cronometro.ToString("0.0") + " s     Enter: siguiente nivel     R: repetir     Esc: mapa";
+            if (mundoCompletado == true)
+            {
+                textoOpciones = "Tiempo: " + cronometro.ToString("0.0") + " s     Enter: volver a los mundos";
+            }
             GUI.Label(new Rect(0, altoVirtual / 2f + 110f, anchoVirtual, 50), textoOpciones, estiloOpciones);
         }
     }

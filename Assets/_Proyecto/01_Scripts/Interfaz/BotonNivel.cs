@@ -1,8 +1,9 @@
 // =====================================================================
 // BotonNivel.cs
 // Proyecto: Inti y Killa
-// Descripción: Un botón del mapa de niveles. Sabe qué nivel abre y
-//              muestra su estado:
+// Descripción: Un botón de la pantalla de niveles. Sabe qué posición ocupa
+//              dentro del mundo (1 a 5); el mundo lo lee de GestorProgreso.
+//              Muestra el título del nivel y su estado:
 //              - Estrellas ganadas (★★☆) si está desbloqueado.
 //              - "Bloqueado" si todavía no se ganó el nivel anterior.
 //              - "Pronto" si la escena todavía no existe en el proyecto.
@@ -15,15 +16,17 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class BotonNivel : MonoBehaviour
 {
-    [SerializeField] private int numeroNivel = 1;
+    [SerializeField] private int numeroEnMundo = 1;
     [SerializeField] private Text textoEstado;
+    [SerializeField] private Text textoTitulo;
 
     private Button boton;
 
-    public void Configurar(int nuevoNumero, Text nuevoTextoEstado)
+    public void Configurar(int nuevoNumeroEnMundo, Text nuevoTextoEstado, Text nuevoTextoTitulo)
     {
-        numeroNivel = nuevoNumero;
+        numeroEnMundo = nuevoNumeroEnMundo;
         textoEstado = nuevoTextoEstado;
+        textoTitulo = nuevoTextoTitulo;
     }
 
     private void Awake()
@@ -44,9 +47,15 @@ public class BotonNivel : MonoBehaviour
             boton = GetComponent<Button>();
         }
 
-        DatosNivel datos = DatosJuego.ObtenerNivel(numeroNivel);
+        int numeroMundo = GestorProgreso.MundoElegido;
+        DatosNivel datos = DatosJuego.ObtenerNivel(numeroMundo, numeroEnMundo);
         bool escenaExiste = datos != null && Application.CanStreamedLevelBeLoaded(datos.nombreEscena);
-        bool estaDesbloqueado = GestorProgreso.EstaDesbloqueado(numeroNivel);
+        bool estaDesbloqueado = GestorProgreso.NivelEstaDesbloqueado(numeroMundo, numeroEnMundo);
+
+        if (textoTitulo != null && datos != null)
+        {
+            textoTitulo.text = datos.titulo;
+        }
 
         if (escenaExiste == false)
         {
@@ -61,7 +70,7 @@ public class BotonNivel : MonoBehaviour
         else
         {
             boton.interactable = true;
-            int estrellas = GestorProgreso.ObtenerEstrellas(numeroNivel);
+            int estrellas = GestorProgreso.ObtenerEstrellas(numeroMundo, numeroEnMundo);
             CambiarTexto(ConvertirEstrellasATexto(estrellas));
         }
     }
@@ -77,7 +86,7 @@ public class BotonNivel : MonoBehaviour
     private string ConvertirEstrellasATexto(int cantidad)
     {
         string texto = "";
-        for (int indice = 1; indice <= 3; indice++)
+        for (int indice = 1; indice <= DatosJuego.estrellasPorNivel; indice++)
         {
             if (indice <= cantidad)
             {
@@ -93,7 +102,7 @@ public class BotonNivel : MonoBehaviour
 
     private void CargarNivel()
     {
-        DatosNivel datos = DatosJuego.ObtenerNivel(numeroNivel);
+        DatosNivel datos = DatosJuego.ObtenerNivel(GestorProgreso.MundoElegido, numeroEnMundo);
         if (datos != null)
         {
             SceneManager.LoadScene(datos.nombreEscena);
