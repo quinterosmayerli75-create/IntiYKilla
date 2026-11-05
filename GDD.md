@@ -107,7 +107,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 | 6-4 | Todo a la vez | Todo mezclado | 5 |
 | 6-5 | El gran final | Gran final | 5 |
 
-Los niveles 1-4, 1-5, 2-4, 2-5, 3-4, 3-5, 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
+Los niveles 2-4, 2-5, 3-4, 3-5, 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
 
 Desbloqueo: al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
 

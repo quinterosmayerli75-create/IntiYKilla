@@ -27,7 +27,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Botones y palancas
 - [x] Altar de eclipse (intercambio de poderes)
 - [x] Luces 2D e iluminación de Inti
-- [ ] Armar los niveles 1-4 y 1-5 (Salar de Uyuni)
+- [x] Armar los niveles 1-4 y 1-5 (Salar de Uyuni)
 - [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
 - [ ] Cajas empujables
 - [ ] Niebla y lluvia

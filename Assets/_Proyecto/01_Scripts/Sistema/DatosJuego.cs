@@ -125,7 +125,7 @@ public static class DatosJuego
         AgregarNivel(1, 1, "Primeros pasos", 35f);
         AgregarNivel(1, 2, "Botones y compuertas", 45f);
         AgregarNivel(1, 3, "El primer eclipse", 70f);
-        AgregarNivel(1, 4, "Espejo de sal", 70f);
+        AgregarNivel(1, 4, "Espejo de sal", 45f);
         AgregarNivel(1, 5, "Travesía del salar", 80f);
 
         // Mundo 2: Minas de Potosí

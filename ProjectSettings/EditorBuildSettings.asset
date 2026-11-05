@@ -24,6 +24,12 @@ EditorBuildSettings:
     path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel3.unity
     guid: 6d664b76f292e4443b14dfffa9b8680e
   - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel4.unity
+    guid: dfa23609375f0c643a0d7fd2542cded1
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo1_Nivel5.unity
+    guid: 12a90802bbf2743449d8eb83fae5f40c
+  - enabled: 1
     path: Assets/_Proyecto/00_Scenes/Niveles/Mundo2_Nivel1.unity
     guid: c96d9f68a8be96b4298166c47ca36103
   m_configObjects:
