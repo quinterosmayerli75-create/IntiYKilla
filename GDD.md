@@ -13,12 +13,15 @@
 ## 2. Concepto y plus
 Inti (Sol) y Killa (Luna) cooperan para recorrer Bolivia y llegar juntos a la salida. Cada uno sobrevive en lo que destruye al otro.
 
+**Identidad: juego engañoso.** Plataformas cooperativo tipo "troll game", con diseño propio: **"no confíes en nada… ni en tu compañero"**. Todos los niveles tienen trampas sorpresa, suaves en el Mundo 1 y cada vez más tramposas. Morir es parte de la gracia: el reinicio es casi instantáneo y cada muerte tiene un mensaje gracioso.
+
 Plus diferenciadores:
+- **Trampas engañosas y de traición:** se ven igual que las piezas normales; algunas castigan al compañero.
 - **Eclipse:** altares donde, si los dos se paran a la vez, intercambian elementos.
 - **Escenarios reales de Bolivia:** 6 mundos.
 - **Mundo musical de Aiquile:** cuerdas de charango trampolín y puertas melódicas.
 - **Día y noche:** plataformas que aparecen o desaparecen.
-- **Estrellas por tiempo:** 1 a 3 estrellas por nivel.
+- **Estrellas por pocas muertes:** 1 a 3 estrellas por nivel.
 - **Niveles finales muy difíciles** (precisión y coordinación).
 
 ## 3. Personajes
@@ -60,7 +63,42 @@ Plus diferenciadores:
 | Puerta melódica (notas en orden) | 5-2 |
 | Eclipse automático cada pocos segundos | 6-1 |
 
-Estrellas: 3 = bajo tiempo objetivo + todas las gemas; 2 = una de las dos; 1 = terminar.
+Estrellas: 1 por terminar, 1 por todas las gemas y 1 por terminar con pocas muertes (el máximo se configura por nivel en `DatosJuego`).
+
+### Trampas (`01_Scripts/Mecanicas/Trampas/`)
+Se ven igual que las piezas normales. En el Inspector tienen una opción de pista visual muy sutil (`mostrarPistaSutil`).
+
+| Trampa | Qué hace |
+|---|---|
+| SueloFalso | Parece suelo y se cae al pisarlo |
+| BloqueInvisible | Aparece de golpe cuando alguien salta debajo |
+| PuasOcultas | Salen del suelo cuando alguien pasa encima |
+| TechoQueCae | Un bloque cae cuando alguien pasa por debajo |
+| GemaTrampa | Parece gema, pero al tocarla activa otra trampa; no cuenta para las estrellas |
+| PuertaFalsa | Parece la salida, pero se escapa al acercarse |
+| PlataformaQueHuye | Se aleja justo cuando alguien salta cerca |
+| BotonEnganoso | Parece abrir algo, pero activa otra trampa |
+| EnemigoSorpresa | Sale del suelo y persigue un tramo corto |
+
+### Trampas de traición
+Detectan qué jugador las activó y castigan al otro. Hay tres castigos: cae lava, salen púas o se abre el suelo. Siempre aparece un aviso rojo y la víctima tiene tiempo de moverse.
+
+| Trampa | Qué hace |
+|---|---|
+| BotonTraicion | Quien lo pisa castiga a su compañero |
+| PalancaSospechosa | Funciona de verdad, pero la primera vez castiga al compañero |
+| PlacaVinculada | Si uno se baja de su placa, el que se queda recibe el castigo |
+
+### Sistema de muertes
+- Reinicio casi instantáneo al morir (0.4 s de espera más lo que tarde en cargar la escena).
+- Contador de muertes visible en el nivel; se conserva entre reinicios y vuelve a cero al entrar de nuevo.
+- Récord de menos muertes por nivel guardado en PlayerPrefs.
+- Mensajes graciosos según la causa ("Ese suelo no era de verdad...", "¡Killa traicionó a Inti!", "Te dije que no confiaras en las gemas.").
+
+### Reglas de dificultad
+- Mundo 1: 1 o 2 trampas por nivel, fáciles de descubrir. Cada mundo agrega más. El Mundo 6 es el más tramposo.
+- Los niveles 4 y 5 de cada mundo usan trampas de traición.
+- **Regla de justicia:** cada trampa engaña una vez, pero después de conocerla el nivel siempre debe poder ganarse. Nunca hay trampas imposibles de evitar.
 
 ## 6. Mundos y niveles
 Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_NivelY` (por ejemplo, `Mundo1_Nivel2`).
@@ -121,9 +159,9 @@ Escenas: `Intro` → `MenuPrincipal` → `SeleccionMundo` → `SeleccionNivel` �
 - F1 en estas dos pantallas desbloquea todo (modo prueba y defensa).
 - Al ganar el nivel 5 de un mundo aparece "¡Mundo completado!" y se vuelve a `SeleccionMundo`.
 
-Ventanas encima del nivel (no escenas): HUD (gemas, cronómetro), Pausa (continuar, reiniciar, opciones, salir al mapa), Opciones (música, efectos, idioma, pantalla completa), Victoria (estrellas, tiempo, gemas), Derrota (reinicio automático).
+Ventanas encima del nivel (no escenas): HUD (gemas, muertes, récord), Pausa (continuar, reiniciar, opciones, salir al mapa), Opciones (música, efectos, idioma, pantalla completa), Victoria (estrellas, muertes, gemas), Derrota (reinicio automático con mensaje gracioso).
 
-Guardado: PlayerPrefs (mundos desbloqueados, niveles desbloqueados por mundo, estrellas por nivel, opciones).
+Guardado: PlayerPrefs (mundos desbloqueados, niveles desbloqueados por mundo, estrellas por nivel, récord de muertes por nivel, opciones).
 
 ## 8. Arte y sonido
 - 2D dibujado a mano, colores planos, luces 2D.

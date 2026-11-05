@@ -6,7 +6,8 @@
 //              - Hasta qué mundo está desbloqueado.
 //              - Hasta qué nivel está desbloqueado en cada mundo.
 //              - Cuántas estrellas se ganaron en cada nivel (la mejor marca).
-// Reglas:      - Al inicio solo está abierto el Mundo 1, Nivel 1.
+//              - El récord de menos muertes de cada nivel.
+// Reglas:     - Al inicio solo está abierto el Mundo 1, Nivel 1.
 //              - Ganar un nivel desbloquea el siguiente de su mundo.
 //              - Un mundo se abre SOLO al ganar el nivel 5 del anterior.
 // =====================================================================
@@ -18,6 +19,7 @@ public static class GestorProgreso
     private const string claveMundosDesbloqueados = "IntiYKilla_MundosDesbloqueados";
     private const string prefijoNivelesDesbloqueados = "IntiYKilla_NivelesDesbloqueados_Mundo";
     private const string prefijoEstrellas = "IntiYKilla_Estrellas_";
+    private const string prefijoRecordMuertes = "IntiYKilla_RecordMuertes_";
 
     // Mundo que se está viendo en la pantalla SeleccionNivel. No se guarda en
     // PlayerPrefs porque solo sirve para pasar el dato de una escena a otra.
@@ -96,6 +98,29 @@ public static class GestorProgreso
         return DatosJuego.nivelesPorMundo * DatosJuego.estrellasPorNivel;
     }
 
+    // ================= Récord de muertes =================
+
+    private static string ClaveRecordMuertes(int numeroMundo, int numeroEnMundo)
+    {
+        return prefijoRecordMuertes + "Mundo" + numeroMundo + "_Nivel" + numeroEnMundo;
+    }
+
+    // Menos muertes con las que se terminó el nivel, o -1 si nunca se terminó.
+    public static int ObtenerRecordMuertes(int numeroMundo, int numeroEnMundo)
+    {
+        return PlayerPrefs.GetInt(ClaveRecordMuertes(numeroMundo, numeroEnMundo), -1);
+    }
+
+    public static void GuardarRecordMuertes(int numeroMundo, int numeroEnMundo, int muertes)
+    {
+        int recordAnterior = ObtenerRecordMuertes(numeroMundo, numeroEnMundo);
+        if (recordAnterior < 0 || muertes < recordAnterior)
+        {
+            PlayerPrefs.SetInt(ClaveRecordMuertes(numeroMundo, numeroEnMundo), muertes);
+            PlayerPrefs.Save();
+        }
+    }
+
     // ================= Guardar =================
 
     // Se llama al ganar un nivel.
@@ -155,6 +180,7 @@ public static class GestorProgreso
             for (int numeroEnMundo = 1; numeroEnMundo <= DatosJuego.nivelesPorMundo; numeroEnMundo++)
             {
                 PlayerPrefs.DeleteKey(ClaveEstrellas(numeroMundo, numeroEnMundo));
+                PlayerPrefs.DeleteKey(ClaveRecordMuertes(numeroMundo, numeroEnMundo));
             }
         }
 

@@ -386,7 +386,11 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearPlataforma("Piso 1 derecha", new Vector2(8f, pisoUno - mitadGrosor), new Vector2(6f, grosor), HerramientasEscena.colorSal, escenario);
         HerramientasEscena.CrearPlataforma("Piso 2 central", new Vector2(0f, pisoDos - mitadGrosor), new Vector2(6f, grosor), HerramientasEscena.colorSal, escenario);
         HerramientasEscena.CrearPlataforma("Piso 3 izquierda", new Vector2(-9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearPlataforma("Piso 3 derecha", new Vector2(9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
+        // TRAMPA: el tramo justo después de los cristales es falso. Quien aterriza
+        // ahí cae un piso; quien ya lo sabe salta más lejos, hasta la puerta.
+        HerramientasEscena.CrearPlataforma("Piso 3 derecha", new Vector2(7.45f, pisoTres - mitadGrosor), new Vector2(4.9f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearSueloFalso("Tramo de suelo", new Vector2(10.45f, pisoTres - mitadGrosor), new Vector2(1.1f, grosor), HerramientasEscena.colorSal, escenario);
+        HerramientasEscena.CrearPlataforma("Piso 3 derecha final", new Vector2(12f, pisoTres - mitadGrosor), new Vector2(2f, grosor), HerramientasEscena.colorSal, escenario);
 
         // Premio arriesgado: dos gemas sobre un bloque que se rompe, justo encima
         // del veneno. Quien se suba tiene que saltar enseguida o cae al charco.
@@ -408,6 +412,13 @@ public static class GeneradorEscenas
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-5.5f, -2.4f), gemas);
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(5.5f, -2.4f), gemas);
+
+        // TRAMPA: una gema regalada junto a Killa. Al tocarla cae el bloque de arriba;
+        // quien no se detiene se salva, y quien ya lo sabe la salta.
+        TechoQueCae bloqueDeLaGema = HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(2.3f, pisoDos - grosor - mitadGrosor), new Vector2(1.5f, grosor), suelo, false, HerramientasEscena.colorSal, escenario);
+        List<TrampaActivable> trampasDeLaGema = new List<TrampaActivable>();
+        trampasDeLaGema.Add(bloqueDeLaGema);
+        HerramientasEscena.CrearGemaTrampa("Gema regalada", TipoElemento.Agua, new Vector2(3f, -2.4f), trampasDeLaGema, gemas);
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-0.6f, 7.2f), gemas);
         HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(0.6f, 7.2f), gemas);
         HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(8.5f, 8.6f), gemas);
@@ -481,6 +492,13 @@ public static class GeneradorEscenas
         abreCompuertaInti.Add(compuertaInti);
         HerramientasEscena.CrearBotonPresion("Boton de Killa", new Vector2(11.5f, suelo), abreCompuertaInti, mecanismos);
 
+        // TRAMPA: un botón en el camino de Inti que parece abrir su compuerta, pero
+        // suelta el bloque de arriba. Quien sigue corriendo se salva.
+        TechoQueCae bloqueDelBoton = HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(-11f, pisoUno - grosor - mitadGrosor), new Vector2(1.5f, grosor), suelo, false, HerramientasEscena.colorSal, escenario);
+        List<TrampaActivable> trampasDelBoton = new List<TrampaActivable>();
+        trampasDelBoton.Add(bloqueDelBoton);
+        HerramientasEscena.CrearBotonEnganoso("Boton de Inti falso", new Vector2(-11f, suelo), trampasDelBoton, mecanismos);
+
         List<ObjetoActivable> abreCompuertaKilla = new List<ObjetoActivable>();
         abreCompuertaKilla.Add(compuertaKilla);
         HerramientasEscena.CrearBotonPresion("Boton de Inti", new Vector2(-10f, pisoUno), abreCompuertaKilla, mecanismos);
@@ -498,6 +516,9 @@ public static class GeneradorEscenas
         abreSalida.Add(cierreDerecho);
         HerramientasEscena.CrearPalanca("Palanca izquierda", new Vector2(-11.5f, pisoTres), abreSalida, mecanismos);
         HerramientasEscena.CrearPalanca("Palanca derecha", new Vector2(11.5f, pisoTres), abreSalida, mecanismos);
+
+        // TRAMPA: una "salida" al lado de la palanca, que sale volando si te acercas.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Fuego, new Vector2(12.6f, pisoTres), new Vector2(0f, 9f), mecanismos);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         // Bajo techo el salto es corto: estos charcos piden un salto preciso.
@@ -568,6 +589,12 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearCharco("Lava final", TipoZona.Lava, 2f, 2f, pisoTres, trampas);
         HerramientasEscena.CrearCharco("Veneno final", TipoZona.Veneno, -2f, 2f, pisoTres, trampas);
         HerramientasEscena.CrearCristalesDeSal("Cristales finales", -6f, 2f, pisoTres, trampas);
+
+        // TRAMPA: púas escondidas justo antes de las puertas. Se pueden saltar.
+        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -8.7f, 1.2f, pisoTres, true, trampas);
+
+        // TRAMPA: un bloque del techo cae sobre el primer río. Quien no se detiene pasa.
+        HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(-5f, pisoUno - grosor - mitadGrosor), new Vector2(1.5f, grosor), suelo, true, HerramientasEscena.colorSal, escenario);
 
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-12f, suelo), new Vector2(12f, suelo), colorAltarUno, altares);
@@ -660,7 +687,15 @@ public static class GeneradorEscenas
 
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-2.7f, suelo), new Vector2(2.7f, suelo), colorAltarUno, altares);
-        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(-10f, pisoDos), new Vector2(0f, pisoTres), colorAltarDos, altares);
+        AltarEclipse altarDeArriba = HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(-10f, pisoDos), new Vector2(0f, pisoTres), colorAltarDos, altares);
+
+        // TRAICIÓN: después del eclipse, el primero que se baja le saca púas al otro.
+        HerramientasEscena.CrearPlacaVinculada(altarDeArriba, TipoCastigo.SalenPuas);
+
+        // TRAICIÓN: para llegar a su gema, Killa tiene que pisar este botón, y a Inti le
+        // cae lava. Con el aviso, Inti tiene tiempo de quitarse. Se puede saltar subiendo
+        // directo al piso 2, pero entonces se pierde la gema.
+        HerramientasEscena.CrearBotonTraicion("Boton del piso 1", new Vector2(10.6f, pisoUno), TipoCastigo.CaeLava, altares);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(-6.5f, -2.4f), gemas);
@@ -743,7 +778,9 @@ public static class GeneradorEscenas
         List<ObjetoActivable> abrePisoUno = new List<ObjetoActivable>();
         abrePisoUno.Add(compuertaPisoUno);
         HerramientasEscena.CrearBotonPresion("Boton de abajo", new Vector2(8.5f, suelo), abrePisoUno, mecanismos);
-        HerramientasEscena.CrearPalanca("Palanca del piso 1", new Vector2(5.7f, pisoUno), abrePisoUno, mecanismos);
+        // TRAICIÓN: la palanca sí abre la compuerta, pero le abre el suelo a quien
+        // sostiene el botón. Con el aviso le alcanza para moverse.
+        HerramientasEscena.CrearPalancaSospechosa("Palanca del piso 1", new Vector2(5.7f, pisoUno), abrePisoUno, TipoCastigo.SeAbreElSuelo, mecanismos);
 
         // Compuerta final: tan alta que no se puede saltar. Funciona igual.
         Vector2 tamanoCierre = new Vector2(0.7f, 4.5f);
@@ -751,7 +788,11 @@ public static class GeneradorEscenas
 
         List<ObjetoActivable> abreFinal = new List<ObjetoActivable>();
         abreFinal.Add(compuertaFinal);
-        HerramientasEscena.CrearBotonPresion("Boton de arriba", new Vector2(9.8f, pisoTres), abreFinal, mecanismos);
+        HerramientasEscena.CrearBotonPresion("Boton de arriba", new Vector2(10.2f, pisoTres), abreFinal, mecanismos);
+
+        // TRAICIÓN: junto al veneno de arriba, un botón que le saca púas a quien sostiene
+        // la compuerta. Está donde no hay techo, para que siempre se pueda saltar.
+        HerramientasEscena.CrearBotonTraicion("Boton del piso 3", new Vector2(7.9f, pisoTres), TipoCastigo.SalenPuas, mecanismos);
         HerramientasEscena.CrearPalanca("Palanca final", new Vector2(-6.5f, pisoTres), abreFinal, mecanismos);
 
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
@@ -763,7 +804,7 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(1.5f, -2f), gemas);
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-3f, 0.5f), gemas);
         HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(0f, 3.9f), gemas);
-        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(6f, 8.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(6f, 10f), gemas);
         HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(1f, 8.8f), gemas);
 
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
@@ -862,6 +903,19 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-2f, 6.9f), gemas);
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6.5f, 0.7f), gemas);
         HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(11.9f, 2.1f), gemas);
+
+        // TRAMPA: bloque invisible en el salto natural hacia el piso alto. Se queda
+        // ahí, pero se rodea saltando desde más lejos.
+        HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(9.9f, 2.65f), new Vector2(1f, grosor), colorSueloMina, escenario);
+
+        // TRAMPA: algo sale del suelo antes de la lava y persigue a quien pasa.
+        HerramientasEscena.CrearEnemigoSorpresa("Habitante de la mina", new Vector2(2.6f, suelo), mecanismos);
+
+        // TRAMPA: la última gema, justo antes de las puertas, saca púas del piso.
+        PuasOcultas puasDeLaGema = HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -9.2f, 1.5f, pisoAlto, false, trampas);
+        List<TrampaActivable> trampasDeLaGema = new List<TrampaActivable>();
+        trampasDeLaGema.Add(puasDeLaGema);
+        HerramientasEscena.CrearGemaTrampa("Gema regalada", TipoElemento.Fuego, new Vector2(-9.2f, 5.5f), trampasDeLaGema, gemas);
 
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(-13.2f, pisoAlto), puertas);

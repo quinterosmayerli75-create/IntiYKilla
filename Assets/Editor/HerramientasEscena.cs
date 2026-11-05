@@ -790,7 +790,7 @@ public static class HerramientasEscena
         zona.ConfigurarZona(tipo);
     }
 
-    public static void CrearGema(string nombre, TipoElemento elemento, Vector2 posicion, Transform padre)
+    public static GameObject CrearGema(string nombre, TipoElemento elemento, Vector2 posicion, Transform padre)
     {
         GameObject gema = new GameObject(nombre);
         gema.transform.SetParent(padre);
@@ -822,10 +822,11 @@ public static class HerramientasEscena
 
         Gema componenteGema = gema.AddComponent<Gema>();
         componenteGema.ConfigurarGema(elemento);
+        return gema;
     }
 
     // posicionSuelo = punto donde la puerta toca el piso.
-    public static void CrearPuertaSalida(string nombre, TipoElemento elemento, Vector2 posicionSuelo, Transform padre)
+    public static GameObject CrearPuertaSalida(string nombre, TipoElemento elemento, Vector2 posicionSuelo, Transform padre)
     {
         Color colorElemento = ColoresElemento.ObtenerColor(elemento);
         Color colorPuerta = new Color(colorElemento.r, colorElemento.g, colorElemento.b, 0.65f);
@@ -846,6 +847,7 @@ public static class HerramientasEscena
 
         PuertaSalida componentePuerta = puerta.AddComponent<PuertaSalida>();
         componentePuerta.ConfigurarPuerta(elemento);
+        return puerta;
     }
 
     // posicionSuelo = punto donde el jugador toca el piso al empezar.
@@ -1000,6 +1002,163 @@ public static class HerramientasEscena
         }
     }
 
+    // ================= Trampas =================
+    // Se arman con las mismas piezas que los objetos normales: por eso se ven iguales.
+
+    public static SueloFalso CrearSueloFalso(string nombre, Vector2 posicion, Vector2 tamano, Color colorRespaldo, Transform padre)
+    {
+        GameObject plataforma = CrearPlataforma(nombre, posicion, tamano, colorRespaldo, padre);
+        SueloFalso trampa = plataforma.AddComponent<SueloFalso>();
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static BloqueInvisible CrearBloqueInvisible(string nombre, Vector2 posicion, Vector2 tamano, Color colorRespaldo, Transform padre)
+    {
+        GameObject plataforma = CrearPlataforma(nombre, posicion, tamano, colorRespaldo, padre);
+        BloqueInvisible trampa = plataforma.AddComponent<BloqueInvisible>();
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // alturaPiso: donde se apoyan. Los dibujos son los mismos cristales que los normales.
+    public static PuasOcultas CrearPuasOcultas(string nombre, float centroX, float ancho, float alturaPiso, bool seActivaSola, Transform padre)
+    {
+        GameObject zona = new GameObject(nombre);
+        zona.transform.SetParent(padre);
+        zona.transform.position = new Vector3(centroX, alturaPiso, 0f);
+
+        Sprite spritePua = imagenCristales;
+        Color colorPua = Color.white;
+        if (spritePua == null)
+        {
+            spritePua = ObtenerSpriteCristal();
+            colorPua = colorCristal;
+        }
+
+        float anchoPua = 0.5f;
+        int cantidadPuas = Mathf.Max(1, Mathf.RoundToInt(ancho / anchoPua));
+        for (int indice = 0; indice < cantidadPuas; indice++)
+        {
+            float posicionX = centroX - ancho / 2f + anchoPua / 2f + indice * anchoPua;
+            CrearDecoracion("Pua " + (indice + 1), spritePua, new Vector2(posicionX, alturaPiso + 0.3f), new Vector2(anchoPua, 0.6f), colorPua, 3, false, zona.transform);
+        }
+
+        PuasOcultas trampa = zona.AddComponent<PuasOcultas>();
+        trampa.Configurar(ancho);
+        trampa.ConfigurarDisparo(seActivaSola);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // alturaPiso: hasta dónde cae. La zona que lo dispara es la columna de debajo.
+    public static TechoQueCae CrearTechoQueCae(string nombre, Vector2 posicion, Vector2 tamano, float alturaPiso, bool seActivaSola, Color colorRespaldo, Transform padre)
+    {
+        GameObject bloque = CrearPlataforma(nombre, posicion, tamano, colorRespaldo, padre);
+        TechoQueCae trampa = bloque.AddComponent<TechoQueCae>();
+        trampa.Configurar(alturaPiso);
+        trampa.ConfigurarDisparo(seActivaSola);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static GemaTrampa CrearGemaTrampa(string nombre, TipoElemento elemento, Vector2 posicion, List<TrampaActivable> trampas, Transform padre)
+    {
+        GameObject gema = CrearGema(nombre, elemento, posicion, padre);
+
+        // Se quita la gema de verdad: esta no debe contar para las estrellas.
+        Object.DestroyImmediate(gema.GetComponent<Gema>());
+        Object.DestroyImmediate(gema.GetComponent<CircleCollider2D>());
+
+        GemaTrampa trampa = gema.AddComponent<GemaTrampa>();
+        trampa.Configurar(trampas);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static PuertaFalsa CrearPuertaFalsa(string nombre, TipoElemento elemento, Vector2 posicionSuelo, Vector2 desplazamientoAlHuir, Transform padre)
+    {
+        GameObject puerta = CrearPuertaSalida(nombre, elemento, posicionSuelo, padre);
+
+        // Se quita la puerta de verdad: el nivel no debe esperar a nadie aquí.
+        Object.DestroyImmediate(puerta.GetComponent<PuertaSalida>());
+        Object.DestroyImmediate(puerta.GetComponent<BoxCollider2D>());
+
+        PuertaFalsa trampa = puerta.AddComponent<PuertaFalsa>();
+        trampa.Configurar(desplazamientoAlHuir);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static PlataformaQueHuye CrearPlataformaQueHuye(string nombre, Vector2 posicion, Vector2 tamano, Vector2 desplazamientoAlHuir, Color colorRespaldo, Transform padre)
+    {
+        GameObject plataforma = CrearPlataforma(nombre, posicion, tamano, colorRespaldo, padre);
+        Rigidbody2D cuerpo = plataforma.AddComponent<Rigidbody2D>();
+        cuerpo.bodyType = RigidbodyType2D.Kinematic;
+
+        PlataformaQueHuye trampa = plataforma.AddComponent<PlataformaQueHuye>();
+        trampa.Configurar(desplazamientoAlHuir);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static BotonEnganoso CrearBotonEnganoso(string nombre, Vector2 posicionSuelo, List<TrampaActivable> trampas, Transform padre)
+    {
+        GameObject boton = CrearBotonPresion(nombre, posicionSuelo, new List<ObjetoActivable>(), padre);
+        BotonEnganoso trampa = boton.AddComponent<BotonEnganoso>();
+        trampa.Configurar(trampas);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // posicionSuelo: el piso del que sale.
+    public static EnemigoSorpresa CrearEnemigoSorpresa(string nombre, Vector2 posicionSuelo, Transform padre)
+    {
+        Vector2 tamano = new Vector2(0.9f, 0.9f);
+        GameObject enemigo = new GameObject(nombre);
+        enemigo.transform.SetParent(padre);
+        enemigo.transform.position = new Vector3(posicionSuelo.x, posicionSuelo.y + tamano.y / 2f, 0f);
+        enemigo.transform.localScale = new Vector3(tamano.x, tamano.y, 1f);
+
+        SpriteRenderer dibujo = enemigo.AddComponent<SpriteRenderer>();
+        dibujo.sprite = spriteCirculo;
+        dibujo.color = new Color(0.25f, 0.10f, 0.30f);
+        dibujo.sortingOrder = 9;
+
+        EnemigoSorpresa trampa = enemigo.AddComponent<EnemigoSorpresa>();
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // ----- Trampas de traición: castigan al compañero de quien las usa -----
+
+    public static BotonTraicion CrearBotonTraicion(string nombre, Vector2 posicionSuelo, TipoCastigo castigo, Transform padre)
+    {
+        GameObject boton = CrearBotonPresion(nombre, posicionSuelo, new List<ObjetoActivable>(), padre);
+        BotonTraicion trampa = boton.AddComponent<BotonTraicion>();
+        trampa.Configurar(castigo);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    public static PalancaSospechosa CrearPalancaSospechosa(string nombre, Vector2 posicionSuelo, List<ObjetoActivable> objetivos, TipoCastigo castigo, Transform padre)
+    {
+        GameObject palanca = CrearPalanca(nombre, posicionSuelo, objetivos, padre);
+        PalancaSospechosa trampa = palanca.AddComponent<PalancaSospechosa>();
+        trampa.Configurar(castigo);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // Une las dos placas de un altar: quien se baja primero castiga al otro.
+    public static PlacaVinculada CrearPlacaVinculada(AltarEclipse altar, TipoCastigo castigo)
+    {
+        PlacaVinculada trampa = altar.gameObject.AddComponent<PlacaVinculada>();
+        trampa.Configurar(altar.PlacaUno, altar.PlacaDos, castigo);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
     // Figura quieta de un personaje (sin física ni controles), para el menú principal.
     public static void CrearFiguraPersonaje(string nombre, Sprite imagenPersonaje, Color colorRespaldo, Vector2 centro, Transform padre)
     {
@@ -1112,7 +1271,7 @@ public static class HerramientasEscena
     }
 
     // Botón de presión apoyado en el suelo en la posición indicada.
-    public static void CrearBotonPresion(string nombre, Vector2 posicionSuelo, List<ObjetoActivable> objetivos, Transform padre)
+    public static GameObject CrearBotonPresion(string nombre, Vector2 posicionSuelo, List<ObjetoActivable> objetivos, Transform padre)
     {
         GameObject boton = new GameObject(nombre);
         boton.transform.SetParent(padre);
@@ -1142,10 +1301,11 @@ public static class HerramientasEscena
 
         BotonPresion componente = boton.AddComponent<BotonPresion>();
         componente.Configurar(objetivos, tapa.GetComponent<SpriteRenderer>());
+        return boton;
     }
 
     // Palanca apoyada en el suelo en la posición indicada.
-    public static void CrearPalanca(string nombre, Vector2 posicionSuelo, List<ObjetoActivable> objetivos, Transform padre)
+    public static GameObject CrearPalanca(string nombre, Vector2 posicionSuelo, List<ObjetoActivable> objetivos, Transform padre)
     {
         GameObject palanca = new GameObject(nombre);
         palanca.transform.SetParent(padre);
@@ -1176,10 +1336,11 @@ public static class HerramientasEscena
 
         Palanca componente = palanca.AddComponent<Palanca>();
         componente.Configurar(objetivos, pivote.transform, mango.GetComponent<SpriteRenderer>());
+        return palanca;
     }
 
     // Altar de eclipse: dos placas (pueden estar lejos) unidas por un mismo altar.
-    public static void CrearAltarEclipse(string nombre, Vector2 posicionPlacaUno, Vector2 posicionPlacaDos, Color colorAltar, Transform padre)
+    public static AltarEclipse CrearAltarEclipse(string nombre, Vector2 posicionPlacaUno, Vector2 posicionPlacaDos, Color colorAltar, Transform padre)
     {
         GameObject altar = new GameObject(nombre);
         altar.transform.SetParent(padre);
@@ -1189,6 +1350,7 @@ public static class HerramientasEscena
 
         AltarEclipse componente = altar.AddComponent<AltarEclipse>();
         componente.Configurar(placaUno, placaDos);
+        return componente;
     }
 
     private static PlacaAltar CrearPlacaAltar(string nombre, Vector2 posicionSuelo, Color colorAltar, Transform padre)

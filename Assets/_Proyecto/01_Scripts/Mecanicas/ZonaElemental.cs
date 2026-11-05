@@ -49,7 +49,7 @@ public class ZonaElemental : MonoBehaviour
 
         if (EsPeligrosoPara(jugador.Elemento) == true)
         {
-            jugador.Morir(ObtenerMotivoDeMuerte());
+            jugador.Morir(MensajesDeMuerte.DeZona(tipoZona, jugador.NombreJugador));
         }
     }
 
@@ -76,25 +76,5 @@ public class ZonaElemental : MonoBehaviour
         }
 
         return false;
-    }
-
-    private string ObtenerMotivoDeMuerte()
-    {
-        if (tipoZona == TipoZona.Lava)
-        {
-            return "tocó la lava";
-        }
-
-        if (tipoZona == TipoZona.Agua)
-        {
-            return "se apagó en el agua";
-        }
-
-        if (tipoZona == TipoZona.Veneno)
-        {
-            return "tocó el veneno";
-        }
-
-        return "se pinchó con los cristales de sal";
     }
 }

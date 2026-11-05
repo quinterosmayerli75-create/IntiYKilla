@@ -60,6 +60,11 @@ public class ControladorJugador : MonoBehaviour
     private bool estaVivo = true;
     private bool puedeMoverse = true;
 
+    // Última trampa que engañó a este personaje, para el mensaje de muerte.
+    private const float tiempoQueRecuerdaLaTrampa = 3f;
+    private string mensajeDeTrampa = "";
+    private float momentoDeLaTrampa = 0f;
+
     // Elemento con el que empezó el nivel; sirve para saber si el eclipse
     // le cambió los poderes (y así teñir la imagen como aviso).
     private TipoElemento elementoInicial = TipoElemento.Fuego;
@@ -78,6 +83,17 @@ public class ControladorJugador : MonoBehaviour
     public bool EstaVivo
     {
         get { return estaVivo; }
+    }
+
+    // Las trampas usan estos datos para saber dónde está y si va saltando.
+    public Bounds LimitesCuerpo
+    {
+        get { return colisionador.bounds; }
+    }
+
+    public float VelocidadVertical
+    {
+        get { return cuerpoFisico.linearVelocity.y; }
     }
 
     private void Awake()
@@ -239,7 +255,7 @@ public class ControladorJugador : MonoBehaviour
     }
 
     // Revisa si hay algo sólido justo debajo de los pies.
-    private bool EstaEnElSuelo()
+    public bool EstaEnElSuelo()
     {
         Bounds limites = colisionador.bounds;
         Vector2 centroCaja = new Vector2(limites.center.x, limites.min.y - 0.05f);
@@ -265,7 +281,7 @@ public class ControladorJugador : MonoBehaviour
     {
         if (transform.position.y < alturaLimiteCaida)
         {
-            Morir("cayó al vacío");
+            Morir(MensajesDeMuerte.DeVacio(nombreJugador));
         }
     }
 
@@ -304,11 +320,18 @@ public class ControladorJugador : MonoBehaviour
     }
 
     // Lo llaman las zonas peligrosas (lava, agua, veneno) o la caída.
-    public void Morir(string motivo)
+    public void Morir(string mensajeDeMuerte)
     {
         if (estaVivo == false)
         {
             return;
+        }
+
+        // Si cayó por culpa de una trampa, el mensaje debe culpar a la trampa,
+        // no a lo último que tocó (el agua, el vacío...).
+        if (mensajeDeTrampa != "" && Time.time - momentoDeLaTrampa <= tiempoQueRecuerdaLaTrampa)
+        {
+            mensajeDeMuerte = mensajeDeTrampa;
         }
 
         estaVivo = false;
@@ -323,8 +346,15 @@ public class ControladorJugador : MonoBehaviour
 
         if (GestorNivel.Instancia != null)
         {
-            GestorNivel.Instancia.JugadorMurio(this, motivo);
+            GestorNivel.Instancia.JugadorMurio(mensajeDeMuerte);
         }
+    }
+
+    // Una trampa avisa que acaba de engañar a este jugador.
+    public void RecordarTrampa(string mensaje)
+    {
+        mensajeDeTrampa = mensaje;
+        momentoDeLaTrampa = Time.time;
     }
 
     // Lo usa el GestorNivel al ganar, para que los personajes se queden quietos.

@@ -3,8 +3,8 @@
 // Proyecto: Inti y Killa
 // Descripción: "Catálogo" del juego. Guarda en un solo lugar los 6 mundos
 //              y sus 5 niveles (30 en total): nombre de la escena, título,
-//              mundo, posición dentro del mundo y tiempo objetivo para
-//              ganar la 3ra estrella.
+//              mundo, posición dentro del mundo y las muertes permitidas para
+//              ganar la 3ra estrella (más altas en los mundos más tramposos).
 //              Así, si un nivel cambia de nombre, se corrige solo aquí.
 // =====================================================================
 
@@ -17,14 +17,14 @@ public class DatosNivel
     public int numeroEnMundo;
     public string nombreEscena;
     public string titulo;
-    public float tiempoObjetivo;
+    public int muertesPermitidas;
 
-    public DatosNivel(int nuevoMundo, int nuevoNumeroEnMundo, string nuevoTitulo, float nuevoTiempoObjetivo)
+    public DatosNivel(int nuevoMundo, int nuevoNumeroEnMundo, string nuevoTitulo, int nuevasMuertesPermitidas)
     {
         numeroMundo = nuevoMundo;
         numeroEnMundo = nuevoNumeroEnMundo;
         titulo = nuevoTitulo;
-        tiempoObjetivo = nuevoTiempoObjetivo;
+        muertesPermitidas = nuevasMuertesPermitidas;
 
         // Mundo 1, nivel 2 -> "Mundo1_Nivel2"
         nombreEscena = "Mundo" + nuevoMundo + "_Nivel" + nuevoNumeroEnMundo;
@@ -112,9 +112,9 @@ public static class DatosJuego
         return nombresMundos[indice];
     }
 
-    private static void AgregarNivel(int numeroMundo, int numeroEnMundo, string titulo, float tiempoObjetivo)
+    private static void AgregarNivel(int numeroMundo, int numeroEnMundo, string titulo, int muertesPermitidas)
     {
-        listaNiveles.Add(new DatosNivel(numeroMundo, numeroEnMundo, titulo, tiempoObjetivo));
+        listaNiveles.Add(new DatosNivel(numeroMundo, numeroEnMundo, titulo, muertesPermitidas));
     }
 
     private static void CrearListaDeNiveles()
@@ -122,45 +122,45 @@ public static class DatosJuego
         listaNiveles = new List<DatosNivel>();
 
         // Mundo 1: Salar de Uyuni (tutorial)
-        AgregarNivel(1, 1, "Primeros pasos", 35f);
-        AgregarNivel(1, 2, "Botones y compuertas", 45f);
-        AgregarNivel(1, 3, "El primer eclipse", 70f);
-        AgregarNivel(1, 4, "Espejo de sal", 45f);
-        AgregarNivel(1, 5, "Travesía del salar", 80f);
+        AgregarNivel(1, 1, "Primeros pasos", 3);
+        AgregarNivel(1, 2, "Botones y compuertas", 3);
+        AgregarNivel(1, 3, "El primer eclipse", 4);
+        AgregarNivel(1, 4, "Espejo de sal", 5);
+        AgregarNivel(1, 5, "Travesía del salar", 6);
 
         // Mundo 2: Minas de Potosí
-        AgregarNivel(2, 1, "La luz de Inti", 60f);
-        AgregarNivel(2, 2, "Vagonetas", 60f);
-        AgregarNivel(2, 3, "Cajas pesadas", 70f);
-        AgregarNivel(2, 4, "Galerías oscuras", 75f);
-        AgregarNivel(2, 5, "El corazón del Cerro Rico", 90f);
+        AgregarNivel(2, 1, "La luz de Inti", 6);
+        AgregarNivel(2, 2, "Vagonetas", 7);
+        AgregarNivel(2, 3, "Cajas pesadas", 8);
+        AgregarNivel(2, 4, "Galerías oscuras", 9);
+        AgregarNivel(2, 5, "El corazón del Cerro Rico", 10);
 
         // Mundo 3: Yungas
-        AgregarNivel(3, 1, "Camino en la niebla", 60f);
-        AgregarNivel(3, 2, "Lluvia en la montaña", 70f);
-        AgregarNivel(3, 3, "Día y noche", 75f);
-        AgregarNivel(3, 4, "Puente entre nubes", 80f);
-        AgregarNivel(3, 5, "El camino de la muerte", 90f);
+        AgregarNivel(3, 1, "Camino en la niebla", 8);
+        AgregarNivel(3, 2, "Lluvia en la montaña", 9);
+        AgregarNivel(3, 3, "Día y noche", 10);
+        AgregarNivel(3, 4, "Puente entre nubes", 11);
+        AgregarNivel(3, 5, "El camino de la muerte", 12);
 
         // Mundo 4: Trópico
-        AgregarNivel(4, 1, "Ríos y lianas", 70f);
-        AgregarNivel(4, 2, "Hojas trampolín", 70f);
-        AgregarNivel(4, 3, "Eclipse en la selva", 80f);
-        AgregarNivel(4, 4, "Persecución en el río", 60f);
-        AgregarNivel(4, 5, "El corazón del Chapare", 90f);
+        AgregarNivel(4, 1, "Ríos y lianas", 10);
+        AgregarNivel(4, 2, "Hojas trampolín", 11);
+        AgregarNivel(4, 3, "Eclipse en la selva", 12);
+        AgregarNivel(4, 4, "Persecución en el río", 13);
+        AgregarNivel(4, 5, "El corazón del Chapare", 14);
 
         // Mundo 5: Aiquile, tierra del charango
-        AgregarNivel(5, 1, "Cuerdas de charango", 70f);
-        AgregarNivel(5, 2, "La puerta melódica", 80f);
-        AgregarNivel(5, 3, "Melodía a dúo", 90f);
-        AgregarNivel(5, 4, "Serenata nocturna", 90f);
-        AgregarNivel(5, 5, "El gran concierto", 100f);
+        AgregarNivel(5, 1, "Cuerdas de charango", 12);
+        AgregarNivel(5, 2, "La puerta melódica", 13);
+        AgregarNivel(5, 3, "Melodía a dúo", 14);
+        AgregarNivel(5, 4, "Serenata nocturna", 15);
+        AgregarNivel(5, 5, "El gran concierto", 16);
 
         // Mundo 6: Isla del Sol
-        AgregarNivel(6, 1, "Eclipse eterno", 90f);
-        AgregarNivel(6, 2, "Las escalinatas de Yumani", 90f);
-        AgregarNivel(6, 3, "El templo del Sol", 100f);
-        AgregarNivel(6, 4, "Todo a la vez", 100f);
-        AgregarNivel(6, 5, "El gran final", 120f);
+        AgregarNivel(6, 1, "Eclipse eterno", 15);
+        AgregarNivel(6, 2, "Las escalinatas de Yumani", 16);
+        AgregarNivel(6, 3, "El templo del Sol", 18);
+        AgregarNivel(6, 4, "Todo a la vez", 20);
+        AgregarNivel(6, 5, "El gran final", 25);
     }
 }

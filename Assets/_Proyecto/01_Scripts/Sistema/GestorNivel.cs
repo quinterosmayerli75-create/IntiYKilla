@@ -28,7 +28,9 @@ public class GestorNivel : MonoBehaviour
         get { return instancia; }
     }
 
-    [SerializeField] private float tiempoEsperaReinicio = 1.2f;
+    // Reinicio casi instantáneo: morir es parte del juego y no debe aburrir.
+    [SerializeField] private float tiempoEsperaReinicio = 0.4f;
+    [SerializeField] private float duracionMensajeDeMuerte = 2.5f;
 
     [Header("Pista que aparece al empezar el nivel")]
     [TextArea]
@@ -39,7 +41,13 @@ public class GestorNivel : MonoBehaviour
     // Queda en null si la escena no está en el catálogo (por ejemplo, una de prueba).
     private DatosNivel datosNivel = null;
     private string tituloNivel = "Nivel de prueba";
-    private float tiempoObjetivo = 60f;
+    private int muertesPermitidas = 5;
+
+    // Son estáticos porque la escena se recarga al morir y borraría lo demás:
+    // las muertes y el último mensaje deben sobrevivir a ese reinicio.
+    private static int muertesDelIntento = 0;
+    private static string escenaDelContador = "";
+    private static string mensajeDeLaUltimaMuerte = "";
 
     // Gemas: totales del nivel y recogidas.
     private int totalGemasFuego = 0;
@@ -78,7 +86,22 @@ public class GestorNivel : MonoBehaviour
         CargarDatosDelNivel();
         BuscarObjetosDeLaEscena();
 
-        if (pistaInicial != "")
+        // Si se entra al nivel desde afuera, el contador empieza de cero.
+        string nombreEscena = SceneManager.GetActiveScene().name;
+        if (nombreEscena != escenaDelContador)
+        {
+            escenaDelContador = nombreEscena;
+            muertesDelIntento = 0;
+            mensajeDeLaUltimaMuerte = "";
+        }
+
+        // El reinicio es tan rápido que el mensaje se muestra ya en el nuevo intento.
+        if (mensajeDeLaUltimaMuerte != "")
+        {
+            MostrarAviso(mensajeDeLaUltimaMuerte, duracionMensajeDeMuerte);
+            mensajeDeLaUltimaMuerte = "";
+        }
+        else if (pistaInicial != "" && muertesDelIntento == 0)
         {
             MostrarAviso(pistaInicial, duracionPista);
         }
@@ -93,7 +116,7 @@ public class GestorNivel : MonoBehaviour
         {
             string nombreMundo = DatosJuego.ObtenerNombreMundo(datosNivel.numeroMundo);
             tituloNivel = "Mundo " + datosNivel.numeroMundo + " - Nivel " + datosNivel.numeroEnMundo + " (" + nombreMundo + "): " + datosNivel.titulo;
-            tiempoObjetivo = datosNivel.tiempoObjetivo;
+            muertesPermitidas = datosNivel.muertesPermitidas;
 
             // Así, al volver al mapa se muestran los niveles de este mundo.
             GestorProgreso.MundoElegido = datosNivel.numeroMundo;
@@ -189,7 +212,7 @@ public class GestorNivel : MonoBehaviour
         tiempoRestanteAviso = segundos;
     }
 
-    public void JugadorMurio(ControladorJugador jugador, string motivo)
+    public void JugadorMurio(string mensajeDeMuerte)
     {
         if (nivelTerminado == true || reinicioEnCurso == true)
         {
@@ -198,7 +221,9 @@ public class GestorNivel : MonoBehaviour
 
         // Regla del GDD: si uno muere, el nivel se reinicia para los dos.
         reinicioEnCurso = true;
-        mensajeCentral = jugador.NombreJugador + " " + motivo + "... ¡otra vez!";
+        muertesDelIntento = muertesDelIntento + 1;
+        mensajeCentral = mensajeDeMuerte;
+        mensajeDeLaUltimaMuerte = mensajeDeMuerte;
         Invoke(nameof(ReiniciarNivel), tiempoEsperaReinicio);
     }
 
@@ -226,9 +251,13 @@ public class GestorNivel : MonoBehaviour
         nivelTerminado = true;
         estrellasGanadas = CalcularEstrellas();
 
+        // Si repiten el nivel después de ganarlo, las muertes empiezan de cero.
+        escenaDelContador = "";
+
         if (datosNivel != null)
         {
             GestorProgreso.GuardarResultado(datosNivel.numeroMundo, datosNivel.numeroEnMundo, estrellasGanadas);
+            GestorProgreso.GuardarRecordMuertes(datosNivel.numeroMundo, datosNivel.numeroEnMundo, muertesDelIntento);
             mundoCompletado = datosNivel.numeroEnMundo == DatosJuego.nivelesPorMundo;
         }
 
@@ -249,7 +278,7 @@ public class GestorNivel : MonoBehaviour
         }
     }
 
-    // 1 estrella por terminar, +1 por todas las gemas, +1 por llegar a tiempo.
+    // 1 estrella por terminar, +1 por todas las gemas, +1 por morir pocas veces.
     private int CalcularEstrellas()
     {
         int estrellas = 1;
@@ -260,8 +289,8 @@ public class GestorNivel : MonoBehaviour
             estrellas = estrellas + 1;
         }
 
-        bool llegoATiempo = cronometro <= tiempoObjetivo;
-        if (llegoATiempo == true)
+        bool murioPocasVeces = muertesDelIntento <= muertesPermitidas;
+        if (murioPocasVeces == true)
         {
             estrellas = estrellas + 1;
         }
@@ -277,6 +306,8 @@ public class GestorNivel : MonoBehaviour
 
     public void VolverAlMapa()
     {
+        escenaDelContador = "";
+
         if (Application.CanStreamedLevelBeLoaded(DatosJuego.escenaSeleccionNivel) == true)
         {
             SceneManager.LoadScene(DatosJuego.escenaSeleccionNivel);
@@ -285,6 +316,7 @@ public class GestorNivel : MonoBehaviour
 
     public void VolverAMundos()
     {
+        escenaDelContador = "";
         SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
     }
 
@@ -330,6 +362,23 @@ public class GestorNivel : MonoBehaviour
         return texto;
     }
 
+    // Muertes de este intento, las permitidas para la estrella y el récord guardado.
+    private string ObtenerTextoMuertes()
+    {
+        string texto = "Muertes: " + muertesDelIntento + "   (estrella con " + muertesPermitidas + " o menos)";
+
+        if (datosNivel != null)
+        {
+            int record = GestorProgreso.ObtenerRecordMuertes(datosNivel.numeroMundo, datosNivel.numeroEnMundo);
+            if (record >= 0)
+            {
+                texto = texto + "   Récord: " + record;
+            }
+        }
+
+        return texto;
+    }
+
     // Resolución para la que se diseñó el HUD. En otras pantallas todo se
     // escala en proporción, así el texto no se corta ni queda diminuto
     // (importante en WebGL, donde cada jugador tiene un tamaño de ventana distinto).
@@ -355,7 +404,7 @@ public class GestorNivel : MonoBehaviour
         GUI.Label(new Rect(margenHud, margenHud, anchoTexto, 44), tituloNivel, estiloTexto);
         string textoGemas = "Gemas de fuego: " + gemasFuegoRecogidas + "/" + totalGemasFuego + "     Gemas de agua: " + gemasAguaRecogidas + "/" + totalGemasAgua;
         GUI.Label(new Rect(margenHud, margenHud + 44, anchoTexto, 44), textoGemas, estiloTexto);
-        GUI.Label(new Rect(margenHud, margenHud + 88, anchoTexto, 44), "Tiempo: " + cronometro.ToString("0.0") + " s   (objetivo: " + tiempoObjetivo.ToString("0") + " s)", estiloTexto);
+        GUI.Label(new Rect(margenHud, margenHud + 88, anchoTexto, 44), ObtenerTextoMuertes(), estiloTexto);
 
         // La ayuda de controles va centrada abajo, con margen para que no toque el borde.
         GUIStyle estiloAyuda = new GUIStyle(GUI.skin.label);
@@ -390,10 +439,10 @@ public class GestorNivel : MonoBehaviour
 
             GUIStyle estiloOpciones = new GUIStyle(estiloAyuda);
             estiloOpciones.fontSize = 30;
-            string textoOpciones = "Tiempo: " + cronometro.ToString("0.0") + " s     Enter: siguiente nivel     R: repetir     Esc: mapa";
+            string textoOpciones = "Muertes: " + muertesDelIntento + "     Enter: siguiente nivel     R: repetir     Esc: mapa";
             if (mundoCompletado == true)
             {
-                textoOpciones = "Tiempo: " + cronometro.ToString("0.0") + " s     Enter: volver a los mundos";
+                textoOpciones = "Muertes: " + muertesDelIntento + "     Enter: volver a los mundos";
             }
             GUI.Label(new Rect(0, altoVirtual / 2f + 110f, anchoVirtual, 50), textoOpciones, estiloOpciones);
         }

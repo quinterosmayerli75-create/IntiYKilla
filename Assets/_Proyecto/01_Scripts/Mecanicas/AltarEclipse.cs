@@ -19,6 +19,16 @@ public class AltarEclipse : MonoBehaviour
     // Evita que el eclipse se repita en cada frame mientras siguen parados.
     private bool estaListo = true;
 
+    public PlacaAltar PlacaUno
+    {
+        get { return placaUno; }
+    }
+
+    public PlacaAltar PlacaDos
+    {
+        get { return placaDos; }
+    }
+
     public void Configurar(PlacaAltar nuevaPlacaUno, PlacaAltar nuevaPlacaDos)
     {
         placaUno = nuevaPlacaUno;

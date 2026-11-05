@@ -28,27 +28,32 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Altar de eclipse (intercambio de poderes)
 - [x] Luces 2D e iluminación de Inti
 - [x] Armar los niveles 1-4 y 1-5 (Salar de Uyuni)
+- [x] Trampas engañosas: suelo falso, bloque invisible, púas ocultas, techo que cae, gema trampa, puerta falsa, plataforma que huye, botón engañoso y enemigo sorpresa
+- [x] Trampas de traición: botón de traición, palanca sospechosa y placa vinculada
+- [x] Sistema de muertes: reinicio rápido, contador, récord y mensajes graciosos
+- [x] Estrellas por pocas muertes (máximo configurable por nivel)
+- [x] Poner trampas en los niveles 1-1 a 1-5 y 2-1
 - [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
 - [ ] Cajas empujables
 - [ ] Niebla y lluvia
 - [ ] Sistema de día y noche
 
 ## Semana 3: Mundo 2 (11 – 17 nov)
-- [ ] Armar los niveles 2-2 a 2-5 (Minas de Potosí; 2-1 listo)
+- [ ] Armar los niveles 2-2 a 2-5 con más trampas (Minas de Potosí; 2-1 listo; traición en 2-4 y 2-5)
 - [ ] Lianas, hojas trampolín y monos
 - [ ] Cuerdas de charango y puerta melódica
 - [ ] Eclipse automático
 
 ## Semana 4: Mundos 3 y 4 (18 – 24 nov)
-- [ ] Armar los niveles 3-1 a 3-5 (Yungas)
-- [ ] Armar los niveles 4-1 a 4-5 (Trópico)
+- [ ] Armar los niveles 3-1 a 3-5 con más trampas (Yungas; traición en 3-4 y 3-5)
+- [ ] Armar los niveles 4-1 a 4-5 con más trampas (Trópico; traición en 4-4 y 4-5)
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
-- [ ] Armar los niveles 5-1 a 5-5 (Aiquile)
-- [ ] Armar los niveles 6-1 a 6-5 (Isla del Sol)
+- [ ] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
+- [ ] Armar los niveles 6-1 a 6-5, los más tramposos (Isla del Sol; traición en 6-4 y 6-5)
 - [x] Menú principal
 - [ ] Selección de mundo con mapa de Bolivia (pantalla simple lista; falta el mapa dibujado)
-- [ ] HUD con gemas y cronómetro
+- [ ] HUD definitivo con gemas y muertes (versión temporal lista)
 - [ ] Pausa, opciones, victoria y derrota
 - [x] Sistema de estrellas
 - [x] Guardado con PlayerPrefs

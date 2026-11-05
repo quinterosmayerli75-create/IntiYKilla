@@ -24,6 +24,13 @@ public class Palanca : MonoBehaviour
 
     private List<ControladorJugador> jugadoresCerca = new List<ControladorJugador>();
     private bool estaEncendida = false;
+    private ControladorJugador ultimoJugadorQueLaUso = null;
+
+    // Lo consulta PalancaSospechosa para saber a quién culpar.
+    public ControladorJugador UltimoJugadorQueLaUso
+    {
+        get { return ultimoJugadorQueLaUso; }
+    }
 
     public void Configurar(List<ObjetoActivable> nuevosObjetivos, Transform nuevoPivote, SpriteRenderer nuevoMango)
     {
@@ -44,6 +51,7 @@ public class Palanca : MonoBehaviour
         {
             if (jugador != null && jugador.PresionoHabilidadEsteFrame() == true)
             {
+                ultimoJugadorQueLaUso = jugador;
                 Alternar();
                 break; // Solo un cambio por frame, aunque los dos presionen a la vez.
             }
