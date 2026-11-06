@@ -20,6 +20,8 @@ public class PlataformaMovil : ObjetoActivable
     [SerializeField] private bool activaDesdeElInicio = false;
 
     private Rigidbody2D cuerpoFisico;
+    private Collider2D colisionador;
+    private ControladorJugador[] jugadores;
     private Vector2 puntoA;
     private Vector2 puntoB;
     private bool vaHaciaB = true;
@@ -36,6 +38,8 @@ public class PlataformaMovil : ObjetoActivable
     private void Awake()
     {
         cuerpoFisico = GetComponent<Rigidbody2D>();
+        colisionador = GetComponent<Collider2D>();
+        jugadores = FindObjectsByType<ControladorJugador>();
         cuerpoFisico.bodyType = RigidbodyType2D.Kinematic;
         // Interpolar hace que el movimiento se vea suave en pantalla.
         cuerpoFisico.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -63,6 +67,30 @@ public class PlataformaMovil : ObjetoActivable
         seEstaMoviendo = activo;
     }
 
+    // Los jugadores no tienen fricción: en un movimiento horizontal hay que
+    // sumarles la velocidad de la plataforma para que viajen con ella.
+    private void LlevarAJugadoresEncima(float velocidadHorizontal)
+    {
+        if (velocidadHorizontal == 0f || colisionador == null)
+        {
+            return;
+        }
+
+        Bounds plataforma = colisionador.bounds;
+        foreach (ControladorJugador jugador in jugadores)
+        {
+            if (jugador != null && jugador.EstaVivo == true)
+            {
+                Bounds cuerpo = jugador.LimitesCuerpo;
+                bool estaEncima = cuerpo.max.x > plataforma.min.x && cuerpo.min.x < plataforma.max.x && Mathf.Abs(cuerpo.min.y - plataforma.max.y) < 0.15f;
+                if (estaEncima == true)
+                {
+                    jugador.AplicarEmpuje(velocidadHorizontal);
+                }
+            }
+        }
+    }
+
     private void FixedUpdate()
     {
         if (seEstaMoviendo == false)
@@ -84,6 +112,7 @@ public class PlataformaMovil : ObjetoActivable
         }
 
         Vector2 nuevaPosicion = Vector2.MoveTowards(cuerpoFisico.position, destino, velocidad * Time.fixedDeltaTime);
+        LlevarAJugadoresEncima((nuevaPosicion.x - cuerpoFisico.position.x) / Time.fixedDeltaTime);
         cuerpoFisico.MovePosition(nuevaPosicion);
 
         // Al llegar al destino, damos media vuelta.

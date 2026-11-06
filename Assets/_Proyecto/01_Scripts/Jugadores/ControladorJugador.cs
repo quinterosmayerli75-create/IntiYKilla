@@ -92,6 +92,11 @@ public class ControladorJugador : MonoBehaviour
         get { return colisionador.bounds; }
     }
 
+    public float DireccionHorizontal
+    {
+        get { return direccionHorizontal; }
+    }
+
     public float VelocidadVertical
     {
         get { return cuerpoFisico.linearVelocity.y; }
@@ -155,7 +160,13 @@ public class ControladorJugador : MonoBehaviour
         empujeExterno = 0f;
     }
 
-    // Lo usa el viento: se suma a la velocidad al caminar.
+    // Lo usan los enemigos cuando alguien los pisa.
+    public void Rebotar(float fuerza)
+    {
+        cuerpoFisico.linearVelocity = new Vector2(cuerpoFisico.linearVelocity.x, fuerza);
+    }
+
+    // Lo usan el viento y las vagonetas: se suma a la velocidad al caminar.
     public void AplicarEmpuje(float velocidadX)
     {
         empujeExterno = velocidadX;

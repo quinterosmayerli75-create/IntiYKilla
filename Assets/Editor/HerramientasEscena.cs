@@ -1190,6 +1190,91 @@ public static class HerramientasEscena
         return componente;
     }
 
+    // Murciélago: mientras no haya arte es un círculo oscuro con borde claro.
+    public static EnemigoVolador CrearMurcielago(string nombre, Vector2 centro, Vector2 amplitud, float segundosPorVuelta, Transform padre)
+    {
+        GameObject murcielago = new GameObject(nombre);
+        murcielago.transform.SetParent(padre);
+        murcielago.transform.position = new Vector3(centro.x, centro.y, 0f);
+        murcielago.transform.localScale = new Vector3(0.8f, 0.7f, 1f);
+
+        SpriteRenderer dibujo = murcielago.AddComponent<SpriteRenderer>();
+        dibujo.sprite = spriteCirculo;
+        dibujo.color = new Color(0.75f, 0.35f, 0.95f);
+        dibujo.sortingOrder = 8;
+
+        EnemigoVolador volador = murcielago.AddComponent<EnemigoVolador>();
+        volador.Configurar(TipoVuelo.Zigzag, amplitud, segundosPorVuelta);
+        volador.ConfigurarMensaje("Un murciélago confundió a {0} con la cena.");
+        return volador;
+    }
+
+    // Roca colgada: alturaPiso es hasta dónde cae.
+    public static PeligroQueCae CrearRocaQueCae(string nombre, Vector2 posicion, float alturaPiso, float segundosDeEspera, Transform padre)
+    {
+        Vector2 tamano = new Vector2(1f, 0.8f);
+        GameObject roca = new GameObject(nombre);
+        roca.transform.SetParent(padre);
+        roca.transform.position = new Vector3(posicion.x, posicion.y, 0f);
+        roca.transform.localScale = new Vector3(tamano.x, tamano.y, 1f);
+
+        SpriteRenderer dibujo = roca.AddComponent<SpriteRenderer>();
+        dibujo.sprite = spriteCuadrado;
+        dibujo.color = new Color(0.85f, 0.75f, 0.60f);
+        dibujo.sortingOrder = 7;
+
+        PeligroQueCae peligro = roca.AddComponent<PeligroQueCae>();
+        peligro.Configurar(tamano, alturaPiso, segundosDeEspera);
+        return peligro;
+    }
+
+    // posicionSuelo: el piso donde se apoya. Pesa tanto que hacen falta los dos.
+    public static CajaEmpujable CrearCajaEmpujable(string nombre, Vector2 posicionSuelo, float limiteIzquierdo, float limiteDerecho, Transform padre)
+    {
+        Vector2 tamano = new Vector2(1.4f, 1.2f);
+        Vector2 centro = new Vector2(posicionSuelo.x, posicionSuelo.y + tamano.y / 2f);
+        GameObject caja = CrearBloque(nombre, centro, tamano, new Color(0.62f, 0.45f, 0.28f), padre);
+        caja.GetComponent<SpriteRenderer>().sortingOrder = 5;
+
+        Rigidbody2D cuerpo = caja.AddComponent<Rigidbody2D>();
+        cuerpo.gravityScale = 3f;
+        cuerpo.freezeRotation = true;
+        cuerpo.mass = 50f;
+        caja.GetComponent<BoxCollider2D>().sharedMaterial = materialSinFriccion;
+
+        CajaEmpujable componente = caja.AddComponent<CajaEmpujable>();
+        componente.Configurar(2, limiteIzquierdo, limiteDerecho);
+        return componente;
+    }
+
+    // Vagoneta: plataforma móvil horizontal con ruedas y su riel a lo largo del recorrido.
+    public static PlataformaMovil CrearVagoneta(string nombre, Vector2 posicion, float distancia, float velocidad, bool moverseDesdeElInicio, Transform padre)
+    {
+        Vector2 tamano = new Vector2(2.4f, 0.4f);
+        Color colorVagoneta = new Color(0.55f, 0.40f, 0.30f);
+
+        // El riel va primero para quedar detrás de la vagoneta.
+        float inicioRiel = Mathf.Min(posicion.x, posicion.x + distancia) - tamano.x / 2f;
+        float largoRiel = Mathf.Abs(distancia) + tamano.x;
+        Vector2 centroRiel = new Vector2(inicioRiel + largoRiel / 2f, posicion.y - tamano.y / 2f - 0.28f);
+        CrearDecoracion(nombre + " riel", spriteCuadrado, centroRiel, new Vector2(largoRiel, 0.08f), new Color(0.35f, 0.30f, 0.30f), -2, false, padre);
+
+        PlataformaMovil vagoneta = CrearPlataformaMovil(nombre, posicion, tamano, new Vector2(distancia, 0f), velocidad, moverseDesdeElInicio, padre);
+
+        // Las ruedas son hijas: su tamaño se divide por la escala de la vagoneta.
+        foreach (SpriteRenderer dibujo in vagoneta.GetComponentsInChildren<SpriteRenderer>())
+        {
+            dibujo.color = colorVagoneta;
+        }
+        Vector2 tamanoRueda = new Vector2(0.28f / tamano.x, 0.28f / tamano.y);
+        float alturaRueda = (-tamano.y / 2f - 0.12f) / tamano.y;
+        GameObject ruedaUno = CrearDibujoHijo("Rueda 1", vagoneta.transform, new Vector2(-0.3f, alturaRueda), tamanoRueda, new Color(0.2f, 0.2f, 0.22f), 1);
+        GameObject ruedaDos = CrearDibujoHijo("Rueda 2", vagoneta.transform, new Vector2(0.3f, alturaRueda), tamanoRueda, new Color(0.2f, 0.2f, 0.22f), 1);
+        ruedaUno.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        ruedaDos.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        return vagoneta;
+    }
+
     // Figura quieta de un personaje (sin física ni controles), para el menú principal.
     public static void CrearFiguraPersonaje(string nombre, Sprite imagenPersonaje, Color colorRespaldo, Vector2 centro, Transform padre)
     {

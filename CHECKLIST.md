@@ -35,19 +35,19 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Poner trampas en los niveles 1-1 a 1-5 y 2-1
 - [x] RemolinoViento y remolinos de sal en los niveles 1-4 y 1-5
 - [x] Mundo 1 completo según la plantilla del GDD
-- [ ] Aturdir enemigos al saltar encima (3 segundos)
-- [ ] PeligroQueCae y EnemigoVolador (Mundo 2)
+- [x] Aturdir enemigos al saltar encima (3 segundos)
+- [x] PeligroQueCae y EnemigoVolador (Mundo 2)
 - [ ] EnemigoEnPicada y PiedraRodante (Mundo 3)
 - [ ] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
 - [ ] EnemigoPerseguidor (Mundo 5)
 - [ ] Jefe final GuardianEclipse (nivel 6-5)
-- [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
-- [ ] Cajas empujables
+- [x] Vagonetas y plataformas móviles
+- [x] Cajas empujables
 - [ ] Niebla y lluvia
 - [ ] Sistema de día y noche
 
 ## Semana 3: Mundo 2 (11 – 17 nov)
-- [ ] Armar los niveles 2-2 a 2-5 con más trampas (Minas de Potosí; 2-1 listo; traición en 2-4 y 2-5)
+- [x] Armar los niveles 2-1 a 2-5 con más trampas (Minas de Potosí)
 - [ ] Lianas, hojas trampolín y monos
 - [ ] Cuerdas de charango y puerta melódica
 - [ ] Eclipse automático
