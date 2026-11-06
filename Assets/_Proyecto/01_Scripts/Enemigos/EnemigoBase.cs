@@ -70,6 +70,17 @@ public abstract class EnemigoBase : MonoBehaviour
 
     protected abstract void MoverEnemigo();
 
+    // Para los avisos de cada enemigo concreto (por ejemplo, ponerse rojo).
+    protected void PintarDibujo(Color color)
+    {
+        dibujo.color = color;
+    }
+
+    protected void RestaurarColorDibujo()
+    {
+        dibujo.color = colorNormal;
+    }
+
     private void ActualizarAturdimiento()
     {
         tiempoAturdidoRestante = tiempoAturdidoRestante - Time.deltaTime;

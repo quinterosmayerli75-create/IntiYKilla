@@ -21,7 +21,7 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public static class HerramientasEscena
+public static partial class HerramientasEscena
 {
     // ================= Rutas =================
     public const string carpetaEscenas = "Assets/_Proyecto/00_Scenes";
@@ -529,7 +529,7 @@ public static class HerramientasEscena
         confinador.BoundingShape2D = formaLimites;
     }
 
-    public static void CrearLuzGlobal(Color colorLuz, float intensidad)
+    public static Light2D CrearLuzGlobal(Color colorLuz, float intensidad)
     {
         // En URP 2D los sprites necesitan luz para verse (si no, salen negros).
         GameObject objetoLuz = new GameObject("Luz global 2D");
@@ -537,6 +537,7 @@ public static class HerramientasEscena
         luz.lightType = Light2D.LightType.Global;
         luz.color = colorLuz;
         luz.intensity = intensidad;
+        return luz;
     }
 
     // La pista es el texto de ayuda que aparece al empezar el nivel.
@@ -777,7 +778,7 @@ public static class HerramientasEscena
     }
 
     // Charco sobre cualquier piso: alturaPiso es donde los pies tocan la plataforma.
-    public static void CrearCharco(string nombre, TipoZona tipo, float centroX, float ancho, float alturaPiso, Transform padre)
+    public static GameObject CrearCharco(string nombre, TipoZona tipo, float centroX, float ancho, float alturaPiso, Transform padre)
     {
         Color color = colorLava;
         Sprite imagen = imagenLava;
@@ -799,6 +800,7 @@ public static class HerramientasEscena
 
         ZonaElemental zona = charco.AddComponent<ZonaElemental>();
         zona.ConfigurarZona(tipo);
+        return charco;
     }
 
     public static GameObject CrearGema(string nombre, TipoElemento elemento, Vector2 posicion, Transform padre)

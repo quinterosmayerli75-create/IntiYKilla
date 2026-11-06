@@ -31,7 +31,7 @@ public static class HerramientasInterfaz
         return GeneradorArteMenus.ObtenerTarjeta(numeroMundo);
     }
 
-    private static Sprite ObtenerImagenFondo(int numeroMundo)
+    public static Sprite ObtenerImagenFondo(int numeroMundo)
     {
         Sprite arte = HerramientasEscena.CargarArteInterfaz("FondoMundo" + numeroMundo);
         if (arte != null)

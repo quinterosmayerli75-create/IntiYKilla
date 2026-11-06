@@ -37,7 +37,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Mundo 1 completo según la plantilla del GDD
 - [x] Aturdir enemigos al saltar encima (3 segundos)
 - [x] PeligroQueCae y EnemigoVolador (Mundo 2)
-- [ ] EnemigoEnPicada y PiedraRodante (Mundo 3)
+- [x] EnemigoEnPicada y PiedraRodante (Mundo 3)
 - [ ] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
 - [ ] EnemigoPerseguidor (Mundo 5)
 - [ ] Jefe final GuardianEclipse (nivel 6-5)
@@ -45,8 +45,9 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Cajas empujables
 - [x] Los jugadores se atraviesan, aura del color del elemento y efecto visual del eclipse
 - [x] Rocas que caen más rápido y texto de ayuda legible
-- [ ] Niebla y lluvia
-- [ ] Sistema de día y noche
+- [x] Niebla y lluvia
+- [x] Habilidades: Killa congela charcos e Inti derrite el hielo (AguaCongelable)
+- [x] Sistema de día y noche
 
 ## Semana 3: Mundo 2 (11 – 17 nov)
 - [x] Armar los niveles 2-1 a 2-5 con más trampas (Minas de Potosí)
@@ -55,7 +56,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Eclipse automático
 
 ## Semana 4: Mundos 3 y 4 (18 – 24 nov)
-- [ ] Armar los niveles 3-1 a 3-5 con más trampas (Yungas; traición en 3-4 y 3-5)
+- [x] Armar los niveles 3-1 a 3-5 con más trampas (Yungas; traición en 3-4 y 3-5)
 - [ ] Armar los niveles 4-1 a 4-5 con más trampas (Trópico; traición en 4-4 y 4-5)
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)

@@ -328,6 +328,21 @@ public class ControladorJugador : MonoBehaviour
         ActualizarColorSegunElemento();
     }
 
+    // Lo usa la lluvia: se pone azul a medida que se apaga (0 = bien, 1 = apagado).
+    public void MostrarApagandose(float fraccion)
+    {
+        if (dibujo == null || estaVivo == false)
+        {
+            return;
+        }
+
+        ActualizarColorSegunElemento();
+        if (fraccion > 0f)
+        {
+            dibujo.color = Color.Lerp(dibujo.color, new Color(0.25f, 0.40f, 0.85f), fraccion);
+        }
+    }
+
     private void ActualizarColorSegunElemento()
     {
         if (dibujo == null || estaVivo == false)

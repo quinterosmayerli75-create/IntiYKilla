@@ -44,5 +44,20 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Proyecto/00_Scenes/Niveles/Mundo2_Nivel5.unity
     guid: fe8602c4917a4c545af4fe5f92722cbf
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo3_Nivel1.unity
+    guid: 7244a9cfb8bed724283e255012ed515a
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo3_Nivel2.unity
+    guid: 9f8045ed82fd12242b16daa8ebaf15ad
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo3_Nivel3.unity
+    guid: 3ef882f140848ce4694e3e8e85fb2e3f
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo3_Nivel4.unity
+    guid: 7b15dcfa16c1fc943bb0775925521c68
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo3_Nivel5.unity
+    guid: 4777b0cd63650e349a0308eff2faceb7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

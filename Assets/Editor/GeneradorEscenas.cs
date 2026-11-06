@@ -8,6 +8,7 @@
 //              - SeleccionNivel (los 5 niveles del mundo elegido)
 //              - Mundo1_Nivel1 a Mundo1_Nivel5 (Salar de Uyuni)
 //              - Mundo2_Nivel1 a Mundo2_Nivel5 (Minas de Potosí)
+//              - Mundo3_Nivel1 a Mundo3_Nivel5 (Yungas), en GeneradorEscenasMundo3
 //              Además ordena las escenas en Build Settings.
 // Uso: Menú superior de Unity -> Inti y Killa -> Generar todas las escenas
 // Ojo: volver a generar una escena la REEMPLAZA (se pierden los cambios
@@ -23,7 +24,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public static class GeneradorEscenas
+public static partial class GeneradorEscenas
 {
     private static readonly Color colorCieloFondo = new Color(0.40f, 0.28f, 0.55f);
     private static readonly Color colorBotonPrincipal = new Color(0.95f, 0.50f, 0.15f);
@@ -57,12 +58,17 @@ public static class GeneradorEscenas
         GenerarMundo2Nivel3();
         GenerarMundo2Nivel4();
         GenerarMundo2Nivel5();
+        GenerarMundo3Nivel1();
+        GenerarMundo3Nivel2();
+        GenerarMundo3Nivel3();
+        GenerarMundo3Nivel4();
+        GenerarMundo3Nivel5();
 
         HerramientasEscena.ActualizarBuildSettings();
 
         // Al terminar, dejamos abierto el menú principal para darle Play.
         EditorSceneManager.OpenScene(RutaEscena(DatosJuego.escenaMenuPrincipal));
-        Debug.Log("Inti y Killa: escenas generadas (menús, Mundo 1 y Mundo 2 completos). ¡Dale Play!");
+        Debug.Log("Inti y Killa: escenas generadas (menús y Mundos 1 a 3 completos). ¡Dale Play!");
     }
 
     [MenuItem("Inti y Killa/Escenas sueltas/Menú principal", false, 20)]
@@ -143,6 +149,36 @@ public static class GeneradorEscenas
         GenerarUnaSola(6);
     }
 
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 3 - Nivel 1", false, 33)]
+    public static void MenuGenerarMundo3Nivel1()
+    {
+        GenerarUnaSola(14);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 3 - Nivel 2", false, 34)]
+    public static void MenuGenerarMundo3Nivel2()
+    {
+        GenerarUnaSola(15);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 3 - Nivel 3", false, 35)]
+    public static void MenuGenerarMundo3Nivel3()
+    {
+        GenerarUnaSola(16);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 3 - Nivel 4", false, 36)]
+    public static void MenuGenerarMundo3Nivel4()
+    {
+        GenerarUnaSola(17);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 3 - Nivel 5", false, 37)]
+    public static void MenuGenerarMundo3Nivel5()
+    {
+        GenerarUnaSola(18);
+    }
+
     private static void GenerarUnaSola(int cual)
     {
         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
@@ -204,6 +240,26 @@ public static class GeneradorEscenas
         else if (cual == 9)
         {
             rutaGenerada = GenerarMundo1Nivel5();
+        }
+        else if (cual == 14)
+        {
+            rutaGenerada = GenerarMundo3Nivel1();
+        }
+        else if (cual == 15)
+        {
+            rutaGenerada = GenerarMundo3Nivel2();
+        }
+        else if (cual == 16)
+        {
+            rutaGenerada = GenerarMundo3Nivel3();
+        }
+        else if (cual == 17)
+        {
+            rutaGenerada = GenerarMundo3Nivel4();
+        }
+        else if (cual == 18)
+        {
+            rutaGenerada = GenerarMundo3Nivel5();
         }
 
         HerramientasEscena.ActualizarBuildSettings();

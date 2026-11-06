@@ -57,9 +57,10 @@ Plus diferenciadores:
 | Oscuridad con luz 2D; Inti ilumina | 2-1 |
 | Vagonetas y plataformas móviles | 2-2 |
 | Cajas empujables entre los dos | 2-3 |
-| Niebla | 3-1 |
-| Lluvia que apaga a Inti | 3-2 |
-| Día y noche | 3-3 |
+| Niebla: cada jugador solo ve cerca de sí mismo | 3-1 |
+| Lluvia que apaga a quien tiene el fuego si no tiene techo | 3-2 |
+| Charcos que Killa congela e Inti derrite (5 s, parpadean antes) | 3-2 |
+| Día y noche: plataformas de día (doradas) y de noche (azules), con 0.6 s de gracia tras el cambio para saltar de una a otra | 3-3 |
 | Lianas y hojas trampolín | 4-1 |
 | Monos que lanzan frutas | 4-2 |
 | Cuerdas de charango (trampolín + nota) | 5-1 |
@@ -125,7 +126,7 @@ Saltar encima de los enemigos que caminan o vuelan los aturde 3 segundos; tocarl
 |---|---|
 | 1. Salar de Uyuni | Solo remolinos de sal, en los niveles 4 y 5 |
 | 2. Minas de Potosí | Rocas que caen y murciélagos, desde el nivel 2 |
-| 3. Yungas | Cóndor y piedras rodantes, desde el nivel 2 |
+| 3. Yungas | Cóndor desde el nivel 2 y piedras rodantes desde el nivel 3 |
 | 4. Trópico | Monos que lanzan cocos y serpientes, en casi todos los niveles |
 | 5. Aiquile | Avispas y piedras rodantes, combinadas con las trampas |
 | 6. Isla del Sol | Llamas que escupen en todos los niveles; el nivel 5 es el jefe final |
@@ -186,7 +187,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 | 6-4 | Todo a la vez | Todo mezclado | 5 |
 | 6-5 | El gran final | Gran final | 5 |
 
-Los niveles 3-4, 3-5, 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
+Los niveles 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
 
 Desbloqueo (durante el desarrollo todo está abierto con `modoPruebaTodoAbierto` en GestorProgreso; se apaga antes de publicar): al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
 
