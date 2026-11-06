@@ -1159,6 +1159,37 @@ public static class HerramientasEscena
         return trampa;
     }
 
+    // ================= Enemigos y peligros =================
+
+    // velocidadEmpuje: positivo empuja a la derecha, negativo a la izquierda.
+    public static RemolinoViento CrearRemolinoViento(string nombre, Vector2 centro, Vector2 tamano, float velocidadEmpuje, Transform padre)
+    {
+        Color colorFondo = new Color(1f, 1f, 1f, 0.12f);
+        Color colorRaya = new Color(1f, 1f, 1f, 0.55f);
+
+        GameObject remolino = new GameObject(nombre);
+        remolino.transform.SetParent(padre);
+        remolino.transform.position = new Vector3(centro.x, centro.y, 0f);
+
+        GameObject fondo = CrearDibujoHijo("Fondo del viento", remolino.transform, Vector2.zero, tamano, colorFondo, -2);
+
+        // Rayas repartidas por la zona: se mueven hacia donde empuja el viento.
+        int cantidadRayas = 6;
+        Transform[] rayas = new Transform[cantidadRayas];
+        for (int indice = 0; indice < cantidadRayas; indice++)
+        {
+            float fraccion = (indice + 0.5f) / cantidadRayas;
+            float posicionX = -tamano.x / 2f + tamano.x * ((indice * 0.37f) % 1f);
+            float posicionY = -tamano.y / 2f + tamano.y * fraccion;
+            GameObject raya = CrearDibujoHijo("Raya " + (indice + 1), remolino.transform, new Vector2(posicionX, posicionY), new Vector2(0.7f, 0.05f), colorRaya, -1);
+            rayas[indice] = raya.transform;
+        }
+
+        RemolinoViento componente = remolino.AddComponent<RemolinoViento>();
+        componente.Configurar(tamano, velocidadEmpuje, fondo.GetComponent<SpriteRenderer>(), rayas);
+        return componente;
+    }
+
     // Figura quieta de un personaje (sin física ni controles), para el menú principal.
     public static void CrearFiguraPersonaje(string nombre, Sprite imagenPersonaje, Color colorRespaldo, Vector2 centro, Transform padre)
     {

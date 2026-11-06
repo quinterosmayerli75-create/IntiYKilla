@@ -521,9 +521,10 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Fuego, new Vector2(12.6f, pisoTres), new Vector2(0f, 9f), mecanismos);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
-        // Bajo techo el salto es corto: estos charcos piden un salto preciso.
-        HerramientasEscena.CrearCharco("Agua de la planta baja", TipoZona.Agua, -6f, 1.4f, trampas);
-        HerramientasEscena.CrearCharco("Lava de la planta baja", TipoZona.Lava, 6f, 1.4f, trampas);
+        // Bajo techo el salto es corto (unas 2.6 unidades). Con 1 de ancho hay margen
+        // para saltar corriendo: con más, el salto exige demasiada precisión.
+        HerramientasEscena.CrearCharco("Agua de la planta baja", TipoZona.Agua, -6f, 1f, trampas);
+        HerramientasEscena.CrearCharco("Lava de la planta baja", TipoZona.Lava, 6f, 1f, trampas);
         HerramientasEscena.CrearCharco("Lava del piso 3", TipoZona.Lava, -9f, 3f, pisoTres, trampas);
         HerramientasEscena.CrearCharco("Agua del piso 3", TipoZona.Agua, 9f, 3f, pisoTres, trampas);
 
@@ -663,9 +664,14 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearCharco("Rio de agua", TipoZona.Agua, -6.5f, 5f, trampas);
         HerramientasEscena.CrearCharco("Rio de lava", TipoZona.Lava, 6.5f, 5f, trampas);
         // Veneno que protege dos gemas opcionales: pide un salto preciso bajo techo.
-        HerramientasEscena.CrearCharco("Veneno izquierdo", TipoZona.Veneno, -7.3f, 1.4f, pisoUno, trampas);
-        HerramientasEscena.CrearCharco("Veneno derecho", TipoZona.Veneno, 7.3f, 1.4f, pisoUno, trampas);
+        HerramientasEscena.CrearCharco("Veneno izquierdo", TipoZona.Veneno, -7.3f, 1f, pisoUno, trampas);
+        HerramientasEscena.CrearCharco("Veneno derecho", TipoZona.Veneno, 7.3f, 1f, pisoUno, trampas);
         HerramientasEscena.CrearCharco("Gran rio de lava", TipoZona.Lava, 0f, 18f, pisoDos, trampas);
+
+        // Remolinos de sal: soplan hacia afuera y dificultan el salto al piso alto.
+        // No matan: quien tenga el fuego cae sobre la lava sin daño y lo intenta de nuevo.
+        HerramientasEscena.CrearRemolinoViento("Remolino izquierdo", new Vector2(-5.25f, 5.75f), new Vector2(3.5f, 5.5f), -3f, trampas);
+        HerramientasEscena.CrearRemolinoViento("Remolino derecho", new Vector2(5.25f, 5.75f), new Vector2(3.5f, 5.5f), 3f, trampas);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
         Vector2 tamanoCompuerta = new Vector2(0.7f, 2.75f);
@@ -767,6 +773,13 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearCharco("Veneno de arriba", TipoZona.Veneno, 6f, 2f, pisoTres, trampas);
         HerramientasEscena.CrearCristalesDeSal("Cristales de arriba", 1f, 2f, pisoTres, trampas);
 
+        // Remolinos de sal: uno empuja hacia el otro lado del veneno y puede hacer que
+        // te pases; el otro sopla en contra sobre los cristales. El de contra es más
+        // suave (2) para que el salto todavía alcance, y termina antes del lugar donde
+        // se aterriza: así nunca empuja hacia los cristales a quien ya cruzó.
+        HerramientasEscena.CrearRemolinoViento("Remolino del veneno", new Vector2(6.25f, 8.25f), new Vector2(3.5f, 4f), -3f, trampas);
+        HerramientasEscena.CrearRemolinoViento("Remolino de los cristales", new Vector2(1.5f, 7.75f), new Vector2(2.4f, 3f), 2f, trampas);
+
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
 
         // Compuerta del piso 1: se hunde, y la abre un botón en la planta baja.
@@ -805,7 +818,7 @@ public static class GeneradorEscenas
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-3f, 0.5f), gemas);
         HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(0f, 3.9f), gemas);
         HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(6f, 10f), gemas);
-        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(1f, 8.8f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(1f, 9.6f), gemas);
 
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(-9f, pisoTres), puertas);

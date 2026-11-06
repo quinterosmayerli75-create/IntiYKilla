@@ -33,6 +33,14 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Sistema de muertes: reinicio rápido, contador, récord y mensajes graciosos
 - [x] Estrellas por pocas muertes (máximo configurable por nivel)
 - [x] Poner trampas en los niveles 1-1 a 1-5 y 2-1
+- [x] RemolinoViento y remolinos de sal en los niveles 1-4 y 1-5
+- [x] Mundo 1 completo según la plantilla del GDD
+- [ ] Aturdir enemigos al saltar encima (3 segundos)
+- [ ] PeligroQueCae y EnemigoVolador (Mundo 2)
+- [ ] EnemigoEnPicada y PiedraRodante (Mundo 3)
+- [ ] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
+- [ ] EnemigoPerseguidor (Mundo 5)
+- [ ] Jefe final GuardianEclipse (nivel 6-5)
 - [ ] Vagonetas y plataformas móviles (plataforma móvil lista; faltan vagonetas)
 - [ ] Cajas empujables
 - [ ] Niebla y lluvia

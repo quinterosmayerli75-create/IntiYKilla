@@ -100,6 +100,44 @@ Detectan qué jugador las activó y castigan al otro. Hay tres castigos: cae lav
 - Los niveles 4 y 5 de cada mundo usan trampas de traición.
 - **Regla de justicia:** cada trampa engaña una vez, pero después de conocerla el nivel siempre debe poder ganarse. Nunca hay trampas imposibles de evitar.
 
+### Enemigos y peligros (`01_Scripts/Enemigos/`)
+Comportamientos reutilizables para distintos animales. Mientras no haya arte se usan formas de color, con un campo `Sprite` para poner la imagen después.
+
+| Comportamiento | Qué hace | Ejemplos |
+|---|---|---|
+| EnemigoPatrulla | Camina de un punto A a un punto B | Serpientes |
+| EnemigoVolador | Vuela en zigzag o en círculo | Murciélagos, avispas |
+| EnemigoEnPicada | Espera arriba y se lanza al jugador más cercano | Cóndor |
+| LanzadorProyectiles | Desde un lugar fijo lanza objetos en arco cada cierto tiempo | Monos con cocos, llamas que escupen |
+| EnemigoPerseguidor | Persigue dentro de su zona y vuelve a su lugar si te alejas | Avispas del panal |
+| PeligroQueCae | Tiembla 0.5 s, cae y reaparece después | Rocas de las minas |
+| PiedraRodante | Rueda por el suelo o una pendiente | Yungas, Aiquile |
+| RemolinoViento | Empuja hacia un lado sin matar | Remolinos de sal |
+
+Saltar encima de los enemigos que caminan o vuelan los aturde 3 segundos; tocarlos de costado mata (y el nivel se reinicia para los dos). Cada muerte tiene su mensaje gracioso ("¡Un mono le tiró un coco a Inti!", "La llama escupió a Killa").
+
+**Regla de justicia:** todo ataque tiene un aviso visible (temblor, sonido o animación) antes de golpear, y ningún enemigo hace imposible un nivel.
+
+| Mundo | Enemigos y peligros |
+|---|---|
+| 1. Salar de Uyuni | Solo remolinos de sal, en los niveles 4 y 5 |
+| 2. Minas de Potosí | Rocas que caen y murciélagos, desde el nivel 2 |
+| 3. Yungas | Cóndor y piedras rodantes, desde el nivel 2 |
+| 4. Trópico | Monos que lanzan cocos y serpientes, en casi todos los niveles |
+| 5. Aiquile | Avispas y piedras rodantes, combinadas con las trampas |
+| 6. Isla del Sol | Llamas que escupen en todos los niveles; el nivel 5 es el jefe final |
+
+### Jefe final: GuardianEclipse (nivel 6-5)
+Se mueve de lado a lado y lanza proyectiles de fuego y de agua; cada uno solo daña al elemento contrario. Tiene 3 vidas y pierde una cuando los DOS jugadores pisan a la vez dos botones del escenario. Al vencerlo se gana el juego.
+
+### Plantilla de cada mundo
+- **Nivel 1:** enseña la mecánica nueva, con trampas suaves.
+- **Nivel 2:** combina la mecánica con cooperación (botones, palancas).
+- **Nivel 3:** usa el eclipse y más trampas sorpresa.
+- **Nivel 4:** aparecen las trampas de traición.
+- **Nivel 5:** el más tramposo y difícil del mundo.
+- Todos: de 1 a 3 minutos, caben en una pantalla, con una pista al inicio y de 2 a 4 gemas por elemento.
+
 ## 6. Mundos y niveles
 Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_NivelY` (por ejemplo, `Mundo1_Nivel2`).
 

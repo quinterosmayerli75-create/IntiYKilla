@@ -55,6 +55,7 @@ public class ControladorJugador : MonoBehaviour
 
     // Estado interno del personaje.
     private float direccionHorizontal = 0f;
+    private float empujeExterno = 0f;
     private float contadorCoyote = 0f;
     private float contadorBufferSalto = 0f;
     private bool estaVivo = true;
@@ -147,8 +148,17 @@ public class ControladorJugador : MonoBehaviour
     {
         // La física se aplica en FixedUpdate para que el movimiento sea estable.
         Vector2 velocidadActual = cuerpoFisico.linearVelocity;
-        Vector2 velocidadNueva = new Vector2(direccionHorizontal * velocidadMovimiento, velocidadActual.y);
+        Vector2 velocidadNueva = new Vector2(direccionHorizontal * velocidadMovimiento + empujeExterno, velocidadActual.y);
         cuerpoFisico.linearVelocity = velocidadNueva;
+
+        // El empuje dura un solo paso: quien empuja lo vuelve a pedir mientras siga adentro.
+        empujeExterno = 0f;
+    }
+
+    // Lo usa el viento: se suma a la velocidad al caminar.
+    public void AplicarEmpuje(float velocidadX)
+    {
+        empujeExterno = velocidadX;
     }
 
     private void LeerTeclado()
