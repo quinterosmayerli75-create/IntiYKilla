@@ -43,6 +43,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Jefe final GuardianEclipse (nivel 6-5)
 - [x] Vagonetas y plataformas móviles
 - [x] Cajas empujables
+- [x] Los jugadores se atraviesan, aura del color del elemento y efecto visual del eclipse
+- [x] Rocas que caen más rápido y texto de ayuda legible
 - [ ] Niebla y lluvia
 - [ ] Sistema de día y noche
 
@@ -76,6 +78,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Traducción al inglés
 
 ## Semana 7: pruebas y publicación (9 – 15 dic)
+- [ ] Poner `modoPruebaTodoAbierto` en false en GestorProgreso (ahora todo está desbloqueado para probar)
 - [ ] Pruebas con al menos 3 parejas de jugadores y corrección de errores
 - [ ] Build WebGL optimizada
 - [ ] Página en itch.io con capturas, descripción y créditos

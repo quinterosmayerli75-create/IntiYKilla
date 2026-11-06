@@ -116,6 +116,20 @@ public class ControladorJugador : MonoBehaviour
     {
         elementoInicial = elemento;
         ActualizarColorSegunElemento();
+        AtravesarAlCompanero();
+    }
+
+    // Los personajes se atraviesan: así uno no empuja al otro ni lo saca de su lugar.
+    private void AtravesarAlCompanero()
+    {
+        ControladorJugador[] jugadores = FindObjectsByType<ControladorJugador>();
+        foreach (ControladorJugador otroJugador in jugadores)
+        {
+            if (otroJugador != this)
+            {
+                Physics2D.IgnoreCollision(colisionador, otroJugador.colisionador, true);
+            }
+        }
     }
 
     // Lo llama el generador de escenas cuando el personaje tiene imagen propia.
@@ -286,10 +300,11 @@ public class ControladorJugador : MonoBehaviour
 
         foreach (Collider2D objeto in objetosDebajo)
         {
-            bool esElMismoJugador = objeto == colisionador;
+            // El compañero tampoco cuenta como suelo: se atraviesan.
+            bool esUnJugador = objeto.GetComponent<ControladorJugador>() != null;
             bool esZonaInvisible = objeto.isTrigger;
 
-            if (esElMismoJugador == false && esZonaInvisible == false)
+            if (esUnJugador == false && esZonaInvisible == false)
             {
                 return true;
             }

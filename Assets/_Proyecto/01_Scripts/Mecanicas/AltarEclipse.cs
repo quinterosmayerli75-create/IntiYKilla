@@ -16,6 +16,12 @@ public class AltarEclipse : MonoBehaviour
     [SerializeField] private PlacaAltar placaUno;
     [SerializeField] private PlacaAltar placaDos;
 
+    [Header("Dibujos del efecto de eclipse")]
+    [SerializeField] private Sprite spriteCirculo;
+    [SerializeField] private Sprite spriteResplandor;
+    // Opcional: la imagen de la luna. Sin ella se usa un círculo.
+    [SerializeField] private Sprite imagenLuna;
+
     // Evita que el eclipse se repita en cada frame mientras siguen parados.
     private bool estaListo = true;
 
@@ -33,6 +39,12 @@ public class AltarEclipse : MonoBehaviour
     {
         placaUno = nuevaPlacaUno;
         placaDos = nuevaPlacaDos;
+    }
+
+    public void ConfigurarEfecto(Sprite nuevoCirculo, Sprite nuevoResplandor)
+    {
+        spriteCirculo = nuevoCirculo;
+        spriteResplandor = nuevoResplandor;
     }
 
     private void Update()
@@ -67,6 +79,8 @@ public class AltarEclipse : MonoBehaviour
 
         jugadorUno.CambiarElemento(elementoDelDos);
         jugadorDos.CambiarElemento(elementoDelUno);
+
+        EfectoEclipse.Reproducir(spriteCirculo, spriteResplandor, imagenLuna);
 
         if (GestorNivel.Instancia != null)
         {

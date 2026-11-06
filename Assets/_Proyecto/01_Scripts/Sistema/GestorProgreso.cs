@@ -16,6 +16,10 @@ using UnityEngine;
 
 public static class GestorProgreso
 {
+    // MODO PRUEBA: con true, todos los mundos y niveles están abiertos para poder
+    // probarlos. ANTES DE PUBLICAR hay que ponerlo en false (está en el CHECKLIST).
+    public const bool modoPruebaTodoAbierto = true;
+
     private const string claveMundosDesbloqueados = "IntiYKilla_MundosDesbloqueados";
     private const string prefijoNivelesDesbloqueados = "IntiYKilla_NivelesDesbloqueados_Mundo";
     private const string prefijoEstrellas = "IntiYKilla_Estrellas_";
@@ -41,6 +45,11 @@ public static class GestorProgreso
 
     public static bool MundoEstaDesbloqueado(int numeroMundo)
     {
+        if (modoPruebaTodoAbierto == true)
+        {
+            return true;
+        }
+
         return numeroMundo <= ObtenerMundosDesbloqueados();
     }
 
@@ -65,6 +74,11 @@ public static class GestorProgreso
     // Un nivel solo está abierto si también lo está su mundo.
     public static bool NivelEstaDesbloqueado(int numeroMundo, int numeroEnMundo)
     {
+        if (modoPruebaTodoAbierto == true)
+        {
+            return true;
+        }
+
         if (MundoEstaDesbloqueado(numeroMundo) == false)
         {
             return false;

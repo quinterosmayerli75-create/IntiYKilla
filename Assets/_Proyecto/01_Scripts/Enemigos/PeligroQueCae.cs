@@ -22,7 +22,7 @@ public class PeligroQueCae : MonoBehaviour
     [Header("Cuerpo y caída")]
     [SerializeField] private Vector2 tamano = new Vector2(1f, 1f);
     [SerializeField] private float alturaDelPiso = -3.5f;
-    [SerializeField] private float velocidadCaida = 12f;
+    [SerializeField] private float velocidadCaida = 26f;
 
     [Header("Tiempos del ciclo")]
     [SerializeField] private float segundosDeEspera = 2.5f;

@@ -18,6 +18,9 @@ Inti (Sol) y Killa (Luna) cooperan para recorrer Bolivia y llegar juntos a la sa
 Plus diferenciadores:
 - **Trampas engañosas y de traición:** se ven igual que las piezas normales; algunas castigan al compañero.
 - **Eclipse:** altares donde, si los dos se paran a la vez, intercambian elementos.
+- **Se atraviesan:** Inti y Killa no chocan entre sí: ninguno empuja al otro ni puede pararse sobre su cabeza.
+- **Aura de elemento:** cada personaje lleva un resplandor con chispas del color de su poder actual; al eclipsar, cambia de color y crece un momento.
+- **Efecto de eclipse:** al intercambiar poderes la pantalla se oscurece y la luna pasa por delante del sol (2,4 s, sin detener el juego).
 - **Escenarios reales de Bolivia:** 6 mundos.
 - **Mundo musical de Aiquile:** cuerdas de charango trampolín y puertas melódicas.
 - **Día y noche:** plataformas que aparecen o desaparecen.
@@ -185,7 +188,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 
 Los niveles 3-4, 3-5, 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
 
-Desbloqueo: al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
+Desbloqueo (durante el desarrollo todo está abierto con `modoPruebaTodoAbierto` en GestorProgreso; se apaga antes de publicar): al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
 
 Reglas: cada nivel dura 1–3 min, introduce una sola idea nueva, y la dificultad final viene de la precisión, no de la longitud.
 

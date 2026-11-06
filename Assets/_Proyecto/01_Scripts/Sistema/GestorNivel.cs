@@ -408,12 +408,20 @@ public class GestorNivel : MonoBehaviour
 
         // La ayuda de controles va centrada abajo, con margen para que no toque el borde.
         GUIStyle estiloAyuda = new GUIStyle(GUI.skin.label);
-        estiloAyuda.fontSize = 22;
+        estiloAyuda.fontSize = 24;
         estiloAyuda.alignment = TextAnchor.MiddleCenter;
-        estiloAyuda.normal.textColor = new Color(1f, 1f, 1f, 0.85f);
+        estiloAyuda.normal.textColor = Color.white;
         estiloAyuda.wordWrap = false;
         string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     R: reiniciar     Esc: mapa";
-        GUI.Label(new Rect(margenHud, altoVirtual - margenHud - 34, anchoTexto, 34), textoAyuda, estiloAyuda);
+
+        // Franja oscura detrás del texto: sin ella, el blanco se pierde sobre el suelo claro.
+        float altoFranja = 44f;
+        Rect franja = new Rect(0f, altoVirtual - altoFranja, anchoVirtual, altoFranja);
+        Color colorAnterior = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.7f);
+        GUI.DrawTexture(franja, Texture2D.whiteTexture);
+        GUI.color = colorAnterior;
+        GUI.Label(franja, textoAyuda, estiloAyuda);
 
         GUIStyle estiloCentral = new GUIStyle(GUI.skin.label);
         estiloCentral.fontSize = 48;

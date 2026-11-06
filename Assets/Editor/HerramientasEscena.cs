@@ -35,6 +35,7 @@ public static class HerramientasEscena
     private const string carpetaSpritesNiveles = "Assets/_Proyecto/03_Sprites/Niveles";
     private const string carpetaSpritesInterfaz = "Assets/_Proyecto/03_Sprites/Interfaz";
     private const string rutaMaterialFisico = "Assets/_Proyecto/Materiales/SinFriccion.physicsMaterial2D";
+    private const string rutaMaterialSinLuces = "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat";
 
     // Altura de la superficie del suelo en todos los niveles.
     public const float alturaSuelo = -3.5f;
@@ -56,6 +57,8 @@ public static class HerramientasEscena
     // Se guardan aquí para no buscarlos en disco cada vez.
     public static Sprite spriteCuadrado;
     public static Sprite spriteCirculo;
+    public static Sprite spriteResplandor;
+    public static Sprite spriteDisco;
     public static PhysicsMaterial2D materialSinFriccion;
 
     // ================= Arte final (imágenes PNG) =================
@@ -136,6 +139,8 @@ public static class HerramientasEscena
 
         spriteCuadrado = ObtenerSpriteBasico("Cuadrado", false);
         spriteCirculo = ObtenerSpriteBasico("Circulo", true);
+        spriteResplandor = ObtenerSpriteResplandor();
+        spriteDisco = ObtenerSpriteDisco();
         materialSinFriccion = ObtenerMaterialSinFriccion();
 
         CargarArteFinal();
@@ -891,6 +896,7 @@ public static class HerramientasEscena
         ControladorJugador controlador = jugador.AddComponent<ControladorJugador>();
         controlador.ConfigurarJugador(nombre, elemento, izquierda, derecha, saltar, habilidad);
         controlador.ConfigurarColoresDeLaImagen(imagenPersonaje != null);
+        AgregarAura(jugador, elemento);
 
         // Marca de identidad sobre la cabeza: solo hace falta en la forma de
         // respaldo, que cambia de color con el eclipse y dejaría de saberse quién
@@ -909,6 +915,56 @@ public static class HerramientasEscena
 
         // Se devuelve para que la cámara cooperativa pueda seguirlo.
         return jugador;
+    }
+
+    // Resplandor y chispas del color del elemento: muestran qué poder tiene cada uno.
+    // Usan un material sin luces para que también se vean en las minas oscuras.
+    private static void AgregarAura(GameObject jugador, TipoElemento elemento)
+    {
+        Vector3 escala = jugador.transform.localScale;
+        Color colorElemento = ColoresElemento.ObtenerColor(elemento);
+        Material materialSinLuces = AssetDatabase.LoadAssetAtPath<Material>(rutaMaterialSinLuces);
+
+        float tamanoResplandor = 3.4f;
+        GameObject resplandor = new GameObject("Resplandor");
+        resplandor.transform.SetParent(jugador.transform);
+        resplandor.transform.localPosition = new Vector3(0f, 0.2f / escala.y, 0f);
+
+        SpriteRenderer dibujoResplandor = resplandor.AddComponent<SpriteRenderer>();
+        dibujoResplandor.sprite = spriteResplandor;
+        dibujoResplandor.color = new Color(colorElemento.r, colorElemento.g, colorElemento.b, 0.6f);
+        dibujoResplandor.sortingOrder = 8;
+        Vector3 tamanoSprite = spriteResplandor.bounds.size;
+        resplandor.transform.localScale = new Vector3(tamanoResplandor / (tamanoSprite.x * escala.x), tamanoResplandor / (tamanoSprite.y * escala.y), 1f);
+
+        int cantidadChispas = 6;
+        float tamanoChispa = 0.2f;
+        SpriteRenderer[] chispas = new SpriteRenderer[cantidadChispas];
+        for (int indice = 0; indice < cantidadChispas; indice++)
+        {
+            GameObject chispa = new GameObject("Chispa " + (indice + 1));
+            chispa.transform.SetParent(jugador.transform);
+            chispa.transform.localPosition = Vector3.zero;
+            chispa.transform.localScale = new Vector3(tamanoChispa / escala.x, tamanoChispa / escala.y, 1f);
+
+            SpriteRenderer dibujoChispa = chispa.AddComponent<SpriteRenderer>();
+            dibujoChispa.sprite = spriteCirculo;
+            dibujoChispa.color = colorElemento;
+            dibujoChispa.sortingOrder = 12;
+            chispas[indice] = dibujoChispa;
+        }
+
+        if (materialSinLuces != null)
+        {
+            dibujoResplandor.sharedMaterial = materialSinLuces;
+            foreach (SpriteRenderer dibujoChispa in chispas)
+            {
+                dibujoChispa.sharedMaterial = materialSinLuces;
+            }
+        }
+
+        AuraElemento aura = jugador.AddComponent<AuraElemento>();
+        aura.Configurar(dibujoResplandor, chispas);
     }
 
     // Los dos protagonistas en su posición inicial.
@@ -1466,6 +1522,7 @@ public static class HerramientasEscena
 
         AltarEclipse componente = altar.AddComponent<AltarEclipse>();
         componente.Configurar(placaUno, placaDos);
+        componente.ConfigurarEfecto(spriteDisco, spriteResplandor);
         return componente;
     }
 
@@ -1808,6 +1865,59 @@ public static class HerramientasEscena
         AssetDatabase.CreateAsset(materialNuevo, rutaMaterialFisico);
         AssetDatabase.SaveAssets();
         return materialNuevo;
+    }
+
+    // Círculo blanco que se desvanece hacia los bordes: el resplandor de las auras.
+    private static Sprite ObtenerSpriteResplandor()
+    {
+        string ruta = carpetaSpritesTemporales + "/Resplandor.png";
+        if (File.Exists(ruta) == true)
+        {
+            return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
+        }
+
+        int tamano = 128;
+        float radio = tamano / 2f;
+        Texture2D textura = new Texture2D(tamano, tamano, TextureFormat.RGBA32, false);
+
+        for (int x = 0; x < tamano; x++)
+        {
+            for (int y = 0; y < tamano; y++)
+            {
+                float distancia = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(radio, radio)) / radio;
+                float transparencia = Mathf.Clamp01(1f - distancia);
+                textura.SetPixel(x, y, new Color(1f, 1f, 1f, transparencia));
+            }
+        }
+
+        return GuardarComoSprite(ruta, textura);
+    }
+
+    // Círculo grande de borde suave: el sol y la luna del eclipse se ven muy grandes
+    // en pantalla y con el círculo pequeño quedarían con el borde dentado.
+    private static Sprite ObtenerSpriteDisco()
+    {
+        string ruta = carpetaSpritesTemporales + "/Disco.png";
+        if (File.Exists(ruta) == true)
+        {
+            return AssetDatabase.LoadAssetAtPath<Sprite>(ruta);
+        }
+
+        int tamano = 512;
+        float radio = tamano / 2f;
+        Texture2D textura = new Texture2D(tamano, tamano, TextureFormat.RGBA32, false);
+
+        for (int x = 0; x < tamano; x++)
+        {
+            for (int y = 0; y < tamano; y++)
+            {
+                float distancia = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(radio, radio));
+                float transparencia = Mathf.Clamp01(radio - 1f - distancia);
+                textura.SetPixel(x, y, new Color(1f, 1f, 1f, transparencia));
+            }
+        }
+
+        return GuardarComoSprite(ruta, textura);
     }
 
     // Cuadrado o círculo blanco de 64x64; se pinta de color en el SpriteRenderer.
