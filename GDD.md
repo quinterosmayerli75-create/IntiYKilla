@@ -195,8 +195,8 @@ Reglas: cada nivel dura 1–3 min, introduce una sola idea nueva, y la dificulta
 ## 7. Escenas e interfaz
 Escenas: `Intro` → `MenuPrincipal` → `SeleccionMundo` → `SeleccionNivel` → `Mundo1_Nivel1`…`Mundo6_Nivel5` → `Final`.
 
-- `SeleccionMundo`: 6 botones con el nombre del mundo, sus estrellas (por ejemplo, 9/15) y si está bloqueado.
-- `SeleccionNivel`: los 5 niveles del mundo elegido y un botón para volver a los mundos.
+- `SeleccionMundo`: tarjetas altas que se pasan hacia los lados (arrastrando, con flechas o con el teclado), con número, dibujo y nombre del mundo, estrellas (por ejemplo, 9/15) y candado si está bloqueado. El fondo muestra el paisaje del mundo central.
+- `SeleccionNivel`: una sola escena para todos los mundos. Cuadros grandes con número y 3 estrellas, título debajo, candado si está bloqueado y "Pronto" si el nivel aún no existe. Flecha redonda para volver.
 - F1 en estas dos pantallas desbloquea todo (modo prueba y defensa).
 - Al ganar el nivel 5 de un mundo aparece "¡Mundo completado!" y se vuelve a `SeleccionMundo`.
 

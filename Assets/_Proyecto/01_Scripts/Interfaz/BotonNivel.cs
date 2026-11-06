@@ -1,11 +1,11 @@
 // =====================================================================
 // BotonNivel.cs
 // Proyecto: Inti y Killa
-// Descripción: Un botón de la pantalla de niveles. Sabe qué posición ocupa
+// Descripción: Un cuadro de la pantalla de niveles. Sabe qué posición ocupa
 //              dentro del mundo (1 a 5); el mundo lo lee de GestorProgreso.
 //              Muestra el título del nivel y su estado:
-//              - Estrellas ganadas (★★☆) si está desbloqueado.
-//              - "Bloqueado" si todavía no se ganó el nivel anterior.
+//              - Número y estrellas ganadas si está disponible.
+//              - Un candado si todavía no se ganó el nivel anterior.
 //              - "Pronto" si la escena todavía no existe en el proyecto.
 // =====================================================================
 
@@ -13,20 +13,39 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public enum EstadoNivel
+{
+    Disponible,
+    Bloqueado,
+    Pronto
+}
+
 [RequireComponent(typeof(Button))]
 public class BotonNivel : MonoBehaviour
 {
     [SerializeField] private int numeroEnMundo = 1;
-    [SerializeField] private Text textoEstado;
+    [SerializeField] private Image imagenCuadro;
+    [SerializeField] private Text textoNumero;
     [SerializeField] private Text textoTitulo;
+    [SerializeField] private Text textoPronto;
+    [SerializeField] private GameObject candado;
+    [SerializeField] private Image[] estrellas;
+
+    private static readonly Color colorCuadroApagado = new Color(0.34f, 0.34f, 0.40f);
+    private static readonly Color colorEstrellaGanada = new Color(1f, 0.82f, 0.20f);
+    private static readonly Color colorEstrellaVacia = new Color(0f, 0f, 0f, 0.35f);
 
     private Button boton;
 
-    public void Configurar(int nuevoNumeroEnMundo, Text nuevoTextoEstado, Text nuevoTextoTitulo)
+    public void Configurar(int nuevoNumeroEnMundo, Image nuevaImagenCuadro, Text nuevoTextoNumero, Text nuevoTextoTitulo, Text nuevoTextoPronto, GameObject nuevoCandado, Image[] nuevasEstrellas)
     {
         numeroEnMundo = nuevoNumeroEnMundo;
-        textoEstado = nuevoTextoEstado;
+        imagenCuadro = nuevaImagenCuadro;
+        textoNumero = nuevoTextoNumero;
         textoTitulo = nuevoTextoTitulo;
+        textoPronto = nuevoTextoPronto;
+        candado = nuevoCandado;
+        estrellas = nuevasEstrellas;
     }
 
     private void Awake()
@@ -42,62 +61,60 @@ public class BotonNivel : MonoBehaviour
 
     public void ActualizarEstado()
     {
-        if (boton == null)
-        {
-            boton = GetComponent<Button>();
-        }
-
         int numeroMundo = GestorProgreso.MundoElegido;
         DatosNivel datos = DatosJuego.ObtenerNivel(numeroMundo, numeroEnMundo);
         bool escenaExiste = datos != null && Application.CanStreamedLevelBeLoaded(datos.nombreEscena);
-        bool estaDesbloqueado = GestorProgreso.NivelEstaDesbloqueado(numeroMundo, numeroEnMundo);
 
-        if (textoTitulo != null && datos != null)
+        EstadoNivel estado = EstadoNivel.Disponible;
+        if (escenaExiste == false)
+        {
+            estado = EstadoNivel.Pronto;
+        }
+        else if (GestorProgreso.NivelEstaDesbloqueado(numeroMundo, numeroEnMundo) == false)
+        {
+            estado = EstadoNivel.Bloqueado;
+        }
+
+        AplicarApariencia(estado, GestorProgreso.ObtenerEstrellas(numeroMundo, numeroEnMundo));
+    }
+
+    public void AplicarApariencia(EstadoNivel estado, int estrellasGanadas)
+    {
+        int numeroMundo = GestorProgreso.MundoElegido;
+        DatosNivel datos = DatosJuego.ObtenerNivel(numeroMundo, numeroEnMundo);
+        if (datos != null)
         {
             textoTitulo.text = datos.titulo;
         }
 
-        if (escenaExiste == false)
+        bool estaDisponible = estado == EstadoNivel.Disponible;
+        boton.interactable = estaDisponible;
+        textoNumero.gameObject.SetActive(estaDisponible);
+        textoPronto.gameObject.SetActive(estado == EstadoNivel.Pronto);
+        candado.SetActive(estado == EstadoNivel.Bloqueado);
+
+        if (estaDisponible == true)
         {
-            boton.interactable = false;
-            CambiarTexto("Pronto");
-        }
-        else if (estaDesbloqueado == false)
-        {
-            boton.interactable = false;
-            CambiarTexto("Bloqueado");
+            imagenCuadro.color = ColoresMundos.ObtenerColor(numeroMundo);
         }
         else
         {
-            boton.interactable = true;
-            int estrellas = GestorProgreso.ObtenerEstrellas(numeroMundo, numeroEnMundo);
-            CambiarTexto(ConvertirEstrellasATexto(estrellas));
+            imagenCuadro.color = colorCuadroApagado;
         }
-    }
 
-    private void CambiarTexto(string nuevoTexto)
-    {
-        if (textoEstado != null)
+        for (int indice = 0; indice < estrellas.Length; indice++)
         {
-            textoEstado.text = nuevoTexto;
-        }
-    }
-
-    private string ConvertirEstrellasATexto(int cantidad)
-    {
-        string texto = "";
-        for (int indice = 1; indice <= DatosJuego.estrellasPorNivel; indice++)
-        {
-            if (indice <= cantidad)
+            // Las estrellas solo tienen sentido en un nivel que se puede jugar.
+            estrellas[indice].gameObject.SetActive(estaDisponible);
+            if (indice < estrellasGanadas)
             {
-                texto = texto + "★";
+                estrellas[indice].color = colorEstrellaGanada;
             }
             else
             {
-                texto = texto + "☆";
+                estrellas[indice].color = colorEstrellaVacia;
             }
         }
-        return texto;
     }
 
     private void CargarNivel()

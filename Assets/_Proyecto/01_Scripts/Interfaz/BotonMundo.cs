@@ -1,10 +1,10 @@
 // =====================================================================
 // BotonMundo.cs
 // Proyecto: Inti y Killa
-// Descripción: Un botón de la pantalla de mundos. Sabe qué mundo abre y
+// Descripción: Una tarjeta de la pantalla de mundos. Sabe qué mundo abre y
 //              muestra su estado:
-//              - Estrellas ganadas del total (★ 9/15) si está desbloqueado.
-//              - "Bloqueado" si todavía no se ganó el nivel 5 del anterior.
+//              - Estrellas ganadas del total (9/15) si está desbloqueado.
+//              - Un candado y qué falta ganar si todavía está bloqueado.
 // =====================================================================
 
 using UnityEngine;
@@ -15,14 +15,20 @@ using UnityEngine.UI;
 public class BotonMundo : MonoBehaviour
 {
     [SerializeField] private int numeroMundo = 1;
-    [SerializeField] private Text textoEstado;
+    [SerializeField] private Text textoEstrellas;
+    [SerializeField] private GameObject grupoEstrellas;
+    [SerializeField] private GameObject grupoBloqueado;
+    [SerializeField] private Text textoBloqueado;
 
     private Button boton;
 
-    public void Configurar(int nuevoNumeroMundo, Text nuevoTextoEstado)
+    public void Configurar(int nuevoNumeroMundo, Text nuevoTextoEstrellas, GameObject nuevoGrupoEstrellas, GameObject nuevoGrupoBloqueado, Text nuevoTextoBloqueado)
     {
         numeroMundo = nuevoNumeroMundo;
-        textoEstado = nuevoTextoEstado;
+        textoEstrellas = nuevoTextoEstrellas;
+        grupoEstrellas = nuevoGrupoEstrellas;
+        grupoBloqueado = nuevoGrupoBloqueado;
+        textoBloqueado = nuevoTextoBloqueado;
     }
 
     private void Awake()
@@ -38,33 +44,29 @@ public class BotonMundo : MonoBehaviour
 
     public void ActualizarEstado()
     {
-        if (boton == null)
-        {
-            boton = GetComponent<Button>();
-        }
+        AplicarApariencia(GestorProgreso.MundoEstaDesbloqueado(numeroMundo));
+    }
 
-        bool estaDesbloqueado = GestorProgreso.MundoEstaDesbloqueado(numeroMundo);
+    public void AplicarApariencia(bool estaDesbloqueado)
+    {
         boton.interactable = estaDesbloqueado;
+        grupoEstrellas.SetActive(estaDesbloqueado);
+        grupoBloqueado.SetActive(estaDesbloqueado == false);
+        textoBloqueado.gameObject.SetActive(estaDesbloqueado == false);
 
-        if (textoEstado == null)
+        int estrellas = GestorProgreso.ObtenerEstrellasDelMundo(numeroMundo);
+        int estrellasMaximas = GestorProgreso.ObtenerEstrellasMaximasPorMundo();
+        textoEstrellas.text = estrellas + "/" + estrellasMaximas;
+        textoBloqueado.text = "Gana el Mundo " + (numeroMundo - 1);
+    }
+
+    public void AbrirMundo()
+    {
+        if (boton.interactable == false)
         {
             return;
         }
 
-        if (estaDesbloqueado == true)
-        {
-            int estrellas = GestorProgreso.ObtenerEstrellasDelMundo(numeroMundo);
-            int estrellasMaximas = GestorProgreso.ObtenerEstrellasMaximasPorMundo();
-            textoEstado.text = "★ " + estrellas + "/" + estrellasMaximas;
-        }
-        else
-        {
-            textoEstado.text = "Bloqueado";
-        }
-    }
-
-    private void AbrirMundo()
-    {
         // La pantalla de niveles lee este dato para saber qué mundo mostrar.
         GestorProgreso.MundoElegido = numeroMundo;
         SceneManager.LoadScene(DatosJuego.escenaSeleccionNivel);

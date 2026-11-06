@@ -418,7 +418,7 @@ public class GestorNivel : MonoBehaviour
         float altoFranja = 44f;
         Rect franja = new Rect(0f, altoVirtual - altoFranja, anchoVirtual, altoFranja);
         Color colorAnterior = GUI.color;
-        GUI.color = new Color(0f, 0f, 0f, 0.7f);
+        GUI.color = new Color(0f, 0f, 0f, 0.88f);
         GUI.DrawTexture(franja, Texture2D.whiteTexture);
         GUI.color = colorAnterior;
         GUI.Label(franja, textoAyuda, estiloAyuda);

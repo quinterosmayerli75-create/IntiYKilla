@@ -62,7 +62,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [ ] Armar los niveles 6-1 a 6-5, los más tramposos (Isla del Sol; traición en 6-4 y 6-5)
 - [x] Menú principal
-- [ ] Selección de mundo con mapa de Bolivia (pantalla simple lista; falta el mapa dibujado)
+- [x] Selección de mundo con tarjetas y selección de nivel con cuadros (arte provisional)
+- [ ] Arte final de los menús en `03_Sprites/Interfaz`: TarjetaMundo1..6, FondoMundo1..6, Estrella, Candado, Flecha
 - [ ] HUD definitivo con gemas y muertes (versión temporal lista)
 - [ ] Pausa, opciones, victoria y derrota
 - [x] Sistema de estrellas

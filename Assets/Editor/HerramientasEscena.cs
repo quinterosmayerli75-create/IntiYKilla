@@ -243,6 +243,12 @@ public static class HerramientasEscena
         return imagen;
     }
 
+    // Imagen final de un menú, o null si todavía no existe.
+    public static Sprite CargarArteInterfaz(string nombreArchivo)
+    {
+        return CargarImagenArte(carpetaSpritesInterfaz, nombreArchivo);
+    }
+
     private static Sprite CargarImagenArte(string carpeta, string nombreArchivo)
     {
         return CargarImagenArte(carpeta, nombreArchivo, pixelesPorUnidadArte);
@@ -1793,6 +1799,12 @@ public static class HerramientasEscena
             {
                 imagen.type = Image.Type.Simple;
             }
+        }
+        else
+        {
+            // Sin imagen propia, un rectángulo redondeado en vez de un cuadrado plano.
+            imagen.sprite = GeneradorArteMenus.ObtenerRedondeado();
+            imagen.type = Image.Type.Sliced;
         }
 
         Button boton = objetoBoton.AddComponent<Button>();

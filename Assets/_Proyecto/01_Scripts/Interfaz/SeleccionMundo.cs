@@ -1,7 +1,9 @@
 // =====================================================================
 // SeleccionMundo.cs
 // Proyecto: Inti y Killa
-// Descripción: Pantalla con los 6 mundos del juego.
+// Descripción: Teclado de la pantalla de mundos.
+//              - Izquierda/Derecha o A/D: cambiar de mundo.
+//              - Enter: entrar al mundo del centro.
 //              - Esc: volver al menú principal.
 //              - F1: desbloquear todo (modo prueba / defensa).
 // =====================================================================
@@ -12,6 +14,13 @@ using UnityEngine.SceneManagement;
 
 public class SeleccionMundo : MonoBehaviour
 {
+    [SerializeField] private CarruselMundos carrusel;
+
+    public void Configurar(CarruselMundos nuevoCarrusel)
+    {
+        carrusel = nuevoCarrusel;
+    }
+
     private void Update()
     {
         Keyboard teclado = Keyboard.current;
@@ -29,6 +38,21 @@ public class SeleccionMundo : MonoBehaviour
         {
             GestorProgreso.DesbloquearTodo();
             RefrescarBotones();
+        }
+
+        if (teclado.leftArrowKey.wasPressedThisFrame == true || teclado.aKey.wasPressedThisFrame == true)
+        {
+            carrusel.MoverAnterior();
+        }
+
+        if (teclado.rightArrowKey.wasPressedThisFrame == true || teclado.dKey.wasPressedThisFrame == true)
+        {
+            carrusel.MoverSiguiente();
+        }
+
+        if (teclado.enterKey.wasPressedThisFrame == true || teclado.numpadEnterKey.wasPressedThisFrame == true)
+        {
+            carrusel.AbrirMundoCentral();
         }
     }
 

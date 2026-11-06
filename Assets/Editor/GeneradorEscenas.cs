@@ -242,33 +242,40 @@ public static class GeneradorEscenas
         // Suelo de sal y los dos protagonistas como decoración.
         Transform decoracion = HerramientasEscena.CrearGrupo("Decoracion");
         HerramientasEscena.CrearSuelo(HerramientasEscena.colorSal, decoracion);
-        HerramientasEscena.CrearFiguraPersonaje("Inti", HerramientasEscena.imagenInti, ColoresElemento.colorFuego, new Vector2(-1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
-        HerramientasEscena.CrearFiguraPersonaje("Killa", HerramientasEscena.imagenKilla, ColoresElemento.colorAgua, new Vector2(1.2f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
+        HerramientasEscena.CrearFiguraPersonaje("Inti", HerramientasEscena.imagenInti, ColoresElemento.colorFuego, new Vector2(-1.6f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
+        HerramientasEscena.CrearFiguraPersonaje("Killa", HerramientasEscena.imagenKilla, ColoresElemento.colorAgua, new Vector2(1.6f, HerramientasEscena.alturaSuelo + 0.6f), decoracion);
 
         // ----- Interfaz -----
         Transform canvas = HerramientasEscena.CrearCanvas();
         HerramientasEscena.CrearEventSystem();
 
-        HerramientasEscena.CrearTexto(canvas, "Titulo", "INTI y KILLA", 130, new Vector2(0f, 340f), new Vector2(1400f, 160f), new Color(1f, 0.92f, 0.70f));
-        HerramientasEscena.CrearTexto(canvas, "Subtitulo", "Un viaje cooperativo por Bolivia", 42, new Vector2(0f, 235f), new Vector2(1400f, 60f), Color.white);
+        // El eclipse, que es la historia del juego, detrás del título.
+        HerramientasInterfaz.CrearImagen(canvas, "Corona", HerramientasEscena.spriteResplandor, new Color(1f, 0.82f, 0.50f, 0.85f), new Vector2(0f, 335f), new Vector2(640f, 640f));
+        HerramientasInterfaz.CrearImagen(canvas, "Luna", HerramientasEscena.spriteDisco, new Color(0.10f, 0.09f, 0.20f), new Vector2(0f, 335f), new Vector2(240f, 240f));
+
+        HerramientasInterfaz.CrearTitulo(canvas, "INTI y KILLA", 150, new Vector2(0f, 310f));
+        Text subtitulo = HerramientasEscena.CrearTexto(canvas, "Subtitulo", "No confíes en nada... ni en tu compañero", 44, new Vector2(0f, 200f), new Vector2(1400f, 60f), Color.white);
+        subtitulo.raycastTarget = false;
 
         GameObject objetoMenu = new GameObject("MenuPrincipal");
         MenuPrincipal menu = objetoMenu.AddComponent<MenuPrincipal>();
 
-        Button botonJugar = HerramientasEscena.CrearBoton(canvas, "Boton Jugar", "JUGAR", new Vector2(0f, 60f), new Vector2(440f, 100f), colorBotonPrincipal, 48);
-        Button botonBorrar = HerramientasEscena.CrearBoton(canvas, "Boton Borrar progreso", "Borrar progreso", new Vector2(0f, -60f), new Vector2(440f, 80f), colorBotonSecundario, 34);
-        Button botonSalir = HerramientasEscena.CrearBoton(canvas, "Boton Salir", "Salir", new Vector2(0f, -160f), new Vector2(440f, 80f), colorBotonSalir, 34);
+        Button botonJugar = HerramientasEscena.CrearBoton(canvas, "Boton Jugar", "JUGAR", new Vector2(0f, 20f), new Vector2(560f, 180f), colorBotonPrincipal, 92);
+        botonJugar.transform.Find("Texto").GetComponent<Text>().fontStyle = FontStyle.Bold;
+        botonJugar.gameObject.AddComponent<EscalaAlPasarMouse>();
+        Button botonBorrar = HerramientasEscena.CrearBoton(canvas, "Boton Borrar progreso", "Borrar progreso", new Vector2(680f, -420f), new Vector2(380f, 80f), colorBotonSecundario, 34);
+        Button botonSalir = HerramientasEscena.CrearBoton(canvas, "Boton Salir", "Salir", new Vector2(-680f, -420f), new Vector2(380f, 80f), colorBotonSalir, 34);
 
         // Conexiones guardadas en la escena (se ven en el Inspector, sección On Click).
         UnityEventTools.AddPersistentListener(botonJugar.onClick, new UnityAction(menu.Jugar));
         UnityEventTools.AddPersistentListener(botonBorrar.onClick, new UnityAction(menu.BorrarProgreso));
         UnityEventTools.AddPersistentListener(botonSalir.onClick, new UnityAction(menu.Salir));
 
-        Text textoMensaje = HerramientasEscena.CrearTexto(canvas, "Mensaje", "", 28, new Vector2(0f, -245f), new Vector2(1200f, 50f), new Color(1f, 1f, 0.8f));
+        Text textoMensaje = HerramientasEscena.CrearTexto(canvas, "Mensaje", "", 30, new Vector2(0f, -120f), new Vector2(1200f, 50f), new Color(1f, 1f, 0.8f));
+        textoMensaje.raycastTarget = false;
         menu.Configurar(textoMensaje);
 
-        string textoControles = "2 jugadores en el mismo teclado     Inti: A D W + S     Killa: Flechas + Flecha abajo";
-        HerramientasEscena.CrearTexto(canvas, "Controles", textoControles, 26, new Vector2(0f, -490f), new Vector2(1800f, 50f), new Color(1f, 1f, 1f, 0.9f));
+        HerramientasInterfaz.CrearFranjaAyuda(canvas, "2 jugadores en el mismo teclado     Inti: A D W + S     Killa: Flechas + Flecha abajo");
 
         string ruta = RutaEscena(DatosJuego.escenaMenuPrincipal);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -276,128 +283,133 @@ public static class GeneradorEscenas
     }
 
     // ================= Selección de mundo =================
+    // Tarjetas altas que se pasan hacia los lados, con el paisaje del mundo de
+    // fondo. Se ve la tarjeta central y parte de las vecinas, para que se note
+    // que hay más mundos a los costados.
 
     private static string GenerarSeleccionMundo()
     {
         Scene escena = CrearEscenaVacia();
 
         HerramientasEscena.CrearCamara(colorCieloFondo);
-        HerramientasEscena.CrearLuzGlobal(new Color(0.75f, 0.70f, 0.85f), 1f);
-        HerramientasEscena.CrearFondoUyuni(9f);
-
         Transform canvas = HerramientasEscena.CrearCanvas();
         HerramientasEscena.CrearEventSystem();
 
-        GameObject objetoSeleccion = new GameObject("SeleccionMundo");
-        SeleccionMundo seleccion = objetoSeleccion.AddComponent<SeleccionMundo>();
+        FondoMundo fondo = HerramientasInterfaz.CrearFondoMundo(canvas);
 
-        HerramientasEscena.CrearTexto(canvas, "Titulo", "Elige un mundo", 72, new Vector2(0f, 455f), new Vector2(1200f, 100f), new Color(1f, 0.92f, 0.70f));
+        // ----- Carrusel: ScrollRect > Ventana (con máscara) > Contenido > Tarjetas -----
+        GameObject objetoCarrusel = new GameObject("Carrusel de mundos", typeof(RectTransform));
+        objetoCarrusel.transform.SetParent(canvas, false);
+        RectTransform rectanguloCarrusel = objetoCarrusel.GetComponent<RectTransform>();
+        rectanguloCarrusel.anchorMin = Vector2.zero;
+        rectanguloCarrusel.anchorMax = Vector2.one;
+        rectanguloCarrusel.offsetMin = Vector2.zero;
+        rectanguloCarrusel.offsetMax = Vector2.zero;
 
-        Button botonVolver = HerramientasEscena.CrearBoton(canvas, "Boton Volver", "< Volver", new Vector2(-780f, 455f), new Vector2(240f, 70f), colorBotonSalir, 30);
-        UnityEventTools.AddPersistentListener(botonVolver.onClick, new UnityAction(seleccion.VolverAlMenu));
+        // La ventana también recibe el arrastre sobre el espacio entre tarjetas.
+        Image imagenVentana = HerramientasInterfaz.CrearImagen(objetoCarrusel.transform, "Ventana", null, Color.white, Vector2.zero, Vector2.zero);
+        imagenVentana.raycastTarget = true;
+        RectTransform ventana = imagenVentana.rectTransform;
+        ventana.anchorMin = Vector2.zero;
+        ventana.anchorMax = Vector2.one;
+        ventana.offsetMin = Vector2.zero;
+        ventana.offsetMax = Vector2.zero;
+        Mask mascaraVentana = imagenVentana.gameObject.AddComponent<Mask>();
+        mascaraVentana.showMaskGraphic = false;
 
-        // Dos filas de tres mundos.
-        int columnasPorFila = 3;
-        float separacionX = 540f;
-        float separacionY = 330f;
-        float inicioX = -separacionX;
-        float inicioY = 150f;
+        GameObject objetoContenido = new GameObject("Contenido", typeof(RectTransform));
+        objetoContenido.transform.SetParent(ventana, false);
+        RectTransform contenido = objetoContenido.GetComponent<RectTransform>();
+        contenido.anchorMin = Vector2.zero;
+        contenido.anchorMax = new Vector2(0f, 1f);
+        contenido.pivot = new Vector2(0f, 0.5f);
+        contenido.anchoredPosition = Vector2.zero;
+        contenido.sizeDelta = Vector2.zero;
 
-        for (int numeroMundo = 1; numeroMundo <= DatosJuego.CantidadDeMundos(); numeroMundo++)
+        ScrollRect desplazamiento = objetoCarrusel.AddComponent<ScrollRect>();
+        desplazamiento.content = contenido;
+        desplazamiento.viewport = ventana;
+        desplazamiento.horizontal = true;
+        desplazamiento.vertical = false;
+        desplazamiento.movementType = ScrollRect.MovementType.Elastic;
+        // Sin inercia ni rueda: el carrusel mismo acomoda la tarjeta al soltar.
+        desplazamiento.inertia = false;
+        desplazamiento.scrollSensitivity = 0f;
+
+        int cantidadMundos = DatosJuego.CantidadDeMundos();
+        RectTransform[] tarjetas = new RectTransform[cantidadMundos];
+        for (int indice = 0; indice < cantidadMundos; indice++)
         {
-            int columna = (numeroMundo - 1) % columnasPorFila;
-            int fila = (numeroMundo - 1) / columnasPorFila;
-            Vector2 posicion = new Vector2(inicioX + columna * separacionX, inicioY - fila * separacionY);
-            CrearBotonDeMundo(canvas, numeroMundo, posicion);
+            tarjetas[indice] = HerramientasInterfaz.CrearTarjetaMundo(contenido, indice + 1);
         }
 
-        string textoAyuda = "Esc: volver al menú     F1: desbloquear todo (modo prueba)";
-        HerramientasEscena.CrearTexto(canvas, "Ayuda", textoAyuda, 24, new Vector2(0f, -500f), new Vector2(1600f, 40f), new Color(1f, 1f, 1f, 0.85f));
+        CarruselMundos carrusel = objetoCarrusel.AddComponent<CarruselMundos>();
+
+        // ----- Encima del carrusel -----
+        HerramientasInterfaz.CrearTitulo(canvas, "Elige un mundo", 80, new Vector2(0f, 445f));
+
+        Button flechaAnterior = HerramientasInterfaz.CrearFlecha(canvas, "Flecha anterior", new Vector2(0f, 0.5f), new Vector2(110f, 0f), 130f, false, new Color(0.14f, 0.11f, 0.22f, 0.85f), new UnityAction(carrusel.MoverAnterior));
+        Button flechaSiguiente = HerramientasInterfaz.CrearFlecha(canvas, "Flecha siguiente", new Vector2(1f, 0.5f), new Vector2(-110f, 0f), 130f, true, new Color(0.14f, 0.11f, 0.22f, 0.85f), new UnityAction(carrusel.MoverSiguiente));
+
+        // Un punto por mundo, bajo las tarjetas.
+        Image[] puntos = new Image[cantidadMundos];
+        float separacionPuntos = 38f;
+        float inicioPuntos = -separacionPuntos * (cantidadMundos - 1) / 2f;
+        for (int indice = 0; indice < cantidadMundos; indice++)
+        {
+            Vector2 posicionPunto = new Vector2(inicioPuntos + indice * separacionPuntos, -372f);
+            puntos[indice] = HerramientasInterfaz.CrearImagen(canvas, "Punto " + (indice + 1), HerramientasEscena.spriteDisco, Color.white, posicionPunto, new Vector2(22f, 22f));
+        }
+
+        carrusel.Configurar(tarjetas, puntos, fondo, flechaAnterior, flechaSiguiente);
+
+        GameObject objetoSeleccion = new GameObject("SeleccionMundo");
+        SeleccionMundo seleccion = objetoSeleccion.AddComponent<SeleccionMundo>();
+        seleccion.Configurar(carrusel);
+
+        HerramientasInterfaz.CrearFlechaVolver(canvas, new UnityAction(seleccion.VolverAlMenu));
+        HerramientasInterfaz.CrearFranjaAyuda(canvas, "Flechas o arrastrar: cambiar de mundo     Enter o clic: entrar     Esc: volver");
 
         string ruta = RutaEscena(DatosJuego.escenaSeleccionMundo);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
     }
 
-    private static void CrearBotonDeMundo(Transform canvas, int numeroMundo, Vector2 posicion)
-    {
-        Vector2 tamanoBoton = new Vector2(500f, 280f);
-        Button boton = HerramientasEscena.CrearBoton(canvas, "Boton Mundo " + numeroMundo, "Mundo " + numeroMundo, posicion, tamanoBoton, colorBotonSecundario, 48);
-
-        // "Mundo 1" arriba, el nombre en el medio y el estado abajo.
-        RectTransform rectanguloNumero = boton.transform.Find("Texto").GetComponent<RectTransform>();
-        rectanguloNumero.anchoredPosition = new Vector2(0f, 80f);
-
-        Text textoNombre = HerramientasEscena.CrearTexto(boton.transform, "Nombre", DatosJuego.ObtenerNombreMundo(numeroMundo), 38, new Vector2(0f, 0f), new Vector2(tamanoBoton.x, 50f), Color.white);
-        textoNombre.raycastTarget = false;
-
-        Text textoEstado = HerramientasEscena.CrearTexto(boton.transform, "Estado", "", 36, new Vector2(0f, -85f), new Vector2(tamanoBoton.x, 50f), new Color(1f, 0.90f, 0.45f));
-        textoEstado.raycastTarget = false;
-
-        BotonMundo botonMundo = boton.gameObject.AddComponent<BotonMundo>();
-        botonMundo.Configurar(numeroMundo, textoEstado);
-    }
-
     // ================= Selección de nivel =================
-    // Una sola escena para los 6 mundos: el título y los botones se llenan al
-    // abrirla, según el mundo elegido en la pantalla anterior.
+    // Una sola escena para los 6 mundos: el paisaje, el título y los cuadros se
+    // llenan al abrirla, según el mundo elegido en la pantalla anterior.
 
     private static string GenerarSeleccionNivel()
     {
         Scene escena = CrearEscenaVacia();
 
         HerramientasEscena.CrearCamara(colorCieloFondo);
-        HerramientasEscena.CrearLuzGlobal(new Color(0.75f, 0.70f, 0.85f), 1f);
-        HerramientasEscena.CrearFondoUyuni(9f);
-
         Transform canvas = HerramientasEscena.CrearCanvas();
         HerramientasEscena.CrearEventSystem();
+
+        FondoMundo fondo = HerramientasInterfaz.CrearFondoMundo(canvas);
 
         GameObject objetoSeleccion = new GameObject("SeleccionNivel");
         SeleccionNivel seleccion = objetoSeleccion.AddComponent<SeleccionNivel>();
 
-        Text textoTitulo = HerramientasEscena.CrearTexto(canvas, "Titulo", "Elige un nivel", 64, new Vector2(100f, 455f), new Vector2(1400f, 100f), new Color(1f, 0.92f, 0.70f));
-        seleccion.Configurar(textoTitulo);
+        Text textoTitulo = HerramientasInterfaz.CrearTitulo(canvas, "Mundo", 76, new Vector2(0f, 420f));
+        Text textoEstrellas = HerramientasInterfaz.CrearContadorEstrellas(canvas, new Vector2(0f, 335f));
+        seleccion.Configurar(textoTitulo, textoEstrellas, fondo);
 
-        Button botonVolver = HerramientasEscena.CrearBoton(canvas, "Boton Volver", "< Volver", new Vector2(-780f, 455f), new Vector2(240f, 70f), colorBotonSalir, 30);
-        UnityEventTools.AddPersistentListener(botonVolver.onClick, new UnityAction(seleccion.VolverAMundos));
-
-        float separacionX = 355f;
-        float inicioX = -2f * separacionX;
-
+        float separacionX = 345f;
+        float inicioX = -separacionX * (DatosJuego.nivelesPorMundo - 1) / 2f;
         for (int numeroEnMundo = 1; numeroEnMundo <= DatosJuego.nivelesPorMundo; numeroEnMundo++)
         {
-            Vector2 posicion = new Vector2(inicioX + (numeroEnMundo - 1) * separacionX, 40f);
-            CrearBotonDeNivel(canvas, numeroEnMundo, posicion);
+            Vector2 posicion = new Vector2(inicioX + (numeroEnMundo - 1) * separacionX, 10f);
+            HerramientasInterfaz.CrearCuadroNivel(canvas, numeroEnMundo, posicion);
         }
 
-        string textoAyuda = "Esc: volver a los mundos     F1: desbloquear todo (modo prueba)";
-        HerramientasEscena.CrearTexto(canvas, "Ayuda", textoAyuda, 24, new Vector2(0f, -500f), new Vector2(1600f, 40f), new Color(1f, 1f, 1f, 0.85f));
+        HerramientasInterfaz.CrearFlechaVolver(canvas, new UnityAction(seleccion.VolverAMundos));
+        HerramientasInterfaz.CrearFranjaAyuda(canvas, "Clic en un nivel para jugar     Esc: volver a los mundos");
 
         string ruta = RutaEscena(DatosJuego.escenaSeleccionNivel);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
-    }
-
-    private static void CrearBotonDeNivel(Transform canvas, int numeroEnMundo, Vector2 posicion)
-    {
-        Vector2 tamanoBoton = new Vector2(330f, 320f);
-        Button boton = HerramientasEscena.CrearBoton(canvas, "Boton Nivel " + numeroEnMundo, numeroEnMundo.ToString(), posicion, tamanoBoton, colorBotonSecundario, 72);
-
-        // El número va arriba, el título en el medio y el estado abajo.
-        RectTransform rectanguloNumero = boton.transform.Find("Texto").GetComponent<RectTransform>();
-        rectanguloNumero.anchoredPosition = new Vector2(0f, 95f);
-
-        // El título puede ser largo: se deja bajar a una segunda línea dentro del botón.
-        Text textoTitulo = HerramientasEscena.CrearTexto(boton.transform, "Titulo", "", 32, new Vector2(0f, -5f), new Vector2(tamanoBoton.x - 30f, 90f), Color.white);
-        textoTitulo.horizontalOverflow = HorizontalWrapMode.Wrap;
-        textoTitulo.raycastTarget = false;
-
-        Text textoEstado = HerramientasEscena.CrearTexto(boton.transform, "Estado", "", 36, new Vector2(0f, -110f), new Vector2(tamanoBoton.x, 50f), new Color(1f, 0.90f, 0.45f));
-        textoEstado.raycastTarget = false;
-
-        BotonNivel botonNivel = boton.gameObject.AddComponent<BotonNivel>();
-        botonNivel.Configurar(numeroEnMundo, textoEstado, textoTitulo);
     }
 
     // ================= Mundo 1, Nivel 1: Primeros pasos =================
