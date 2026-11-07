@@ -65,9 +65,9 @@ Plus diferenciadores:
 | Hojas trampolín: lanzan mucho más alto que un salto | 4-2 |
 | Monos que lanzan cocos en arco; no le lanzan a quien espera en su puerta | 4-2 |
 | Crecida del río: el agua sube sin parar y se lleva a los dos; obliga a escalar | 4-4 |
-| Cuerdas de charango (trampolín + nota) | 5-1 |
-| Puerta melódica (notas en orden) | 5-2 |
-| Eclipse automático cada pocos segundos | 6-1 |
+| Cuerdas de charango: trampolín que toca su nota (5 notas con colores); algunas solo suenan de día o de noche | 5-1 |
+| Puerta melódica: las luces muestran la melodía; una nota equivocada la reinicia (repetir la última no cuenta) | 5-2 |
+| Eclipse automático cada 9 s, con cuenta regresiva; 0,7 s de gracia en lava y agua al cambiar | 6-1 |
 
 Estrellas: 1 por terminar, 1 por todas las gemas y 1 por terminar con pocas muertes (el máximo se configura por nivel en `DatosJuego`).
 
@@ -120,7 +120,7 @@ Comportamientos reutilizables para distintos animales. Mientras no haya arte se 
 | PiedraRodante | Rueda por el suelo o una pendiente | Yungas, Aiquile |
 | RemolinoViento | Empuja hacia un lado sin matar | Remolinos de sal |
 
-Saltar encima de los enemigos que caminan o vuelan los aturde 3 segundos; tocarlos de costado mata (y el nivel se reinicia para los dos). Cada muerte tiene su mensaje gracioso ("¡Un mono le tiró un coco a Inti!", "La llama escupió a Killa").
+Quien espera dentro de una puerta está a salvo de monos, llamas y avispas. Saltar encima de los enemigos que caminan o vuelan los aturde 3 segundos; tocarlos de costado mata (y el nivel se reinicia para los dos). Cada muerte tiene su mensaje gracioso ("¡Un mono le tiró un coco a Inti!", "La llama escupió a Killa").
 
 **Regla de justicia:** todo ataque tiene un aviso visible (temblor, sonido o animación) antes de golpear, y ningún enemigo hace imposible un nivel.
 
@@ -134,7 +134,7 @@ Saltar encima de los enemigos que caminan o vuelan los aturde 3 segundos; tocarl
 | 6. Isla del Sol | Llamas que escupen en todos los niveles; el nivel 5 es el jefe final |
 
 ### Jefe final: GuardianEclipse (nivel 6-5)
-Se mueve de lado a lado y lanza proyectiles de fuego y de agua; cada uno solo daña al elemento contrario. Tiene 3 vidas y pierde una cuando los DOS jugadores pisan a la vez dos botones del escenario. Al vencerlo se gana el juego.
+Se mueve de lado a lado y lanza proyectiles de fuego y de agua; cada uno solo daña al elemento contrario. Antes de cada disparo brilla del color de la bola. Tiene 3 vidas y pierde una cuando los DOS jugadores pisan a la vez dos botones del escenario; después de cada golpe parpadea 2,5 s y se vuelve más rápido. Al vencerlo sube un escalón hacia las puertas, y al ganar el nivel llega la escena Final.
 
 ### Plantilla de cada mundo
 - **Nivel 1:** enseña la mecánica nueva, con trampas suaves.
@@ -189,7 +189,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 | 6-4 | Todo a la vez | Todo mezclado | 5 |
 | 6-5 | El gran final | Gran final | 5 |
 
-Los niveles 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
+Los 30 niveles están armados (Mundos 1 a 6).
 
 Desbloqueo (durante el desarrollo todo está abierto con `modoPruebaTodoAbierto` en GestorProgreso; se apaga antes de publicar): al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
 
@@ -203,7 +203,9 @@ Escenas: `Intro` → `MenuPrincipal` → `SeleccionMundo` → `SeleccionNivel` �
 - F1 en estas dos pantallas desbloquea todo (modo prueba y defensa).
 - Al ganar el nivel 5 de un mundo aparece "¡Mundo completado!" y se vuelve a `SeleccionMundo`.
 
-Ventanas encima del nivel (no escenas): HUD (gemas, muertes, récord), Pausa (continuar, reiniciar, opciones, salir al mapa), Opciones (música, efectos, idioma, pantalla completa), Victoria (estrellas, muertes, gemas), Derrota (reinicio automático con mensaje gracioso).
+Ventanas encima del nivel (no escenas): HUD (gemas, muertes, récord), Pausa con Esc (continuar, reiniciar, opciones, salir al mapa), Opciones (volumen general y pantalla completa; música y efectos separados llegarán con el Audio Mixer, e idioma con la traducción), Victoria (estrellas, gemas, muertes y tiempo), Derrota (reinicio automático con mensaje gracioso).
+
+`Intro` y `Final` cuentan la historia en páginas (Enter sigue, Esc salta). El Final muestra el total de estrellas.
 
 Guardado: PlayerPrefs (mundos desbloqueados, niveles desbloqueados por mundo, estrellas por nivel, récord de muertes por nivel, opciones).
 

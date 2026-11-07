@@ -19,6 +19,15 @@ public class ProyectilArco : MonoBehaviour
     private float radio;
     private string mensajeDeMuerte;
     private float tiempo = 0f;
+    // Si es verdadero, solo daña a quien tiene el elemento contrario al del proyectil.
+    private bool daniaSoloAlContrario = false;
+    private TipoElemento elementoDelProyectil = TipoElemento.Fuego;
+
+    public void DaniarSoloAlContrarioDe(TipoElemento elemento)
+    {
+        daniaSoloAlContrario = true;
+        elementoDelProyectil = elemento;
+    }
 
     public void Iniciar(Vector2 nuevaVelocidad, float nuevaGravedad, float nuevoRadio, string nuevoMensaje)
     {
@@ -39,6 +48,12 @@ public class ProyectilArco : MonoBehaviour
         foreach (ControladorJugador jugador in jugadores)
         {
             if (jugador == null || jugador.EstaVivo == false)
+            {
+                continue;
+            }
+
+            // El fuego no le hace nada a quien tiene el fuego, y el agua tampoco al agua.
+            if (daniaSoloAlContrario == true && jugador.Elemento == elementoDelProyectil)
             {
                 continue;
             }

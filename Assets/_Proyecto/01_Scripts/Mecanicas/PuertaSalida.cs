@@ -33,10 +33,12 @@ public class PuertaSalida : MonoBehaviour
         }
     }
 
-    // Quien ya llegó a su puerta está a salvo mientras espera a su compañero.
+    // Quien ya llegó a una puerta está a salvo mientras espera a su compañero.
+    // Vale en cualquier puerta: con el eclipse automático a veces hay que esperar
+    // en la "equivocada" hasta que cambien los poderes.
     public bool EstaEsperando(ControladorJugador jugador)
     {
-        return jugadoresDentro.Contains(jugador) == true && jugador.Elemento == elementoRequerido;
+        return jugadoresDentro.Contains(jugador) == true;
     }
 
     public void ConfigurarPuerta(TipoElemento nuevoElemento)

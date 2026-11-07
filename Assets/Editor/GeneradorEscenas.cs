@@ -10,6 +10,8 @@
 //              - Mundo2_Nivel1 a Mundo2_Nivel5 (Minas de Potosí)
 //              - Mundo3_Nivel1 a Mundo3_Nivel5 (Yungas), en GeneradorEscenasMundo3
 //              - Mundo4_Nivel1 a Mundo4_Nivel5 (Trópico), en GeneradorEscenasMundo4
+//              - Mundos 5 y 6, en GeneradorEscenasMundo5 y GeneradorEscenasMundo6
+//              - Intro y Final, en GeneradorEscenasHistoria
 //              Además ordena las escenas en Build Settings.
 // Uso: Menú superior de Unity -> Inti y Killa -> Generar todas las escenas
 // Ojo: volver a generar una escena la REEMPLAZA (se pierden los cambios
@@ -69,12 +71,24 @@ public static partial class GeneradorEscenas
         GenerarMundo4Nivel3();
         GenerarMundo4Nivel4();
         GenerarMundo4Nivel5();
+        GenerarMundo5Nivel1();
+        GenerarMundo5Nivel2();
+        GenerarMundo5Nivel3();
+        GenerarMundo5Nivel4();
+        GenerarMundo5Nivel5();
+        GenerarMundo6Nivel1();
+        GenerarMundo6Nivel2();
+        GenerarMundo6Nivel3();
+        GenerarMundo6Nivel4();
+        GenerarMundo6Nivel5();
+        GenerarIntro();
+        GenerarFinal();
 
         HerramientasEscena.ActualizarBuildSettings();
 
         // Al terminar, dejamos abierto el menú principal para darle Play.
         EditorSceneManager.OpenScene(RutaEscena(DatosJuego.escenaMenuPrincipal));
-        Debug.Log("Inti y Killa: escenas generadas (menús y Mundos 1 a 4 completos). ¡Dale Play!");
+        Debug.Log("Inti y Killa: escenas generadas (todo el juego: Intro, menús, 30 niveles y Final). ¡Dale Play!");
     }
 
     [MenuItem("Inti y Killa/Escenas sueltas/Menú principal", false, 20)]
@@ -215,6 +229,66 @@ public static partial class GeneradorEscenas
         GenerarUnaSola(23);
     }
 
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 5 - Nivel 1", false, 43)]
+    public static void MenuGenerarMundo5Nivel1()
+    {
+        GenerarUnaSola(24);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 5 - Nivel 2", false, 44)]
+    public static void MenuGenerarMundo5Nivel2()
+    {
+        GenerarUnaSola(25);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 5 - Nivel 3", false, 45)]
+    public static void MenuGenerarMundo5Nivel3()
+    {
+        GenerarUnaSola(26);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 5 - Nivel 4", false, 46)]
+    public static void MenuGenerarMundo5Nivel4()
+    {
+        GenerarUnaSola(27);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 5 - Nivel 5", false, 47)]
+    public static void MenuGenerarMundo5Nivel5()
+    {
+        GenerarUnaSola(28);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 6 - Nivel 1", false, 48)]
+    public static void MenuGenerarMundo6Nivel1()
+    {
+        GenerarUnaSola(29);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 6 - Nivel 2", false, 49)]
+    public static void MenuGenerarMundo6Nivel2()
+    {
+        GenerarUnaSola(30);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 6 - Nivel 3", false, 50)]
+    public static void MenuGenerarMundo6Nivel3()
+    {
+        GenerarUnaSola(31);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 6 - Nivel 4", false, 51)]
+    public static void MenuGenerarMundo6Nivel4()
+    {
+        GenerarUnaSola(32);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 6 - Nivel 5", false, 52)]
+    public static void MenuGenerarMundo6Nivel5()
+    {
+        GenerarUnaSola(33);
+    }
+
     private static void GenerarUnaSola(int cual)
     {
         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
@@ -316,6 +390,46 @@ public static partial class GeneradorEscenas
         else if (cual == 23)
         {
             rutaGenerada = GenerarMundo4Nivel5();
+        }
+        else if (cual == 24)
+        {
+            rutaGenerada = GenerarMundo5Nivel1();
+        }
+        else if (cual == 25)
+        {
+            rutaGenerada = GenerarMundo5Nivel2();
+        }
+        else if (cual == 26)
+        {
+            rutaGenerada = GenerarMundo5Nivel3();
+        }
+        else if (cual == 27)
+        {
+            rutaGenerada = GenerarMundo5Nivel4();
+        }
+        else if (cual == 28)
+        {
+            rutaGenerada = GenerarMundo5Nivel5();
+        }
+        else if (cual == 29)
+        {
+            rutaGenerada = GenerarMundo6Nivel1();
+        }
+        else if (cual == 30)
+        {
+            rutaGenerada = GenerarMundo6Nivel2();
+        }
+        else if (cual == 31)
+        {
+            rutaGenerada = GenerarMundo6Nivel3();
+        }
+        else if (cual == 32)
+        {
+            rutaGenerada = GenerarMundo6Nivel4();
+        }
+        else if (cual == 33)
+        {
+            rutaGenerada = GenerarMundo6Nivel5();
         }
 
         HerramientasEscena.ActualizarBuildSettings();

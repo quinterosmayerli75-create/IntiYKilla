@@ -24,6 +24,12 @@ public class BotonPresion : MonoBehaviour
     private bool estaPresionado = false;
     private Vector3 posicionTapaSuelta;
 
+    // Lo usa el Guardián del Eclipse para saber si los dos botones están pisados.
+    public bool EstaPresionado
+    {
+        get { return estaPresionado; }
+    }
+
     public void Configurar(List<ObjetoActivable> nuevosObjetivos, SpriteRenderer nuevaTapa)
     {
         objetivos = nuevosObjetivos;

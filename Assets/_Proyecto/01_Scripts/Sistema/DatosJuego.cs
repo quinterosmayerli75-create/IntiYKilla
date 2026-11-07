@@ -36,6 +36,8 @@ public static class DatosJuego
     public const string escenaMenuPrincipal = "MenuPrincipal";
     public const string escenaSeleccionMundo = "SeleccionMundo";
     public const string escenaSeleccionNivel = "SeleccionNivel";
+    public const string escenaIntro = "Intro";
+    public const string escenaFinal = "Final";
 
     public const int nivelesPorMundo = 5;
     public const int estrellasPorNivel = 3;

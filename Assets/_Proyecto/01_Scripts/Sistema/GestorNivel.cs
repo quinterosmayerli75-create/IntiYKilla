@@ -6,7 +6,7 @@
 //              - Reinicia el nivel cuando alguien muere.
 //              - Declara la victoria cuando los dos están en su puerta,
 //                calcula las estrellas y guarda el progreso.
-//              - Teclas: R reiniciar, Esc volver al mapa,
+//              - Teclas: R reiniciar, H ver la pista (Esc pausa, en MenuPausa),
 //                Enter pasar al siguiente nivel (después de ganar).
 //              Muestra un HUD temporal (OnGUI) mientras se diseña la
 //              interfaz definitiva.
@@ -182,12 +182,17 @@ public class GestorNivel : MonoBehaviour
             MostrarAviso(pistaInicial, duracionPista);
         }
 
+        if (MenuPausa.EstaPausado == true)
+        {
+            return;
+        }
+
         if (teclado.rKey.wasPressedThisFrame == true)
         {
             ReiniciarNivel();
         }
 
-        if (teclado.escapeKey.wasPressedThisFrame == true)
+        if (teclado.escapeKey.wasPressedThisFrame == true && nivelTerminado == true)
         {
             VolverAlMapa();
         }
@@ -276,6 +281,10 @@ public class GestorNivel : MonoBehaviour
         {
             // Se deja ver el mensaje y las estrellas antes de volver a los mundos.
             mensajeCentral = "¡Mundo completado!";
+            if (EsElUltimoNivelDelJuego() == true)
+            {
+                mensajeCentral = "¡Vencieron al eclipse!";
+            }
             Invoke(nameof(VolverAMundos), segundosMensajeMundoCompletado);
         }
         else
@@ -304,6 +313,11 @@ public class GestorNivel : MonoBehaviour
         return estrellas;
     }
 
+    public bool NivelTerminado
+    {
+        get { return nivelTerminado; }
+    }
+
     public void ReiniciarNivel()
     {
         Scene escenaActual = SceneManager.GetActiveScene();
@@ -320,9 +334,20 @@ public class GestorNivel : MonoBehaviour
         }
     }
 
+    private bool EsElUltimoNivelDelJuego()
+    {
+        return datosNivel != null && datosNivel.numeroMundo == DatosJuego.CantidadDeMundos() && datosNivel.numeroEnMundo == DatosJuego.nivelesPorMundo;
+    }
+
     public void VolverAMundos()
     {
         escenaDelContador = "";
+        // Después del último nivel del juego viene la escena final.
+        if (EsElUltimoNivelDelJuego() == true && Application.CanStreamedLevelBeLoaded(DatosJuego.escenaFinal) == true)
+        {
+            SceneManager.LoadScene(DatosJuego.escenaFinal);
+            return;
+        }
         SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
     }
 
@@ -416,6 +441,38 @@ public class GestorNivel : MonoBehaviour
         GUI.Label(new Rect(posicionX, posicionY, anchoAviso, altoTexto), avisoTemporal, estiloAviso);
     }
 
+    // Ventana de victoria: estrellas, gemas, muertes y tiempo, y qué teclas usar.
+    private void DibujarVentanaVictoria(float anchoVirtual, float altoVirtual, GUIStyle estiloCentral, GUIStyle estiloAyuda)
+    {
+        float anchoVentana = 900f;
+        float altoVentana = 330f;
+        Rect ventana = new Rect((anchoVirtual - anchoVentana) / 2f, altoVirtual / 2f - 120f, anchoVentana, altoVentana);
+        Color colorAnterior = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.8f);
+        GUI.DrawTexture(ventana, Texture2D.whiteTexture);
+        GUI.color = colorAnterior;
+
+        GUI.Label(new Rect(ventana.x, ventana.y + 10f, anchoVentana, 80f), mensajeCentral, estiloCentral);
+
+        GUIStyle estiloEstrellas = new GUIStyle(estiloCentral);
+        estiloEstrellas.fontSize = 80;
+        GUI.Label(new Rect(ventana.x, ventana.y + 85f, anchoVentana, 100f), TextoEstrellas(estrellasGanadas), estiloEstrellas);
+
+        GUIStyle estiloDatos = new GUIStyle(estiloAyuda);
+        estiloDatos.fontSize = 30;
+        int gemasRecogidas = gemasFuegoRecogidas + gemasAguaRecogidas;
+        int gemasTotales = totalGemasFuego + totalGemasAgua;
+        string textoDatos = "Gemas: " + gemasRecogidas + "/" + gemasTotales + "     Muertes: " + muertesDelIntento + "     Tiempo: " + cronometro.ToString("0") + " s";
+        GUI.Label(new Rect(ventana.x, ventana.y + 195f, anchoVentana, 50f), textoDatos, estiloDatos);
+
+        string textoOpciones = "Enter: siguiente nivel     R: repetir     Esc: mapa";
+        if (mundoCompletado == true)
+        {
+            textoOpciones = "Enter: continuar";
+        }
+        GUI.Label(new Rect(ventana.x, ventana.y + 255f, anchoVentana, 50f), textoOpciones, estiloDatos);
+    }
+
     private void OnGUI()
     {
         // Todo lo que se dibuja abajo usa coordenadas "virtuales" de 1080 de alto;
@@ -442,7 +499,7 @@ public class GestorNivel : MonoBehaviour
         estiloAyuda.alignment = TextAnchor.MiddleCenter;
         estiloAyuda.normal.textColor = Color.white;
         estiloAyuda.wordWrap = false;
-        string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     H: ver pista     R: reiniciar     Esc: mapa";
+        string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     H: ver pista     R: reiniciar     Esc: pausa";
 
         // Franja oscura detrás del texto: sin ella, el blanco se pierde sobre el suelo claro.
         float altoFranja = 44f;
@@ -464,25 +521,15 @@ public class GestorNivel : MonoBehaviour
             DibujarAviso(anchoVirtual, altoVirtual);
         }
 
-        if (mensajeCentral != "")
+        // Al ganar, el mensaje va dentro de la ventana de victoria.
+        if (mensajeCentral != "" && nivelTerminado == false)
         {
             GUI.Label(new Rect(0, altoVirtual / 2f - 80f, anchoVirtual, 80), mensajeCentral, estiloCentral);
         }
 
         if (nivelTerminado == true)
         {
-            GUIStyle estiloEstrellas = new GUIStyle(estiloCentral);
-            estiloEstrellas.fontSize = 80;
-            GUI.Label(new Rect(0, altoVirtual / 2f, anchoVirtual, 100), TextoEstrellas(estrellasGanadas), estiloEstrellas);
-
-            GUIStyle estiloOpciones = new GUIStyle(estiloAyuda);
-            estiloOpciones.fontSize = 30;
-            string textoOpciones = "Muertes: " + muertesDelIntento + "     Enter: siguiente nivel     R: repetir     Esc: mapa";
-            if (mundoCompletado == true)
-            {
-                textoOpciones = "Muertes: " + muertesDelIntento + "     Enter: volver a los mundos";
-            }
-            GUI.Label(new Rect(0, altoVirtual / 2f + 110f, anchoVirtual, 50), textoOpciones, estiloOpciones);
+            DibujarVentanaVictoria(anchoVirtual, altoVirtual, estiloCentral, estiloAyuda);
         }
     }
 }

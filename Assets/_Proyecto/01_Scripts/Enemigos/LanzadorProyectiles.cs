@@ -41,6 +41,14 @@ public class LanzadorProyectiles : EnemigoBase
         spriteProyectil = nuevoSprite;
     }
 
+    // Para que el mismo lanzador sirva para monos con cocos y llamas que escupen.
+    public void ConfigurarProyectil(Color nuevoColor, float nuevoTamano, string nuevoMensaje)
+    {
+        colorProyectil = nuevoColor;
+        tamanoProyectil = nuevoTamano;
+        mensajeDelProyectil = nuevoMensaje;
+    }
+
     protected override void Awake()
     {
         base.Awake();

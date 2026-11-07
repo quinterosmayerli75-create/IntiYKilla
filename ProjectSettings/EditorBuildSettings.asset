@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Intro.unity
+    guid: 6627ff8ba7d18654ca62ef92caadee6e
+  - enabled: 1
     path: Assets/_Proyecto/00_Scenes/MenuPrincipal.unity
     guid: f824e855efb4eff448419011436bf182
   - enabled: 1
@@ -74,5 +77,38 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Proyecto/00_Scenes/Niveles/Mundo4_Nivel5.unity
     guid: 65a36ba6741938d43a3ad37deaef3d4b
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo5_Nivel1.unity
+    guid: db966586c21442c4aa70a2635a5c771f
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo5_Nivel2.unity
+    guid: c1eb5dd12b68f86419a4f2f74d5be391
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo5_Nivel3.unity
+    guid: 9359f2900c316f34d9e9535308cf0f60
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo5_Nivel4.unity
+    guid: 28d3de84b6ddcd646a3b25f0f2534bd4
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo5_Nivel5.unity
+    guid: 79c83092ff9fdfd48afd03e431f838b3
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo6_Nivel1.unity
+    guid: c8eef7c1d14e7794d98b705eae387b46
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo6_Nivel2.unity
+    guid: 857827943338a20488702b47abe98919
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo6_Nivel3.unity
+    guid: 11930291d3e6e2b4485990d1669da6c6
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo6_Nivel4.unity
+    guid: 2f43fab8d86f4664c8499ade287ad093
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Niveles/Mundo6_Nivel5.unity
+    guid: 7504561b9902482479a1c6616eea3f7a
+  - enabled: 1
+    path: Assets/_Proyecto/00_Scenes/Final.unity
+    guid: fc7ca541fb9fcb04d8274b23ce9fc5c0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

@@ -65,6 +65,13 @@ public class ZonaElemental : MonoBehaviour
             return true;
         }
 
+        // Durante el cambio de poderes del eclipse automático, la lava y el agua
+        // dan un instante de gracia (ver CicloEclipse).
+        if (CicloEclipse.EstaEnGracia == true)
+        {
+            return false;
+        }
+
         if (tipoZona == TipoZona.Lava && elementoJugador == TipoElemento.Agua)
         {
             return true;

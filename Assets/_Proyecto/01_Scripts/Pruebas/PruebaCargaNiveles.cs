@@ -29,7 +29,7 @@ public class PruebaCargaNiveles
     // Los niveles que ya existen. Al terminar un mundo nuevo se agregan aquí.
     private static IEnumerable<string> NivelesTerminados()
     {
-        for (int numeroMundo = 1; numeroMundo <= 4; numeroMundo++)
+        for (int numeroMundo = 1; numeroMundo <= 6; numeroMundo++)
         {
             for (int numeroNivel = 1; numeroNivel <= 5; numeroNivel++)
             {

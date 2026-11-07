@@ -546,6 +546,7 @@ public static partial class HerramientasEscena
         GameObject objetoGestor = new GameObject("GestorNivel");
         GestorNivel gestor = objetoGestor.AddComponent<GestorNivel>();
         gestor.ConfigurarPista(pista);
+        objetoGestor.AddComponent<MenuPausa>();
     }
 
     // Suelo de lado a lado + paredes invisibles para no salirse de la pantalla.
@@ -1834,6 +1835,7 @@ public static partial class HerramientasEscena
     {
         List<EditorBuildSettingsScene> listaEscenas = new List<EditorBuildSettingsScene>();
 
+        AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaIntro + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaMenuPrincipal + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionMundo + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionNivel + ".unity");
@@ -1842,6 +1844,8 @@ public static partial class HerramientasEscena
         {
             AgregarSiExiste(listaEscenas, carpetaNiveles + "/" + nivel.nombreEscena + ".unity");
         }
+
+        AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaFinal + ".unity");
 
         EditorBuildSettings.scenes = listaEscenas.ToArray();
     }

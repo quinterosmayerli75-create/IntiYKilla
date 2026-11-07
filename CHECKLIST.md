@@ -39,8 +39,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] PeligroQueCae y EnemigoVolador (Mundo 2)
 - [x] EnemigoEnPicada y PiedraRodante (Mundo 3)
 - [x] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
-- [ ] EnemigoPerseguidor (Mundo 5)
-- [ ] Jefe final GuardianEclipse (nivel 6-5)
+- [x] EnemigoPerseguidor (Mundo 5)
+- [x] Jefe final GuardianEclipse (nivel 6-5)
 - [x] Vagonetas y plataformas móviles
 - [x] Cajas empujables
 - [x] Los jugadores se atraviesan, aura del color del elemento y efecto visual del eclipse
@@ -52,8 +52,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 ## Semana 3: Mundo 2 (11 – 17 nov)
 - [x] Armar los niveles 2-1 a 2-5 con más trampas (Minas de Potosí)
 - [x] Lianas, hojas trampolín y monos
-- [ ] Cuerdas de charango y puerta melódica
-- [ ] Eclipse automático
+- [x] Cuerdas de charango y puerta melódica
+- [x] Eclipse automático (con un instante de gracia en los charcos al cambiar)
 
 ## Semana 4: Mundos 3 y 4 (18 – 24 nov)
 - [x] Armar los niveles 3-1 a 3-5 con más trampas (Yungas; traición en 3-4 y 3-5)
@@ -61,13 +61,13 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Crecida del río en el nivel 4-4
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
-- [ ] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
-- [ ] Armar los niveles 6-1 a 6-5, los más tramposos (Isla del Sol; traición en 6-4 y 6-5)
+- [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
+- [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)
 - [x] Menú principal
 - [x] Selección de mundo con tarjetas y selección de nivel con cuadros (arte provisional)
 - [ ] Arte final de los menús en `03_Sprites/Interfaz`: TarjetaMundo1..6, FondoMundo1..6, Estrella, Candado, Flecha
 - [ ] HUD definitivo con gemas y muertes (versión temporal lista)
-- [ ] Pausa, opciones, victoria y derrota
+- [x] Pausa (Esc), opciones (volumen y pantalla completa), ventana de victoria y reinicio al morir
 - [x] Sistema de estrellas
 - [x] Guardado con PlayerPrefs
 
@@ -77,7 +77,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Música por mundo y efectos de sonido
 - [ ] Audio Mixer con volúmenes separados
 - [ ] Partículas, temblor de cámara y bloom
-- [ ] Intro y escena final
+- [x] Intro y escena final (historia en páginas; textos provisionales)
 - [ ] Traducción al inglés
 
 ## Semana 7: pruebas y publicación (9 – 15 dic)
