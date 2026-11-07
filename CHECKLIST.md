@@ -38,7 +38,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Aturdir enemigos al saltar encima (3 segundos)
 - [x] PeligroQueCae y EnemigoVolador (Mundo 2)
 - [x] EnemigoEnPicada y PiedraRodante (Mundo 3)
-- [ ] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
+- [x] EnemigoPatrulla y LanzadorProyectiles (Mundo 4)
 - [ ] EnemigoPerseguidor (Mundo 5)
 - [ ] Jefe final GuardianEclipse (nivel 6-5)
 - [x] Vagonetas y plataformas móviles
@@ -51,13 +51,14 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 
 ## Semana 3: Mundo 2 (11 – 17 nov)
 - [x] Armar los niveles 2-1 a 2-5 con más trampas (Minas de Potosí)
-- [ ] Lianas, hojas trampolín y monos
+- [x] Lianas, hojas trampolín y monos
 - [ ] Cuerdas de charango y puerta melódica
 - [ ] Eclipse automático
 
 ## Semana 4: Mundos 3 y 4 (18 – 24 nov)
 - [x] Armar los niveles 3-1 a 3-5 con más trampas (Yungas; traición en 3-4 y 3-5)
-- [ ] Armar los niveles 4-1 a 4-5 con más trampas (Trópico; traición en 4-4 y 4-5)
+- [x] Armar los niveles 4-1 a 4-5 con más trampas (Trópico; traición en 4-4 y 4-5)
+- [x] Crecida del río en el nivel 4-4
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [ ] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)

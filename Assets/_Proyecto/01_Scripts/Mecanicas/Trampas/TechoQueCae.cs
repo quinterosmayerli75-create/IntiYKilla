@@ -16,7 +16,7 @@ public class TechoQueCae : TrampaActivable
 {
     [SerializeField] private float alturaDelPiso = -3.5f;
     [SerializeField] private float retardoAntesDeCaer = 0.35f;
-    [SerializeField] private float velocidadCaida = 14f;
+    [SerializeField] private float velocidadCaida = 24f;
     [SerializeField] private string mensajeDeMuerte = "¿Mirabas al techo? Yo tampoco.";
 
     private BoxCollider2D colisionador;

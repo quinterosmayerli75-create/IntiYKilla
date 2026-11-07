@@ -3,7 +3,7 @@
 // Proyecto: Inti y Killa
 // Descripción: Roca colgada que se repite en ciclo:
 //              1) Espera en su lugar.
-//              2) Tiembla 0.5 segundos: es el aviso (regla de justicia).
+//              2) Tiembla un instante: es el aviso (regla de justicia).
 //              3) Cae y mata a quien toque.
 //              4) Desaparece al llegar al piso y reaparece después de un rato.
 // Uso: objeto con SpriteRenderer. Mientras no haya arte se ve como una forma
@@ -22,12 +22,12 @@ public class PeligroQueCae : MonoBehaviour
     [Header("Cuerpo y caída")]
     [SerializeField] private Vector2 tamano = new Vector2(1f, 1f);
     [SerializeField] private float alturaDelPiso = -3.5f;
-    [SerializeField] private float velocidadCaida = 26f;
+    [SerializeField] private float velocidadCaida = 32f;
 
     [Header("Tiempos del ciclo")]
     [SerializeField] private float segundosDeEspera = 2.5f;
-    [SerializeField] private float segundosDeTemblor = 0.5f;
-    [SerializeField] private float segundosParaReaparecer = 1.5f;
+    [SerializeField] private float segundosDeTemblor = 0.35f;
+    [SerializeField] private float segundosParaReaparecer = 0.5f;
     [SerializeField] private float intensidadTemblor = 0.08f;
 
     [SerializeField] private string mensajeDeMuerte = "Una roca de Potosí le cayó encima a {0}.";

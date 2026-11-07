@@ -9,6 +9,7 @@
 //              - Mundo1_Nivel1 a Mundo1_Nivel5 (Salar de Uyuni)
 //              - Mundo2_Nivel1 a Mundo2_Nivel5 (Minas de Potosí)
 //              - Mundo3_Nivel1 a Mundo3_Nivel5 (Yungas), en GeneradorEscenasMundo3
+//              - Mundo4_Nivel1 a Mundo4_Nivel5 (Trópico), en GeneradorEscenasMundo4
 //              Además ordena las escenas en Build Settings.
 // Uso: Menú superior de Unity -> Inti y Killa -> Generar todas las escenas
 // Ojo: volver a generar una escena la REEMPLAZA (se pierden los cambios
@@ -63,12 +64,17 @@ public static partial class GeneradorEscenas
         GenerarMundo3Nivel3();
         GenerarMundo3Nivel4();
         GenerarMundo3Nivel5();
+        GenerarMundo4Nivel1();
+        GenerarMundo4Nivel2();
+        GenerarMundo4Nivel3();
+        GenerarMundo4Nivel4();
+        GenerarMundo4Nivel5();
 
         HerramientasEscena.ActualizarBuildSettings();
 
         // Al terminar, dejamos abierto el menú principal para darle Play.
         EditorSceneManager.OpenScene(RutaEscena(DatosJuego.escenaMenuPrincipal));
-        Debug.Log("Inti y Killa: escenas generadas (menús y Mundos 1 a 3 completos). ¡Dale Play!");
+        Debug.Log("Inti y Killa: escenas generadas (menús y Mundos 1 a 4 completos). ¡Dale Play!");
     }
 
     [MenuItem("Inti y Killa/Escenas sueltas/Menú principal", false, 20)]
@@ -179,6 +185,36 @@ public static partial class GeneradorEscenas
         GenerarUnaSola(18);
     }
 
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 4 - Nivel 1", false, 38)]
+    public static void MenuGenerarMundo4Nivel1()
+    {
+        GenerarUnaSola(19);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 4 - Nivel 2", false, 39)]
+    public static void MenuGenerarMundo4Nivel2()
+    {
+        GenerarUnaSola(20);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 4 - Nivel 3", false, 40)]
+    public static void MenuGenerarMundo4Nivel3()
+    {
+        GenerarUnaSola(21);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 4 - Nivel 4", false, 41)]
+    public static void MenuGenerarMundo4Nivel4()
+    {
+        GenerarUnaSola(22);
+    }
+
+    [MenuItem("Inti y Killa/Escenas sueltas/Mundo 4 - Nivel 5", false, 42)]
+    public static void MenuGenerarMundo4Nivel5()
+    {
+        GenerarUnaSola(23);
+    }
+
     private static void GenerarUnaSola(int cual)
     {
         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
@@ -260,6 +296,26 @@ public static partial class GeneradorEscenas
         else if (cual == 18)
         {
             rutaGenerada = GenerarMundo3Nivel5();
+        }
+        else if (cual == 19)
+        {
+            rutaGenerada = GenerarMundo4Nivel1();
+        }
+        else if (cual == 20)
+        {
+            rutaGenerada = GenerarMundo4Nivel2();
+        }
+        else if (cual == 21)
+        {
+            rutaGenerada = GenerarMundo4Nivel3();
+        }
+        else if (cual == 22)
+        {
+            rutaGenerada = GenerarMundo4Nivel4();
+        }
+        else if (cual == 23)
+        {
+            rutaGenerada = GenerarMundo4Nivel5();
         }
 
         HerramientasEscena.ActualizarBuildSettings();
@@ -957,7 +1013,7 @@ public static partial class GeneradorEscenas
     // 4) En el piso alto cruzan otro río de veneno, y otra vez dependen de la luz.
 
     private static readonly Color colorFondoMina = new Color(0.07f, 0.05f, 0.05f);
-    private static readonly Color colorSueloMina = new Color(0.40f, 0.32f, 0.28f);
+    private static readonly Color colorSueloMina = new Color(0.68f, 0.52f, 0.38f);
 
     private static string GenerarMundo2Nivel1()
     {
@@ -1103,7 +1159,7 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearBotonPresion("Boton derecho", new Vector2(13.5f, suelo), mueveVagoneta, mecanismos);
 
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
-        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(8.5f, 2.6f), pisoUno, 2f, peligros);
+        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(8.5f, 2.6f), pisoUno, 0.8f, peligros);
         HerramientasEscena.CrearMurcielago("Murcielago", new Vector2(-5f, 5.4f), new Vector2(2.5f, 1f), 5f, peligros);
 
         Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
@@ -1143,7 +1199,7 @@ public static partial class GeneradorEscenas
 
         Camera camaraPrincipal = HerramientasEscena.CrearCamara(colorFondoMina);
         HerramientasEscena.CrearLuzGlobal(new Color(0.85f, 0.80f, 0.85f), 0.65f);
-        HerramientasEscena.CrearGestorNivel("La caja pesa mucho: empújenla los dos juntos hasta el borde y úsenla de escalón. Arriba, un eclipse los ayudará a cruzar.");
+        HerramientasEscena.CrearGestorNivel("Párense los dos a la izquierda de la caja y empújenla juntos hasta la marca amarilla. Súbanse a ella y lleguen a las placas de arriba.");
         HerramientasEscena.CrearFondoMina();
 
         // 4.7 sobre el suelo: más que el salto (3.8). Sin la caja (1.2) no se llega.
@@ -1159,6 +1215,10 @@ public static partial class GeneradorEscenas
         // La caja se detiene junto al borde del piso alto: nunca se atasca sin solución.
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
         HerramientasEscena.CrearCajaEmpujable("Caja", new Vector2(-4f, suelo), -9f, 6.4f, mecanismos);
+        // Flechas y marca en el piso: muestran adónde hay que llevar la caja.
+        HerramientasEscena.CrearFlechaGuia("Flecha de la caja 1", new Vector2(0f, -1.6f), true, mecanismos);
+        HerramientasEscena.CrearFlechaGuia("Flecha de la caja 2", new Vector2(3f, -1.6f), true, mecanismos);
+        HerramientasEscena.CrearDecoracion("Marca de la caja", HerramientasEscena.spriteCuadrado, new Vector2(6.4f, suelo + 0.04f), new Vector2(1.4f, 0.08f), new Color(1f, 0.85f, 0.25f), 1, false, mecanismos);
 
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         HerramientasEscena.CrearCharco("Rio de lava", TipoZona.Lava, -2f, 14f, pisoFinal, trampas);
@@ -1177,7 +1237,7 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse", new Vector2(6.2f, pisoFinal), new Vector2(-11f, pisoFinal), colorAltarUno, altares);
 
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
-        HerramientasEscena.CrearRocaQueCae("Roca del piso alto", new Vector2(9.5f, 3.6f), pisoAlto, 2.5f, peligros);
+        HerramientasEscena.CrearRocaQueCae("Roca del piso alto", new Vector2(9.5f, 3.6f), pisoAlto, 0.8f, peligros);
         HerramientasEscena.CrearMurcielago("Murcielago", new Vector2(0f, 7f), new Vector2(3f, 1f), 6f, peligros);
 
         Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
@@ -1253,7 +1313,7 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPlataformaOculta("Cristal alto 3", new Vector2(-4f, alturaCristal), tamanoCristal, cristales);
 
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
-        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(10f, 3.5f), pisoUno, 2.5f, peligros);
+        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(10f, 3.5f), pisoUno, 0.8f, peligros);
         HerramientasEscena.CrearMurcielago("Murcielago", new Vector2(-9f, 7.1f), new Vector2(2f, 1f), 5f, peligros);
 
         Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
@@ -1314,6 +1374,10 @@ public static partial class GeneradorEscenas
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
         HerramientasEscena.CrearCajaEmpujable("Caja", new Vector2(-6f, suelo), -9f, 5.2f, mecanismos);
+        // Flechas y marca en el piso: muestran adónde hay que llevar la caja.
+        HerramientasEscena.CrearFlechaGuia("Flecha de la caja 1", new Vector2(-2f, -1.6f), true, mecanismos);
+        HerramientasEscena.CrearFlechaGuia("Flecha de la caja 2", new Vector2(1f, -1.6f), true, mecanismos);
+        HerramientasEscena.CrearDecoracion("Marca de la caja", HerramientasEscena.spriteCuadrado, new Vector2(5.2f, suelo + 0.04f), new Vector2(1.4f, 0.08f), new Color(1f, 0.85f, 0.25f), 1, false, mecanismos);
 
         // TRAICIÓN: la palanca enciende la vagoneta y le abre el suelo al compañero.
         PlataformaMovil vagoneta = HerramientasEscena.CrearVagoneta("Vagoneta", new Vector2(6.8f, 3.9f), -14.6f, 4f, false, mecanismos);
@@ -1341,8 +1405,8 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaTrampa("Gema regalada", TipoElemento.Fuego, new Vector2(9.5f, 8.75f), trampasDeLaGema, gemas);
 
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
-        HerramientasEscena.CrearRocaQueCae("Roca del piso 2", new Vector2(-12f, 7f), pisoDos, 2.5f, peligros);
-        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(13.5f, 3.6f), pisoUno, 3f, peligros);
+        HerramientasEscena.CrearRocaQueCae("Roca del piso 2", new Vector2(-12f, 7f), pisoDos, 0.8f, peligros);
+        HerramientasEscena.CrearRocaQueCae("Roca del piso 1", new Vector2(13.5f, 3.6f), pisoUno, 0.8f, peligros);
         HerramientasEscena.CrearMurcielago("Murcielago de abajo", new Vector2(-1f, 0.5f), new Vector2(3f, 0.8f), 6f, peligros);
         HerramientasEscena.CrearMurcielago("Murcielago de arriba", new Vector2(-7f, 10.2f), new Vector2(2f, 0.8f), 5f, peligros);
 

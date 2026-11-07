@@ -35,7 +35,7 @@ public class GestorNivel : MonoBehaviour
     [Header("Pista que aparece al empezar el nivel")]
     [TextArea]
     [SerializeField] private string pistaInicial = "";
-    [SerializeField] private float duracionPista = 6f;
+    [SerializeField] private float duracionPista = 8f;
 
     // Datos del nivel actual (se leen de DatosJuego según el nombre de la escena).
     // Queda en null si la escena no está en el catálogo (por ejemplo, una de prueba).
@@ -174,6 +174,12 @@ public class GestorNivel : MonoBehaviour
         if (teclado == null)
         {
             return;
+        }
+
+        // La pista solo sale al empezar: con H se puede volver a leer.
+        if (teclado.hKey.wasPressedThisFrame == true && pistaInicial != "")
+        {
+            MostrarAviso(pistaInicial, duracionPista);
         }
 
         if (teclado.rKey.wasPressedThisFrame == true)
@@ -386,6 +392,30 @@ public class GestorNivel : MonoBehaviour
     private const float margenHud = 30f;
 
     // HUD temporal: luego se reemplaza por la interfaz definitiva.
+    // Pistas y avisos: el texto puede ser largo, así que baja a varias líneas y
+    // lleva un panel oscuro para que se lea sobre cualquier parte del nivel.
+    private void DibujarAviso(float anchoVirtual, float altoVirtual)
+    {
+        GUIStyle estiloAviso = new GUIStyle(GUI.skin.label);
+        estiloAviso.fontSize = 36;
+        estiloAviso.fontStyle = FontStyle.Bold;
+        estiloAviso.alignment = TextAnchor.MiddleCenter;
+        estiloAviso.normal.textColor = new Color(1f, 0.88f, 0.4f);
+        estiloAviso.wordWrap = true;
+
+        float anchoAviso = Mathf.Min(anchoVirtual - 120f, 1200f);
+        float altoTexto = estiloAviso.CalcHeight(new GUIContent(avisoTemporal), anchoAviso);
+        float relleno = 16f;
+        float posicionX = (anchoVirtual - anchoAviso) / 2f;
+        float posicionY = altoVirtual * 0.22f;
+
+        Color colorAnterior = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.85f);
+        GUI.DrawTexture(new Rect(posicionX - relleno, posicionY - relleno, anchoAviso + relleno * 2f, altoTexto + relleno * 2f), Texture2D.whiteTexture);
+        GUI.color = colorAnterior;
+        GUI.Label(new Rect(posicionX, posicionY, anchoAviso, altoTexto), avisoTemporal, estiloAviso);
+    }
+
     private void OnGUI()
     {
         // Todo lo que se dibuja abajo usa coordenadas "virtuales" de 1080 de alto;
@@ -412,7 +442,7 @@ public class GestorNivel : MonoBehaviour
         estiloAyuda.alignment = TextAnchor.MiddleCenter;
         estiloAyuda.normal.textColor = Color.white;
         estiloAyuda.wordWrap = false;
-        string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     R: reiniciar     Esc: mapa";
+        string textoAyuda = "Inti: A/D mover, W saltar, S usar     Killa: Flechas mover, Arriba saltar, Abajo usar     H: ver pista     R: reiniciar     Esc: mapa";
 
         // Franja oscura detrás del texto: sin ella, el blanco se pierde sobre el suelo claro.
         float altoFranja = 44f;
@@ -431,7 +461,7 @@ public class GestorNivel : MonoBehaviour
 
         if (tiempoRestanteAviso > 0f && avisoTemporal != "")
         {
-            GUI.Label(new Rect(0, altoVirtual * 0.25f, anchoVirtual, 80), avisoTemporal, estiloCentral);
+            DibujarAviso(anchoVirtual, altoVirtual);
         }
 
         if (mensajeCentral != "")

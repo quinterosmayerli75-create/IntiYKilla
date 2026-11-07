@@ -21,6 +21,9 @@ public class CajaEmpujable : MonoBehaviour
     // Hasta qué distancia cuenta un jugador que empuja (el segundo empuja por detrás del primero).
     [SerializeField] private float distanciaDeEmpuje = 1.1f;
 
+    [SerializeField] private float segundosAntesDeAvisar = 0.7f;
+
+    private float tiempoEmpujandoSolo = 0f;
     private Rigidbody2D cuerpoFisico;
     private BoxCollider2D colisionador;
     private ControladorJugador[] jugadores;
@@ -44,6 +47,8 @@ public class CajaEmpujable : MonoBehaviour
         int empujanHaciaDerecha = ContarEmpujes(1f);
         int empujanHaciaIzquierda = ContarEmpujes(-1f);
 
+        AvisarSiEmpujanSolos(empujanHaciaDerecha, empujanHaciaIzquierda);
+
         float velocidadX = 0f;
         float posicionX = cuerpoFisico.position.x;
 
@@ -65,6 +70,30 @@ public class CajaEmpujable : MonoBehaviour
         {
             cuerpoFisico.constraints = RigidbodyConstraints2D.FreezeRotation;
             cuerpoFisico.linearVelocity = new Vector2(velocidadX, cuerpoFisico.linearVelocity.y);
+        }
+    }
+
+    // Si alguien empuja sin ayuda, la caja no se mueve y parecería un error del
+    // juego: después de un momento se le explica qué falta.
+    private void AvisarSiEmpujanSolos(int empujanHaciaDerecha, int empujanHaciaIzquierda)
+    {
+        bool empujaSinAyuda = empujanHaciaDerecha > 0 && empujanHaciaDerecha < jugadoresNecesarios;
+        if (empujanHaciaIzquierda > 0 && empujanHaciaIzquierda < jugadoresNecesarios)
+        {
+            empujaSinAyuda = true;
+        }
+
+        if (empujaSinAyuda == false)
+        {
+            tiempoEmpujandoSolo = 0f;
+            return;
+        }
+
+        tiempoEmpujandoSolo = tiempoEmpujandoSolo + Time.fixedDeltaTime;
+        if (tiempoEmpujandoSolo >= segundosAntesDeAvisar && GestorNivel.Instancia != null)
+        {
+            GestorNivel.Instancia.MostrarAviso("Esta caja pesa mucho: empújenla los dos juntos, por el mismo lado.", 3f);
+            tiempoEmpujandoSolo = 0f;
         }
     }
 

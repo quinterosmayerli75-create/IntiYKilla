@@ -462,7 +462,7 @@ public static partial class HerramientasEscena
 
     // Zoom = mitad de la altura visible, en unidades.
     // El máximo (8.5) muestra el nivel completo, igual que la cámara fija anterior.
-    private const float zoomMinimoCamara = 7f;
+    private const float zoomMinimoCamara = 7.8f;
     private const float zoomMaximoCamara = 8.5f;
 
     public static void CrearCamaraCooperativa(Camera camaraPrincipal, Transform jugadorUno, Transform jugadorDos)

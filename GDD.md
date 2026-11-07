@@ -61,8 +61,10 @@ Plus diferenciadores:
 | Lluvia que apaga a quien tiene el fuego si no tiene techo | 3-2 |
 | Charcos que Killa congela e Inti derrite (5 s, parpadean antes) | 3-2 |
 | Día y noche: plataformas de día (doradas) y de noche (azules), con 0.6 s de gracia tras el cambio para saltar de una a otra | 3-3 |
-| Lianas y hojas trampolín | 4-1 |
-| Monos que lanzan frutas | 4-2 |
+| Lianas: se balancean solas; al tocarlas en el aire el jugador se agarra, y se suelta con la tecla de salto | 4-1 |
+| Hojas trampolín: lanzan mucho más alto que un salto | 4-2 |
+| Monos que lanzan cocos en arco; no le lanzan a quien espera en su puerta | 4-2 |
+| Crecida del río: el agua sube sin parar y se lleva a los dos; obliga a escalar | 4-4 |
 | Cuerdas de charango (trampolín + nota) | 5-1 |
 | Puerta melódica (notas en orden) | 5-2 |
 | Eclipse automático cada pocos segundos | 6-1 |
@@ -114,7 +116,7 @@ Comportamientos reutilizables para distintos animales. Mientras no haya arte se 
 | EnemigoEnPicada | Espera arriba y se lanza al jugador más cercano | Cóndor |
 | LanzadorProyectiles | Desde un lugar fijo lanza objetos en arco cada cierto tiempo | Monos con cocos, llamas que escupen |
 | EnemigoPerseguidor | Persigue dentro de su zona y vuelve a su lugar si te alejas | Avispas del panal |
-| PeligroQueCae | Tiembla 0.5 s, cae y reaparece después | Rocas de las minas |
+| PeligroQueCae | Tiembla un instante, cae muy rápido y reaparece en medio segundo: pasa unos 1,2 s colgada | Rocas de las minas |
 | PiedraRodante | Rueda por el suelo o una pendiente | Yungas, Aiquile |
 | RemolinoViento | Empuja hacia un lado sin matar | Remolinos de sal |
 
@@ -140,7 +142,7 @@ Se mueve de lado a lado y lanza proyectiles de fuego y de agua; cada uno solo da
 - **Nivel 3:** usa el eclipse y más trampas sorpresa.
 - **Nivel 4:** aparecen las trampas de traición.
 - **Nivel 5:** el más tramposo y difícil del mundo.
-- Todos: de 1 a 3 minutos, caben en una pantalla, con una pista al inicio y de 2 a 4 gemas por elemento.
+- Todos: de 1 a 3 minutos, caben en una pantalla, con una pista al inicio (se vuelve a leer con H) y de 2 a 4 gemas por elemento.
 
 ## 6. Mundos y niveles
 Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_NivelY` (por ejemplo, `Mundo1_Nivel2`).
@@ -174,7 +176,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 | 4-1 | Ríos y lianas | Ríos y lianas | 3 |
 | 4-2 | Hojas trampolín | Hojas trampolín y monos | 3 |
 | 4-3 | Eclipse en la selva | Eclipse en la selva | 3 |
-| 4-4 | Persecución en el río | Persecución por el río | 4 |
+| 4-4 | Persecución en el río | Escapar de la crecida escalando en zigzag | 4 |
 | 4-5 | El corazón del Chapare | Examen del mundo: lianas, monos y eclipse | 4 |
 | 5-1 | Cuerdas de charango | Cuerdas de charango | 3 |
 | 5-2 | La puerta melódica | Primera puerta melódica | 3 |
@@ -187,7 +189,7 @@ Son 6 mundos con 5 niveles cada uno. Cada nivel es una escena llamada `MundoX_Ni
 | 6-4 | Todo a la vez | Todo mezclado | 5 |
 | 6-5 | El gran final | Gran final | 5 |
 
-Los niveles 4-5, 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
+Los niveles 5-5, 6-2 y 6-3 son propuestas nuevas para llegar a 30 niveles: se pueden cambiar al diseñarlos.
 
 Desbloqueo (durante el desarrollo todo está abierto con `modoPruebaTodoAbierto` en GestorProgreso; se apaga antes de publicar): al inicio solo está abierto el nivel 1-1. Ganar un nivel abre el siguiente de su mundo. Un mundo nuevo se abre solo al ganar el nivel 5 del anterior.
 

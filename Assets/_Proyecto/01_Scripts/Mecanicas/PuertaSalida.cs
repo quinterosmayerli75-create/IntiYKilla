@@ -33,6 +33,12 @@ public class PuertaSalida : MonoBehaviour
         }
     }
 
+    // Quien ya llegó a su puerta está a salvo mientras espera a su compañero.
+    public bool EstaEsperando(ControladorJugador jugador)
+    {
+        return jugadoresDentro.Contains(jugador) == true && jugador.Elemento == elementoRequerido;
+    }
+
     public void ConfigurarPuerta(TipoElemento nuevoElemento)
     {
         elementoRequerido = nuevoElemento;

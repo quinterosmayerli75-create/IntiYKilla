@@ -48,6 +48,20 @@ public class ControladorJugador : MonoBehaviour
     // Qué tanto se tiñe la imagen después de un eclipse (0 = nada, 1 = todo).
     [SerializeField] private float intensidadTinteEclipse = 0.5f;
 
+    [Header("Lianas")]
+    // Parte del salto normal con que sale impulsado al soltarse.
+    [SerializeField] private float fuerzaAlSoltarLiana = 0.85f;
+    [SerializeField] private float segundosSinAgarrarLiana = 0.5f;
+
+    private Liana lianaActual = null;
+    private float distanciaEnLiana = 0f;
+    private float esperaParaAgarrarLiana = 0f;
+
+    public bool EstaEnLiana
+    {
+        get { return lianaActual != null; }
+    }
+
     // Referencias a los componentes del mismo objeto.
     private Rigidbody2D cuerpoFisico;
     private BoxCollider2D colisionador;
@@ -158,6 +172,19 @@ public class ControladorJugador : MonoBehaviour
         }
 
         LeerTeclado();
+        esperaParaAgarrarLiana = esperaParaAgarrarLiana - Time.deltaTime;
+
+        // Colgado de una liana no se camina: solo se puede soltar con el salto.
+        if (lianaActual != null)
+        {
+            if (contadorBufferSalto > 0f)
+            {
+                SoltarLiana();
+            }
+            contadorBufferSalto = contadorBufferSalto - Time.deltaTime;
+            return;
+        }
+
         ActualizarContadoresDeSalto();
         IntentarSaltar();
         RevisarCaidaAlVacio();
@@ -165,6 +192,14 @@ public class ControladorJugador : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Colgado, la liana manda: el personaje sigue el punto donde se agarró.
+        if (lianaActual != null)
+        {
+            cuerpoFisico.position = lianaActual.ObtenerPunto(distanciaEnLiana);
+            cuerpoFisico.linearVelocity = Vector2.zero;
+            return;
+        }
+
         // La física se aplica en FixedUpdate para que el movimiento sea estable.
         Vector2 velocidadActual = cuerpoFisico.linearVelocity;
         Vector2 velocidadNueva = new Vector2(direccionHorizontal * velocidadMovimiento + empujeExterno, velocidadActual.y);
@@ -178,6 +213,29 @@ public class ControladorJugador : MonoBehaviour
     public void Rebotar(float fuerza)
     {
         cuerpoFisico.linearVelocity = new Vector2(cuerpoFisico.linearVelocity.x, fuerza);
+    }
+
+    // Las lianas preguntan esto antes de agarrar a alguien: solo en el aire, y no
+    // justo después de soltarse (si no, volvería a agarrarse de inmediato).
+    public bool PuedeAgarrarLiana()
+    {
+        return estaVivo == true && puedeMoverse == true && lianaActual == null && esperaParaAgarrarLiana <= 0f && EstaEnElSuelo() == false;
+    }
+
+    public void AgarrarLiana(Liana liana, float distancia)
+    {
+        lianaActual = liana;
+        distanciaEnLiana = distancia;
+        contadorBufferSalto = 0f;
+    }
+
+    private void SoltarLiana()
+    {
+        lianaActual = null;
+        esperaParaAgarrarLiana = segundosSinAgarrarLiana;
+        contadorBufferSalto = 0f;
+        contadorCoyote = 0f;
+        cuerpoFisico.linearVelocity = new Vector2(0f, fuerzaSalto * fuerzaAlSoltarLiana);
     }
 
     // Lo usan el viento y las vagonetas: se suma a la velocidad al caminar.
@@ -386,6 +444,7 @@ public class ControladorJugador : MonoBehaviour
         }
 
         estaVivo = false;
+        lianaActual = null;
         direccionHorizontal = 0f;
         cuerpoFisico.linearVelocity = Vector2.zero;
 
@@ -412,6 +471,7 @@ public class ControladorJugador : MonoBehaviour
     public void DetenerMovimiento()
     {
         puedeMoverse = false;
+        lianaActual = null;
         direccionHorizontal = 0f;
     }
 
