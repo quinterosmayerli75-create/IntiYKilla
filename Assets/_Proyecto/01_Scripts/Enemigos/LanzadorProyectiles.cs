@@ -14,6 +14,9 @@ public class LanzadorProyectiles : EnemigoBase
 {
     [Header("Lanzamiento")]
     [SerializeField] private float alcanceHorizontal = 7f;
+    // Solo apunta a quien está más o menos a su altura: así no le lanza a
+    // alguien que camina varios pisos más abajo, a través de las plataformas.
+    [SerializeField] private float alcanceVertical = 5f;
     [SerializeField] private float segundosEntreLanzamientos = 3.5f;
     [SerializeField] private float segundosDeAviso = 0.6f;
     [SerializeField] private float segundosDeVuelo = 1.1f;
@@ -139,6 +142,13 @@ public class LanzadorProyectiles : EnemigoBase
         foreach (ControladorJugador jugador in todosLosJugadores)
         {
             if (jugador == null || jugador.EstaVivo == false || EstaEnSuPuerta(jugador) == true)
+            {
+                continue;
+            }
+
+            // Regla de justicia: quien está en otro piso queda fuera de su alcance.
+            float distanciaVertical = Mathf.Abs(jugador.transform.position.y - posicionOriginal.y);
+            if (distanciaVertical > alcanceVertical)
             {
                 continue;
             }

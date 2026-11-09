@@ -102,6 +102,8 @@ public static partial class GeneradorEscenas
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         HerramientasEscena.CrearCharco("Veneno izquierdo", TipoZona.Veneno, -10f, 10f, trampas);
         HerramientasEscena.CrearCharco("Veneno derecho", TipoZona.Veneno, 10f, 10f, trampas);
+        // TRAMPA: una puerta de Inti en la copa, lejos de la verdadera; se escapa al acercarse.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Fuego, new Vector2(-7f, pisoAlto), new Vector2(0f, 9f), trampas);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
         Vector2 tamanoReja = new Vector2(0.5f, 4.5f);

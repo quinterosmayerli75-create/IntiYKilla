@@ -58,10 +58,18 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCharco("Agua del piso 2", TipoZona.Agua, 6.5f, 7f, pisoDosYungas, trampas);
         HerramientasEscena.CrearCharco("Lava del piso 2", TipoZona.Lava, -3.5f, 7f, pisoDosYungas, trampas);
 
+        // TRAMPA: una gema regalada abajo; al tocarla cae el bloque pegado al piso 1.
+        TechoQueCae bloqueDeLaGema = HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(10f, pisoUnoYungas - 0.75f), new Vector2(1.5f, 0.5f), suelo, false, HerramientasEscena.colorSueloIsla, escenario);
+        List<TrampaActivable> trampasDeLaGema = new List<TrampaActivable>();
+        trampasDeLaGema.Add(bloqueDeLaGema);
+        // TRAMPA: en la salida, una puerta de Killa de más; se escapa al acercarse.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Agua, new Vector2(-6.8f, pisoTresYungas), new Vector2(0f, 9f), trampas);
+
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
         HerramientasEscena.CrearLlama("Llama", new Vector2(-5.4f, pisoTresYungas + 0.5f), 3f, 4f, peligros);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
+        HerramientasEscena.CrearGemaTrampa("Gema regalada", TipoElemento.Fuego, new Vector2(10f, -2.4f), trampasDeLaGema, gemas);
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-3.5f, 0.9f), gemas);
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(6.5f, 0.9f), gemas);
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-3.5f, 4.15f), gemas);
@@ -116,11 +124,17 @@ public static partial class GeneradorEscenas
         }
         CrearPisoIsla("Cima", 0f, 10f, pisoAltoAiquile, escenario);
 
+        // TRAMPA: una gema regalada entre los dos al empezar; al tocarla salen púas debajo.
+        PuasOcultas puasDeLaGema = HerramientasEscena.CrearPuasOcultas("Piso con gema", 0f, 1.5f, suelo, false, trampas);
+        List<TrampaActivable> trampasDeLaGema = new List<TrampaActivable>();
+        trampasDeLaGema.Add(puasDeLaGema);
+
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
         CrearPisoIsla("Roca de la llama", 0f, 1.5f, 11.6f, escenario);
         HerramientasEscena.CrearLlama("Llama", new Vector2(0f, 12.05f), 3f, 4f, peligros);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
+        HerramientasEscena.CrearGemaTrampa("Gema regalada", TipoElemento.Agua, new Vector2(0f, -2.4f), trampasDeLaGema, gemas);
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-10f, 0.9f), gemas);
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(10f, 0.9f), gemas);
         HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(6f, 4.15f), gemas);
@@ -162,6 +176,12 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCharco("Pozo de veneno", TipoZona.Veneno, 0f, 16f, trampas);
         HerramientasEscena.CrearCharco("Lava del piso 2", TipoZona.Lava, 4f, 2f, pisoDosYungas, trampas);
         HerramientasEscena.CrearCharco("Agua del piso 3", TipoZona.Agua, -4f, 2f, pisoTresYungas, trampas);
+        // TRAMPA: antes de la salida, una puerta de Inti de más; se escapa al acercarse.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Fuego, new Vector2(-7f, pisoTresYungas), new Vector2(0f, 9f), trampas);
+
+        // Las llamas están en todos los niveles de la isla (GDD); esta cuida el piso 1.
+        Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
+        HerramientasEscena.CrearLlama("Llama", new Vector2(14.2f, pisoUnoYungas + 0.5f), 2.5f, 4f, peligros);
 
         Transform cristales = HerramientasEscena.CrearGrupo("Cristales de luz");
         Vector2 tamanoCristal = new Vector2(1.6f, 0.4f);
@@ -285,6 +305,14 @@ public static partial class GeneradorEscenas
 
         ObjetoActivable[] alSerVencido = new ObjetoActivable[] { escalon };
         HerramientasEscena.CrearGuardian(new Vector2(0f, 8f), HerramientasEscena.BuscarBoton(botonIzquierdo), HerramientasEscena.BuscarBoton(botonDerecho), alSerVencido);
+
+        // Como en todos los niveles, 2 gemas por elemento (GDD). Cada uno tiene las
+        // suyas de su lado, en el camino hacia su botón.
+        Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
+        HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-4.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema fuego 2", TipoElemento.Fuego, new Vector2(-10.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(4.5f, -2.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 2", TipoElemento.Agua, new Vector2(10.5f, -2.4f), gemas);
 
         Transform puertas = HerramientasEscena.CrearGrupo("Puertas");
         HerramientasEscena.CrearPuertaSalida("Puerta fuego", TipoElemento.Fuego, new Vector2(-1.5f, pisoDosYungas), puertas);

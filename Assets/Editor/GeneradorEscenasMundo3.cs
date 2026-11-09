@@ -131,6 +131,8 @@ public static partial class GeneradorEscenas
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         // Más ancho que un salto: Inti no puede cruzarlo sin que Killa lo congele.
         HerramientasEscena.CrearCharcoCongelable("Charco", -6.25f, 6.5f, suelo, trampas);
+        // TRAMPA: una puerta de Killa en el piso 2, bajo techo; se escapa al acercarse.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Agua, new Vector2(-3f, pisoDosYungas), new Vector2(0f, 9f), trampas);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
         PuertaMecanica compuerta = HerramientasEscena.CrearPuertaMecanica("Compuerta", new Vector2(1.75f, -0.5f), new Vector2(0.5f, 6f), new Vector2(0f, -6.5f), 1, mecanismos);

@@ -116,6 +116,10 @@ public static partial class GeneradorEscenas
         Transform peligros = HerramientasEscena.CrearGrupo("Peligros");
         HerramientasEscena.CrearPiedraRodante("Piedra", 14.4f, suelo, -10.5f, 7f, 2.5f, peligros);
 
+        // TRAMPA: púas escondidas entre la reja y el escalón; quien las conoce las salta.
+        Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
+        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 4f, 1.2f, suelo, true, trampas);
+
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-11.5f, -2.4f), gemas);
         HerramientasEscena.CrearGema("Gema agua 1", TipoElemento.Agua, new Vector2(-5.5f, -2.4f), gemas);
@@ -159,6 +163,8 @@ public static partial class GeneradorEscenas
         Transform escenario = HerramientasEscena.CrearSueloYParedes(HerramientasEscena.colorSueloAiquile);
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         CrearEscenarioDuo(escenario, trampas);
+        // TRAMPA: en la salida, una puerta de Inti de más; se escapa al acercarse.
+        HerramientasEscena.CrearPuertaFalsa("Puerta sospechosa", TipoElemento.Fuego, new Vector2(-3f, pisoDosYungas), new Vector2(0f, 9f), trampas);
 
         Transform cuerdas = HerramientasEscena.CrearGrupo("Cuerdas");
         HerramientasEscena.CrearCuerda("Cuerda 0", -12f, suelo, 0, MomentoCuerda.Siempre, cuerdas);
