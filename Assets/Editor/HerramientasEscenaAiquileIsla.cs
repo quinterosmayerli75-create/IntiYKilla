@@ -12,6 +12,7 @@ using UnityEngine;
 
 public static partial class HerramientasEscena
 {
+    private static readonly Color colorPaisajeDelNivel = new Color(0.72f, 0.72f, 0.78f);
     public static readonly Color colorSueloAiquile = new Color(0.46f, 0.28f, 0.16f);
     public static readonly Color colorSueloIsla = new Color(0.40f, 0.36f, 0.30f);
 
@@ -20,7 +21,8 @@ public static partial class HerramientasEscena
     {
         Transform fondo = CrearGrupo("Fondo");
         Sprite paisaje = HerramientasInterfaz.ObtenerImagenFondo(numeroMundo);
-        CrearDecoracion("Paisaje", paisaje, new Vector2(0f, 4f), new Vector2(36f, 20.25f), Color.white, -30, false, fondo);
+        // Un poco oscurecido: así las plataformas se distinguen del paisaje.
+        CrearDecoracion("Paisaje", paisaje, new Vector2(0f, 4f), new Vector2(36f, 20.25f), colorPaisajeDelNivel, -30, false, fondo);
     }
 
     // Cuerda tendida entre dos clavijas, del color de su nota.

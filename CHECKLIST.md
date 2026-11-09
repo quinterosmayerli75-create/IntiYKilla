@@ -65,7 +65,7 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)
 - [x] Menú principal
 - [x] Selección de mundo con tarjetas y selección de nivel con cuadros (arte provisional)
-- [ ] Arte final de los menús en `03_Sprites/Interfaz`: TarjetaMundo1..6, FondoMundo1..6, Estrella, Candado, Flecha
+- [x] Arte de los 6 mundos (tarjetas y fondos en `03_Sprites/Interfaz`; originales en ArteOriginal/Mundos)
 - [ ] HUD definitivo con gemas y muertes (versión temporal lista)
 - [x] Pausa (Esc), opciones (volumen y pantalla completa), ventana de victoria y reinicio al morir
 - [x] Sistema de estrellas

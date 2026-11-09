@@ -29,7 +29,8 @@ public static partial class HerramientasEscena
     {
         Transform fondo = CrearGrupo("Fondo");
         Sprite paisaje = HerramientasInterfaz.ObtenerImagenFondo(3);
-        CrearDecoracion("Paisaje", paisaje, new Vector2(0f, 4f), new Vector2(36f, 20.25f), Color.white, -30, false, fondo);
+        // Un poco oscurecido: así las plataformas se distinguen del paisaje.
+        CrearDecoracion("Paisaje", paisaje, new Vector2(0f, 4f), new Vector2(36f, 20.25f), colorPaisajeDelNivel, -30, false, fondo);
     }
 
     public static void CrearNiebla()
