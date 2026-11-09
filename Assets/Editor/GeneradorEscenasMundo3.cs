@@ -63,7 +63,9 @@ public static partial class GeneradorEscenas
 
         // Camino de vuelta, por arriba y hacia la izquierda.
         CrearPisoYungas("Vuelta 1", 9.5f, 5f, pisoTresYungas, escenario);
-        CrearPisoYungas("Vuelta 2", 4.5f, 3f, pisoTresYungas, escenario);
+        // VERSIÓN DIFÍCIL: este tramo se da vuelta si alguien se queda encima.
+        // Debajo está el tramo "Ida 3": quien cae no muere, pero vuelve atrás.
+        HerramientasEscena.CrearPlataformaQueSeVoltea("Vuelta 2", AlturaDeBloque(4.5f, pisoTresYungas), new Vector2(3f, 0.5f), HerramientasEscena.colorSueloYungas, escenario);
         CrearPisoYungas("Vuelta 3", -2.05f, 1.9f, pisoTresYungas, escenario);
         CrearPisoYungas("Vuelta 4", -7f, 3f, pisoTresYungas, escenario);
         CrearPisoYungas("Salida", -12f, 5f, pisoTresYungas, escenario);
@@ -92,6 +94,14 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13.5f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-11.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Neblina violeta sobre el primer tramo: ahí los controles van al revés.
+        // En el último tramo de ida, donde se aterriza, aparece lava. Y las puertas
+        // se cambian de lugar.
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-7f, 1f), new Vector2(3f, 2.5f), trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 11f, 1.2f, pisoUnoYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -162,6 +172,13 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-12f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-10f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Lava que aparece en el piso 2 (camino de Killa), púas en la planta baja
+        // pasando la compuerta, y puertas que se cambian de lugar bajo el techo.
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, -1f, 1.2f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 5.5f, 1f, suelo, true, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -238,6 +255,12 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(1.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // En el mirador, junto a la gema de Inti, el piso se llena de veneno. Y en
+        // la salida las puertas se cambian de lugar.
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se envenena", TipoZona.Veneno, -2f, 1.2f, pisoUnoYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(3, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -307,6 +330,14 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-14.5f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-13f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Púas en el borde del inicio, justo donde uno espera el cambio de luz:
+        // hay que esperar un paso más atrás. Lava que aparece en el descanso, y
+        // puertas que se cambian de lugar.
+        HerramientasEscena.CrearPuasOcultas("Borde tranquilo", -9.6f, 1f, pisoUnoYungas, true, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 12.5f, 1.2f, pisoUnoYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -386,6 +417,13 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(11f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(9.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Púas donde se aterriza en la terraza, agua que aparece en el camino alto
+        // (apaga a Inti) y puertas que se cambian de lugar.
+        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -8f, 1f, pisoUnoYungas, true, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se inunda", TipoZona.Agua, 6f, 1.2f, pisoTresYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 5);
         EditorSceneManager.SaveScene(escena, ruta);

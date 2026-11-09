@@ -83,6 +83,16 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(2f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // Sobre cada cuerda baja, una gema que al acercarse huye a la loma de su
+        // lado. Donde se aterriza en la cima desde las cuerdas altas, el piso se
+        // vuelve de lo que mata a quien llega por ahí. Y las puertas se cambian.
+        HerramientasEscena.CrearGemaQueHuye("Gema fuego 3", TipoElemento.Fuego, new Vector2(-10f, 2.5f), new Vector2(-12.2f, 4.15f), gemas);
+        HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(10f, 2.5f), new Vector2(12.2f, 4.15f), gemas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Cima que se inunda", TipoZona.Agua, -4.2f, 1.2f, pisoAltoAiquile, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Cima que se calienta", TipoZona.Lava, 4.2f, 1.2f, pisoAltoAiquile, trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(5, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -133,6 +143,18 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-14.5f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-14.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Neblina que invierte los controles sobre las cuerdas 2 y 3, una gema que
+        // huye a la vertical de la cuerda 1, veneno que aparece en el escalón, un
+        // bloque invisible en el salto corto a la salida (se salta desde más
+        // atrás), un enemigo junto a las puertas y puertas que se cambian.
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-5.5f, -1.5f), new Vector2(3f, 4f), trampas);
+        HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(-8.5f, 3.5f), new Vector2(-10f, 2.5f), gemas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Escalon que se envenena", TipoZona.Veneno, 6f, 1.2f, pisoUnoYungas, trampas);
+        HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(8f, 2.5f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloAiquile, escenario);
+        HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la salida", new Vector2(10.5f, pisoDosYungas), trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -194,6 +216,16 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(2f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // Neblinas que invierten los controles junto a una cuerda de cada lado,
+        // piso que se vuelve de lo que mata a cada uno donde se aterriza en la
+        // salida, y puertas que se cambian de lugar.
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa izquierda", new Vector2(-5.3f, -1.5f), new Vector2(2f, 4f), trampas);
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa derecha", new Vector2(9f, -1.5f), new Vector2(2f, 4f), trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Salida que se inunda", TipoZona.Agua, -3.6f, 0.8f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 3.6f, 0.8f, pisoDosYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(5, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -245,6 +277,17 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-14.5f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-14.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Neblina que invierte los controles sobre la cuerda 2 (la de día), una
+        // gema que huye a la vertical de la cuerda 3, púas entre la última cuerda
+        // y la reja, lava donde se aterriza en la salida y puertas que se cambian.
+        Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-7f, -1.5f), new Vector2(2.5f, 4f), trampas);
+        HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(-5.5f, 3.5f), new Vector2(-4f, 2.5f), gemas);
+        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 0.8f, 1f, suelo, true, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 9.5f, 0.8f, pisoDosYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -298,6 +341,18 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-0.7f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(0.7f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // El examen del mundo: neblinas que invierten los controles a cada lado,
+        // púas junto a las gemas de las orillas, piso que se vuelve de lo que mata
+        // a cada uno en la salida, y puertas que se cambian de lugar.
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa izquierda", new Vector2(-9f, -1.5f), new Vector2(2f, 4f), trampas);
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa derecha", new Vector2(5.3f, -1.5f), new Vector2(2f, 4f), trampas);
+        HerramientasEscena.CrearPuasOcultas("Orilla tranquila izquierda", -13.2f, 0.8f, suelo, true, trampas);
+        HerramientasEscena.CrearPuasOcultas("Orilla tranquila derecha", 12.6f, 0.8f, suelo, true, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Salida que se inunda", TipoZona.Agua, -3.6f, 0.8f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 3.6f, 0.8f, pisoDosYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 5);
         EditorSceneManager.SaveScene(escena, ruta);

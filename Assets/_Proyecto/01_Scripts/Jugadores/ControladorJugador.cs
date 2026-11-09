@@ -75,6 +75,9 @@ public class ControladorJugador : MonoBehaviour
     private bool estaVivo = true;
     private bool puedeMoverse = true;
 
+    // Lo activa la ZonaControlesInvertidos: izquierda y derecha al revés.
+    private bool controlesInvertidos = false;
+
     // Última trampa que engañó a este personaje, para el mensaje de muerte.
     private const float tiempoQueRecuerdaLaTrampa = 3f;
     private string mensajeDeTrampa = "";
@@ -238,6 +241,12 @@ public class ControladorJugador : MonoBehaviour
         cuerpoFisico.linearVelocity = new Vector2(0f, fuerzaSalto * fuerzaAlSoltarLiana);
     }
 
+    // Lo usa la ZonaControlesInvertidos al entrar y al salir.
+    public void InvertirControles(bool nuevoValor)
+    {
+        controlesInvertidos = nuevoValor;
+    }
+
     // Lo usan el viento y las vagonetas: se suma a la velocidad al caminar.
     public void AplicarEmpuje(float velocidadX)
     {
@@ -262,6 +271,12 @@ public class ControladorJugador : MonoBehaviour
         if (teclado[teclaDerecha].isPressed == true)
         {
             direccionHorizontal = direccionHorizontal + 1f;
+        }
+
+        // Dentro de la neblina engañosa las flechas funcionan al revés.
+        if (controlesInvertidos == true)
+        {
+            direccionHorizontal = -direccionHorizontal;
         }
 
         // Voltea el dibujo para que mire hacia donde camina.

@@ -60,6 +60,13 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Armar los niveles 4-1 a 4-5 con más trampas (Trópico; traición en 4-4 y 4-5)
 - [x] Crecida del río en el nivel 4-4
 
+## Versión difícil (pedido del revisor, 9 nov)
+- [x] Trampas nuevas: PisoQueSeCalienta, PuertasQueSeCambian, GemaQueHuye, PlataformaQueSeVoltea, ZonaControlesInvertidos y flecha engañosa
+- [x] Monos y llamas solo apuntan a quien está a su altura (el mono del 4-2 mataba desde la copa)
+- [x] Más trampas en los 30 niveles, con dificultad progresiva fuerte
+- [ ] Jugar los 30 niveles en la versión difícil y confirmar que todos se pueden ganar
+- [ ] Animar la lava y el agua (que fluyan como un río) y plataformas de roca como en las imágenes de referencia
+
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)

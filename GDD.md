@@ -85,6 +85,12 @@ Se ven igual que las piezas normales. En el Inspector tienen una opción de pist
 | PlataformaQueHuye | Se aleja justo cuando alguien salta cerca |
 | BotonEnganoso | Parece abrir algo, pero activa otra trampa |
 | EnemigoSorpresa | Sale del suelo y persigue un tramo corto |
+| PisoQueSeCalienta | Un tramo de piso normal parpadea al pisarlo y se vuelve lava, agua o veneno unos segundos |
+| PuertasQueSeCambian | Las dos puertas de salida se cambian de lugar (saltando en arco) la primera vez que alguien se acerca |
+| GemaQueHuye | Una gema de verdad que, al acercarse su dueño, huye una vez a otro lugar alcanzable |
+| PlataformaQueSeVoltea | Tiembla al pisarla y se da vuelta un momento; quien sigue encima cae |
+| ZonaControlesInvertidos | Neblina violeta: adentro, izquierda y derecha van al revés (brilla más cuando hay alguien) |
+| Flecha engañosa | Una flecha guía que apunta hacia el lado equivocado (solo decoración) |
 
 ### Trampas de traición
 Detectan qué jugador las activó y castigan al otro. Hay tres castigos: cae lava, salen púas o se abre el suelo. Siempre aparece un aviso rojo y la víctima tiene tiempo de moverse.
@@ -102,8 +108,10 @@ Detectan qué jugador las activó y castigan al otro. Hay tres castigos: cae lav
 - Mensajes graciosos según la causa ("Ese suelo no era de verdad...", "¡Killa traicionó a Inti!", "Te dije que no confiaras en las gemas.").
 
 ### Reglas de dificultad
-- Mundo 1: 1 o 2 trampas por nivel, fáciles de descubrir. Cada mundo agrega más. El Mundo 6 es el más tramposo.
-- Los niveles 4 y 5 de cada mundo usan trampas de traición.
+- Versión difícil (pedido del revisor: los niveles eran muy fáciles). Dificultad progresiva fuerte: el Mundo 1 ya engaña con 4 a 6 trampas por nivel, y la cantidad sube hasta 7 a 9 en los Mundos 5 y 6. El Mundo 6 es el más tramposo.
+- Cada nivel agrega sus trampas extra en un bloque "VERSIÓN DIFÍCIL" al final de su generador.
+- Los niveles 4 y 5 de cada mundo usan trampas de traición, salvo el jefe final (6-5): una traición en plena pelea sería injusta.
+- Las puertas no se cambian de lugar cuando un muro las separa (4-5 y 6-4): el nivel quedaría imposible.
 - **Regla de justicia:** cada trampa engaña una vez, pero después de conocerla el nivel siempre debe poder ganarse. Nunca hay trampas imposibles de evitar.
 
 ### Enemigos y peligros (`01_Scripts/Enemigos/`)

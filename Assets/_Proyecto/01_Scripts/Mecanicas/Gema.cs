@@ -34,6 +34,13 @@ public class Gema : MonoBehaviour
         posicionInicial = transform.position;
     }
 
+    // Lo usa la GemaQueHuye: la gema sigue flotando, pero desde su nuevo lugar.
+    public void CambiarPosicionBase(Vector3 nuevaPosicion)
+    {
+        posicionInicial = nuevaPosicion;
+        transform.position = nuevaPosicion;
+    }
+
     private void Update()
     {
         // Mathf.Sin genera una onda que sube y baja entre -1 y 1.

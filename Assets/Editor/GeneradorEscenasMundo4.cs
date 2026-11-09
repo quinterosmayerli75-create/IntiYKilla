@@ -76,6 +76,14 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-11f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // En el borde de la rama, donde se espera la liana, aparece agua (Inti
+        // tiene que esperar un paso más atrás). Donde se aterriza en la salida, una
+        // neblina invierte los controles. Y las puertas se cambian de lugar.
+        HerramientasEscena.CrearPisoQueSeCalienta("Borde que se inunda", TipoZona.Agua, -10.6f, 1.2f, pisoUnoYungas, trampas);
+        HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(11.6f, 1f), new Vector2(1.6f, 2.2f), trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(4, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -142,6 +150,16 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(1.5f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // Encima de cada hoja central, una gema que al acercarse huye a la rama de
+        // su lado. En la copa, donde se aterriza desde las hojas de afuera, el piso
+        // se llena de veneno. Y las puertas se cambian de lugar.
+        HerramientasEscena.CrearGemaQueHuye("Gema fuego 4", TipoElemento.Fuego, new Vector2(-4f, 5.5f), new Vector2(-7.25f, 4.1f), gemas);
+        HerramientasEscena.CrearGemaQueHuye("Gema agua 4", TipoElemento.Agua, new Vector2(4f, 5.5f), new Vector2(7.25f, 4.1f), gemas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena izquierda", TipoZona.Veneno, -8.5f, 1.2f, pisoAlto, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena derecha", TipoZona.Veneno, 8.5f, 1.2f, pisoAlto, trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(4, 2);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -204,6 +222,14 @@ public static partial class GeneradorEscenas
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(3.2f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
+        // ===== VERSIÓN DIFÍCIL =====
+        // Donde cada uno aterriza al subir a su placa, el piso se vuelve de lo que
+        // lo mata (lejos de la placa, para que esperar ahí sea seguro). Y las
+        // puertas se cambian de lugar.
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se inunda", TipoZona.Agua, -11.6f, 0.8f, pisoUnoYungas, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 11.6f, 0.8f, pisoUnoYungas, trampas);
+        CambiarPuertasDeLugar(trampas);
+
         string ruta = RutaNivel(4, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -259,6 +285,16 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-13f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(-11f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Con el río subiendo: veneno que aparece donde se aterriza en los pisos 2
+        // y 3, un bloque invisible en el salto natural al piso 4 (se rodea saltando
+        // desde más a la derecha), y puertas que se cambian de lugar.
+        Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso 2 que se envenena", TipoZona.Veneno, 4f, 1.2f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Piso 3 que se envenena", TipoZona.Veneno, -4f, 1.2f, pisoTresYungas, trampas);
+        HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(5.8f, 8.3f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloTropico, escenario);
+        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(4, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -325,6 +361,15 @@ public static partial class GeneradorEscenas
         GameObject inti = HerramientasEscena.CrearInti(new Vector2(-3.4f, suelo));
         GameObject killa = HerramientasEscena.CrearKilla(new Vector2(3.4f, suelo));
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
+
+        // ===== VERSIÓN DIFÍCIL =====
+        // Donde se aterriza en cada rama al salir de la hoja, el piso se vuelve de
+        // lo que mata a quien suele llegar por ahí, y de cada rama sale un enemigo.
+        // (Las puertas no se cambian: el muro central lo haría imposible.)
+        HerramientasEscena.CrearPisoQueSeCalienta("Rama que se inunda", TipoZona.Agua, -7f, 1.2f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearPisoQueSeCalienta("Rama que se calienta", TipoZona.Lava, 7f, 1.2f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama izquierda", new Vector2(-10.5f, pisoDosYungas), trampas);
+        HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama derecha", new Vector2(10.5f, pisoDosYungas), trampas);
 
         string ruta = RutaNivel(4, 5);
         EditorSceneManager.SaveScene(escena, ruta);
