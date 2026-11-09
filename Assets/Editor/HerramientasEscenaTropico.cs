@@ -116,5 +116,9 @@ public static partial class HerramientasEscena
 
         CrecidaRio componente = crecida.AddComponent<CrecidaRio>();
         componente.Configurar(alturaFinal, velocidad, segundosDeAviso);
+
+        // El río que sube también corre: ondas y destellos en su superficie.
+        AnimacionLiquido animacion = crecida.AddComponent<AnimacionLiquido>();
+        animacion.Configurar(TipoZona.Agua, spriteCirculo, spriteCuadrado, ObtenerMaterialSinLuces());
     }
 }

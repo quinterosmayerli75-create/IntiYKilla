@@ -801,6 +801,10 @@ public static partial class HerramientasEscena
 
         ZonaElemental zona = charco.AddComponent<ZonaElemental>();
         zona.ConfigurarZona(tipo);
+
+        // Ondas que corren, brillo y burbujas: el charco parece un río vivo.
+        AnimacionLiquido animacion = charco.AddComponent<AnimacionLiquido>();
+        animacion.Configurar(tipo, spriteCirculo, spriteCuadrado, ObtenerMaterialSinLuces());
         return charco;
     }
 
