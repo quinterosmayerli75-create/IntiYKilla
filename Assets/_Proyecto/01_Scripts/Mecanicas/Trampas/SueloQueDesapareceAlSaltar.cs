@@ -23,6 +23,8 @@ public class SueloQueDesapareceAlSaltar : TrampaActivable
     private Color[] coloresOriginales;
     // Se guarda al empezar: con el choque apagado Unity informa tamaño cero.
     private Bounds limitesDelPiso;
+    // Si cada jugador estaba parado encima en el cuadro anterior.
+    private bool[] estabaParadoEncima;
 
     protected override void Awake()
     {
@@ -44,16 +46,28 @@ public class SueloQueDesapareceAlSaltar : TrampaActivable
             return;
         }
 
-        // Franja justo encima del piso: ahí están los pies de quien lo pisa
-        // y también los de quien acaba de despegar.
+        // Franja delgada justo encima del piso: ahí están los pies de quien
+        // está parado sobre él.
         Bounds limites = limitesDelPiso;
-        Vector2 centroFranja = new Vector2(limites.center.x, limites.max.y + 0.6f);
-        Vector2 tamanoFranja = new Vector2(limites.size.x, 1.2f);
+        Vector2 centroFranja = new Vector2(limites.center.x, limites.max.y + 0.3f);
+        Vector2 tamanoFranja = new Vector2(limites.size.x, 0.6f);
 
-        foreach (ControladorJugador jugador in jugadores)
+        if (estabaParadoEncima == null || estabaParadoEncima.Length != jugadores.Length)
         {
-            bool acabaDeSaltar = jugador.VelocidadVertical > 2f && jugador.EstaEnElSuelo() == false;
-            if (jugador.EstaVivo == true && acabaDeSaltar == true && JugadorTocaRectangulo(jugador, centroFranja, tamanoFranja) == true)
+            estabaParadoEncima = new bool[jugadores.Length];
+        }
+
+        for (int indice = 0; indice < jugadores.Length; indice++)
+        {
+            ControladorJugador jugador = jugadores[indice];
+            bool estaParado = jugador.EstaVivo == true && jugador.EstaEnElSuelo() == true && JugadorTocaRectangulo(jugador, centroFranja, tamanoFranja) == true;
+
+            // Solo cuenta quien estaba PARADO encima y ahora sube: así no se
+            // dispara cuando alguien llega saltando desde un piso de abajo.
+            bool acabaDeSaltar = estabaParadoEncima[indice] == true && jugador.VelocidadVertical > 2f && jugador.EstaEnElSuelo() == false;
+            estabaParadoEncima[indice] = estaParado;
+
+            if (jugador.EstaVivo == true && acabaDeSaltar == true)
             {
                 Activar(jugador);
                 return;

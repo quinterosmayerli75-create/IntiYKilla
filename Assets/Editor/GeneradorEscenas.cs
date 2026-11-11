@@ -720,6 +720,13 @@ public static partial class GeneradorEscenas
         // ===== VERSIÓN DIFÍCIL =====
         // Primer nivel: pocas trampas nuevas para no espantar. En el piso 1 de Inti,
         // púas donde se aterriza después del agua.
+        // DESAFÍO: cuando Killa llega cerca de su puerta, un bloque sube detrás de
+        // ella y cierra el camino de vuelta. No hace falta volver: es solo el susto
+        // de "ya no hay vuelta atrás". Nunca se cierra encima de nadie.
+        BloqueQueCierraElRegreso bloqueDelRegreso = HerramientasEscena.CrearBloqueQueCierraElRegreso("Bloque del regreso", new Vector2(-5.5f, pisoTres + 0.7f), new Vector2(0.8f, 1.4f), HerramientasEscena.colorSal, trampas);
+        List<TrampaActivable> trampasDelSensor = new List<TrampaActivable>();
+        trampasDelSensor.Add(bloqueDelRegreso);
+        HerramientasEscena.CrearSensorTrampa("Sensor junto a la puerta", new Vector2(-10.8f, pisoTres + 0.6f), new Vector2(1.2f, 1.2f), CondicionSensor.AlEntrar, 0f, trampasDelSensor, trampas);
         HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -6f, 1f, pisoUno, true, trampas);
 
         string ruta = RutaNivel(1, 1);
@@ -760,7 +767,10 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPlataforma("Piso 2 central", new Vector2(0f, pisoDos - mitadGrosor), new Vector2(7f, grosor), HerramientasEscena.colorSal, escenario);
         HerramientasEscena.CrearPlataforma("Piso 3 izquierda", new Vector2(-9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
         HerramientasEscena.CrearPlataforma("Piso 3 derecha", new Vector2(9f, pisoTres - mitadGrosor), new Vector2(8f, grosor), HerramientasEscena.colorSal, escenario);
-        HerramientasEscena.CrearPlataforma("Piso de salida", new Vector2(0f, pisoSalida - mitadGrosor), new Vector2(7f, grosor), HerramientasEscena.colorSal, escenario);
+        // DESAFÍO: el piso de la salida tiene grietas finas. Se puede caminar, pero
+        // si alguien SALTA estando encima, desaparece un momento y se cae al piso
+        // de abajo (no se muere: hay que volver a subir).
+        HerramientasEscena.CrearSueloQueDesapareceAlSaltar("Piso de salida", new Vector2(0f, pisoSalida - mitadGrosor), new Vector2(7f, grosor), HerramientasEscena.colorSal, escenario);
 
         Transform mecanismos = HerramientasEscena.CrearGrupo("Mecanismos");
 
