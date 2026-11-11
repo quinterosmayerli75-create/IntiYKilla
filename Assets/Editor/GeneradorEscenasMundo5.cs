@@ -91,7 +91,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(10f, 2.5f), new Vector2(12.2f, 4.15f), gemas);
         HerramientasEscena.CrearPisoQueSeCalienta("Cima que se inunda", TipoZona.Agua, -4.2f, 1.2f, pisoAltoAiquile, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Cima que se calienta", TipoZona.Lava, 4.2f, 1.2f, pisoAltoAiquile, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -151,10 +150,9 @@ public static partial class GeneradorEscenas
         // atrás), un enemigo junto a las puertas y puertas que se cambian.
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-5.5f, -1.5f), new Vector2(3f, 4f), trampas);
         HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(-8.5f, 3.5f), new Vector2(-10f, 2.5f), gemas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Escalon que se envenena", TipoZona.Veneno, 6f, 1.2f, pisoUnoYungas, trampas);
         HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(8f, 2.5f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloAiquile, escenario);
-        HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la salida", new Vector2(10.5f, pisoDosYungas), trampas);
-        CambiarPuertasDeLugar(trampas);
+        // (El enemigo sorpresa que había en la salida se quitó: salía justo donde se
+        // aterriza y no daba tiempo a esquivarlo. Regla de justicia.)
 
         string ruta = RutaNivel(5, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -224,7 +222,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa derecha", new Vector2(9f, -1.5f), new Vector2(2f, 4f), trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se inunda", TipoZona.Agua, -3.6f, 0.8f, pisoDosYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 3.6f, 0.8f, pisoDosYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 3);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -287,7 +284,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(-5.5f, 3.5f), new Vector2(-4f, 2.5f), gemas);
         HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 0.8f, 1f, suelo, true, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 9.5f, 0.8f, pisoDosYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(5, 4);
         EditorSceneManager.SaveScene(escena, ruta);

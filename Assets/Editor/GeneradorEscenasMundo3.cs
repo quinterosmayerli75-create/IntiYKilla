@@ -100,8 +100,8 @@ public static partial class GeneradorEscenas
         // En el último tramo de ida, donde se aterriza, aparece lava. Y las puertas
         // se cambian de lugar.
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-7f, 1f), new Vector2(3f, 2.5f), trampas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 11f, 1.2f, pisoUnoYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
+        // DESAFÍO: derrumbe en la ladera. Las sombras avisan dónde cae cada roca.
+        HerramientasEscena.CrearLluviaDeRocas("Derrumbe de la ladera", 10f, 12.5f, pisoUnoYungas + 3f, pisoUnoYungas, 2, true, trampas);
 
         string ruta = RutaNivel(3, 1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -174,11 +174,10 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         // ===== VERSIÓN DIFÍCIL =====
-        // Lava que aparece en el piso 2 (camino de Killa), púas en la planta baja
-        // pasando la compuerta, y puertas que se cambian de lugar bajo el techo.
-        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, -1f, 1.2f, pisoDosYungas, trampas);
-        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 5.5f, 1f, suelo, true, trampas);
-        CambiarPuertasDeLugar(trampas);
+        // Las púas que había en la planta baja se quitaron: bajo ese techo no hay
+        // altura para saltarlas y la trampa no se podía superar (regla de justicia).
+        // DESAFÍO: entre las hojas mojadas se esconde un bicho que se deja caer.
+        HerramientasEscena.CrearEnemigoQueCaeDelTecho("Bicho de las hojas", new Vector2(-1f, pisoDosYungas + 2.8f), pisoDosYungas, new Color(0.35f, 0.5f, 0.3f), trampas);
 
         string ruta = RutaNivel(3, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -259,7 +258,6 @@ public static partial class GeneradorEscenas
         // En el mirador, junto a la gema de Inti, el piso se llena de veneno. Y en
         // la salida las puertas se cambian de lugar.
         HerramientasEscena.CrearPisoQueSeCalienta("Piso que se envenena", TipoZona.Veneno, -2f, 1.2f, pisoUnoYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 3);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -336,8 +334,6 @@ public static partial class GeneradorEscenas
         // hay que esperar un paso más atrás. Lava que aparece en el descanso, y
         // puertas que se cambian de lugar.
         HerramientasEscena.CrearPuasOcultas("Borde tranquilo", -9.6f, 1f, pisoUnoYungas, true, trampas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 12.5f, 1.2f, pisoUnoYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(3, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -419,9 +415,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         // ===== VERSIÓN DIFÍCIL =====
-        // Púas donde se aterriza en la terraza, agua que aparece en el camino alto
-        // (apaga a Inti) y puertas que se cambian de lugar.
-        HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -8f, 1f, pisoUnoYungas, true, trampas);
+        // Agua que aparece en el camino alto (apaga a Inti) y, como final del mundo,
+        // puertas que se cambian de lugar. Las púas de la terraza se quitaron: salían
+        // antes de que se terminara de aterrizar y no se podían esquivar.
         HerramientasEscena.CrearPisoQueSeCalienta("Piso que se inunda", TipoZona.Agua, 6f, 1.2f, pisoTresYungas, trampas);
         CambiarPuertasDeLugar(trampas);
 

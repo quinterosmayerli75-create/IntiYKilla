@@ -64,7 +64,11 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Trampas nuevas: PisoQueSeCalienta, PuertasQueSeCambian, GemaQueHuye, PlataformaQueSeVoltea, ZonaControlesInvertidos y flecha engañosa
 - [x] Monos y llamas solo apuntan a quien está a su altura (el mono del 4-2 mataba desde la copa)
 - [x] Más trampas en los 30 niveles, con dificultad progresiva fuerte
-- [ ] Jugar los 30 niveles en la versión difícil y confirmar que todos se pueden ganar
+- [x] Jugar los 30 niveles en la versión difícil y confirmar que todos se pueden ganar (prueba automática: 30 de 30 ganados seguidos, sin muertes)
+- [x] Trampas del desafío en los niveles: lluvia de rocas con sombras (1-3, 2-1, 3-1, 6-1), poción engañosa (1-2), piso que arrastra (2-2), bicho o mono que cae del techo (1-5, 2-3, 3-2, 4-4) y bloque que baja a aplastar (2-4)
+- [x] Menos trampas repetidas: el cambio de puertas queda solo en los finales de mundo (2-5, 3-5, 5-5, 6-5) y hay menos pisos que se calientan
+- [x] Quitar trampas imposibles de superar: púas del 3-2 y del 3-5, enemigo de la salida del 5-2 y veneno del centro del 6-1
+- [ ] Colocar en algún nivel las piezas ya programadas: suelo que desaparece al saltar, bloque que cierra el regreso y sensor de trampas
 - [ ] Animar la lava y el agua (que fluyan como un río) y plataformas de roca como en las imágenes de referencia
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)

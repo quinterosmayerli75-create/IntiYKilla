@@ -86,14 +86,13 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         // ===== VERSIÓN DIFÍCIL =====
-        // En el centro seco de cada piso (donde se espera el eclipse) aparece
-        // veneno: hay que esperar a un costado. Neblina que invierte los controles
-        // antes de subir a la salida, un enemigo en el piso 1 y puertas que se cambian.
-        HerramientasEscena.CrearPisoQueSeCalienta("Centro del piso 1", TipoZona.Veneno, 1.5f, 1f, pisoUnoYungas, trampas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Centro del piso 2", TipoZona.Veneno, 1.5f, 1f, pisoDosYungas, trampas);
+        // Neblina que invierte los controles antes de subir a la salida y un enemigo
+        // en el piso 1. (Antes aparecía veneno en el centro del piso 1, pero ocupaba
+        // el único lugar seguro para esperar el eclipse: se quitó por justicia.)
+        // DESAFÍO: en el piso 2 caen rocas del templo; las sombras avisan.
+        HerramientasEscena.CrearLluviaDeRocas("Piedras del templo", 0.5f, 2.5f, pisoDosYungas + 3f, pisoDosYungas, 2, true, trampas);
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-12f, 4.2f), new Vector2(3f, 2.4f), trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo del piso 1", new Vector2(12f, pisoUnoYungas), trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(6, 1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -169,7 +168,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa izquierda", new Vector2(-6f, 4.2f), new Vector2(3f, 2.4f), trampas);
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa derecha", new Vector2(6f, 4.2f), new Vector2(3f, 2.4f), trampas);
         HerramientasEscena.CrearPuasOcultas("Cima tranquila", 0f, 1.2f, pisoAltoAiquile, true, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(6, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -240,7 +238,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPuasOcultas("Borde tranquilo", -9.2f, 0.8f, suelo, true, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Piso 2 que se envenena", TipoZona.Veneno, 8.2f, 1f, pisoDosYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Piso 3 que se envenena", TipoZona.Veneno, -0.8f, 1f, pisoTresYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(6, 3);
         EditorSceneManager.SaveScene(escena, ruta);

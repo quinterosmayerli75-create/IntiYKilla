@@ -82,7 +82,6 @@ public static partial class GeneradorEscenas
         // neblina invierte los controles. Y las puertas se cambian de lugar.
         HerramientasEscena.CrearPisoQueSeCalienta("Borde que se inunda", TipoZona.Agua, -10.6f, 1.2f, pisoUnoYungas, trampas);
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(11.6f, 1f), new Vector2(1.6f, 2.2f), trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(4, 1);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -158,7 +157,6 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema agua 4", TipoElemento.Agua, new Vector2(4f, 5.5f), new Vector2(7.25f, 4.1f), gemas);
         HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena izquierda", TipoZona.Veneno, -8.5f, 1.2f, pisoAlto, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena derecha", TipoZona.Veneno, 8.5f, 1.2f, pisoAlto, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(4, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -228,7 +226,6 @@ public static partial class GeneradorEscenas
         // puertas se cambian de lugar.
         HerramientasEscena.CrearPisoQueSeCalienta("Piso que se inunda", TipoZona.Agua, -11.6f, 0.8f, pisoUnoYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Piso que se calienta", TipoZona.Lava, 11.6f, 0.8f, pisoUnoYungas, trampas);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(4, 3);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -292,9 +289,9 @@ public static partial class GeneradorEscenas
         // desde más a la derecha), y puertas que se cambian de lugar.
         Transform trampas = HerramientasEscena.CrearGrupo("Trampas");
         HerramientasEscena.CrearPisoQueSeCalienta("Piso 2 que se envenena", TipoZona.Veneno, 4f, 1.2f, pisoDosYungas, trampas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Piso 3 que se envenena", TipoZona.Veneno, -4f, 1.2f, pisoTresYungas, trampas);
+        // DESAFÍO: un mono escondido en la copa se deja caer al paso.
+        HerramientasEscena.CrearEnemigoQueCaeDelTecho("Mono que cae", new Vector2(-4f, pisoTresYungas + 2.8f), pisoTresYungas, new Color(0.72f, 0.48f, 0.26f), trampas);
         HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(5.8f, 8.3f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloTropico, escenario);
-        CambiarPuertasDeLugar(trampas);
 
         string ruta = RutaNivel(4, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -363,11 +360,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearCamaraCooperativa(camaraPrincipal, inti.transform, killa.transform);
 
         // ===== VERSIÓN DIFÍCIL =====
-        // Donde se aterriza en cada rama al salir de la hoja, el piso se vuelve de
-        // lo que mata a quien suele llegar por ahí, y de cada rama sale un enemigo.
+        // De cada rama sale un enemigo del suelo: se salta cuando la liana está
+        // lejos, para no quedar colgado en medio del salto.
         // (Las puertas no se cambian: el muro central lo haría imposible.)
-        HerramientasEscena.CrearPisoQueSeCalienta("Rama que se inunda", TipoZona.Agua, -7f, 1.2f, pisoDosYungas, trampas);
-        HerramientasEscena.CrearPisoQueSeCalienta("Rama que se calienta", TipoZona.Lava, 7f, 1.2f, pisoDosYungas, trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama izquierda", new Vector2(-10.5f, pisoDosYungas), trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama derecha", new Vector2(10.5f, pisoDosYungas), trampas);
 
