@@ -69,7 +69,17 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Menos trampas repetidas: el cambio de puertas queda solo en los finales de mundo (2-5, 3-5, 5-5, 6-5) y hay menos pisos que se calientan
 - [x] Quitar trampas imposibles de superar: púas del 3-2 y del 3-5, enemigo de la salida del 5-2 y veneno del centro del 6-1
 - [x] Colocar en los niveles el suelo que desaparece al saltar (salida del 1-2) y el sensor con el bloque que cierra el regreso (1-1); probados por separado y con los 30 niveles otra vez ganados seguidos
-- [ ] Animar la lava y el agua (que fluyan como un río) y plataformas de roca como en las imágenes de referencia
+- [x] Animar la lava y el agua (que fluyan como un río)
+- [ ] Plataformas de roca flotante y decoración como en las imágenes de referencia (imágenes de Leonardo AI, ver PROPUESTA_TRAMPAS.md)
+
+## Versión engañosa (ver PROPUESTA_TRAMPAS.md, aprobada el 11 nov)
+- [x] Pruebas del punto de partida: 30 de 30 niveles cargan, el bot gana los 30, sistema y piezas del desafío sin fallos
+- [ ] Etapa 0: bot de pruebas guardado en el proyecto, con prueba de reinicio y de gemas alcanzables
+- [ ] Etapa 1: piezas nuevas (gema explosiva, gema que persigue, plataforma fantasma, palanca engañosa, roca por detrás, nube tramposa, salida que se aleja, sensor al llegar a la salida)
+- [ ] Etapa 2: Mundos 1 y 2 (6 y 7 trampas por nivel, con momentos memorables)
+- [ ] Etapa 3: Mundos 3 y 4 (8 y 9 trampas por nivel)
+- [ ] Etapa 4: Mundos 5 y 6 (10 y 11-12 trampas por nivel)
+- [ ] Bot sobre los 30 niveles y partida de prueba después de cada etapa
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
