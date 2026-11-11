@@ -74,7 +74,9 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 
 ## Versión engañosa (ver PROPUESTA_TRAMPAS.md, aprobada el 11 nov)
 - [x] Pruebas del punto de partida: 30 de 30 niveles cargan, el bot gana los 30, sistema y piezas del desafío sin fallos
-- [ ] Etapa 0: bot de pruebas guardado en el proyecto, con prueba de reinicio y de gemas alcanzables
+- [x] Etapa 0: bot de pruebas guardado en el proyecto (`01_Scripts/HerramientasDePrueba`, menú "Inti y Killa > Pruebas" y `Herramientas/correr_bot.ps1`); probado desde el proyecto
+- [x] Prueba de reinicio: en los 30 niveles se disparan las trampas, muere Inti y todo vuelve a su estado inicial (150 de 150 comprobaciones)
+- [ ] Confirmar que se alcanzan las gemas que el bot no recoge (3-1, 4-1, 4-4, 4-5, 5-2, 5-3, 5-4, 5-5, 6-3); se hace al actualizar las rutas de cada mundo
 - [ ] Etapa 1: piezas nuevas (gema explosiva, gema que persigue, plataforma fantasma, palanca engañosa, roca por detrás, nube tramposa, salida que se aleja, sensor al llegar a la salida)
 - [ ] Etapa 2: Mundos 1 y 2 (6 y 7 trampas por nivel, con momentos memorables)
 - [ ] Etapa 3: Mundos 3 y 4 (8 y 9 trampas por nivel)
