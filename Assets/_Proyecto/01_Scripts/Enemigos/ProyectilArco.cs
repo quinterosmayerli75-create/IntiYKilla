@@ -14,6 +14,7 @@ public class ProyectilArco : MonoBehaviour
     private const float alturaParaDesaparecer = -12f;
 
     private ControladorJugador[] jugadores;
+    private PuertaSalida[] puertas;
     private Vector2 velocidad;
     private float gravedad;
     private float radio;
@@ -36,6 +37,23 @@ public class ProyectilArco : MonoBehaviour
         radio = nuevoRadio;
         mensajeDeMuerte = nuevoMensaje;
         jugadores = FindObjectsByType<ControladorJugador>();
+        puertas = FindObjectsByType<PuertaSalida>();
+    }
+
+    private bool EstaEnSuPuerta(ControladorJugador jugador)
+    {
+        if (puertas == null)
+        {
+            return false;
+        }
+        foreach (PuertaSalida puerta in puertas)
+        {
+            if (puerta != null && puerta.EstaEsperando(jugador) == true)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void Update()
@@ -48,6 +66,12 @@ public class ProyectilArco : MonoBehaviour
         foreach (ControladorJugador jugador in jugadores)
         {
             if (jugador == null || jugador.EstaVivo == false)
+            {
+                continue;
+            }
+
+            // Regla de justicia: quien ya espera adentro de su puerta está a salvo.
+            if (EstaEnSuPuerta(jugador) == true)
             {
                 continue;
             }

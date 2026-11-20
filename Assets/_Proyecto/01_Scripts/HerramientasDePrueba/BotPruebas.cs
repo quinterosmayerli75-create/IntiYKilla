@@ -55,6 +55,22 @@ public class BotPruebas : MonoBehaviour
         objeto.AddComponent<BotPruebas>();
     }
 
+    private EjecutorDeRutasBot ejecutor;
+
+    // Todo lo que las rutas ponen en marcha corre en el ejecutor.
+    private new Coroutine StartCoroutine(IEnumerator rutina)
+    {
+        return ejecutor.StartCoroutine(rutina);
+    }
+
+    private new void StopCoroutine(Coroutine rutina)
+    {
+        if (rutina != null)
+        {
+            ejecutor.StopCoroutine(rutina);
+        }
+    }
+
     private void Start()
     {
         Application.runInBackground = true;
@@ -62,7 +78,10 @@ public class BotPruebas : MonoBehaviour
         InputSystem.settings.editorInputBehaviorInPlayMode = InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
         teclado = InputSystem.AddDevice<Keyboard>();
         teclado.MakeCurrent();
-        StartCoroutine(TodoMundo56());
+        // Las rutas corren en otro componente: así se pueden cortar todas juntas
+        // (al repetirse la sala o al terminar un nivel) sin cortar la prueba entera.
+        ejecutor = gameObject.AddComponent<EjecutorDeRutasBot>();
+        base.StartCoroutine(TodoMundo56());
     }
 
     // ===== Prueba de reinicio =====
@@ -279,12 +298,36 @@ public class BotPruebas : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         bool buscoPuertas = false;
+        GestorNivel gestorActual = GestorNivel.Instancia;
         Coroutine rutaActiva = StartCoroutine(Envolver(ruta));
         float limite = Time.time + 150f;
         string resultado = "TIEMPO AGOTADO";
 
         while (Time.time < limite)
         {
+            // Sala que se repite: la escena se recargó sin que nadie muriera.
+            if (GestorNivel.Instancia == null)
+            {
+                yield return null;
+                continue;
+            }
+            if (GestorNivel.Instancia != gestorActual)
+            {
+                yield return null;
+                yield return null;
+                ejecutor.StopAllCoroutines();
+                teclas.Clear();
+                inti = Crear("Inti", Key.A, Key.D, Key.W, Key.S);
+                killa = Crear("Killa", Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow);
+                gestorActual = GestorNivel.Instancia;
+                rutaTerminada = false;
+                buscoPuertas = false;
+                limite = limite + 150f;
+                Log(escena + " vuelta " + (SalaQueSeRepite.VueltaActual + 1));
+                yield return new WaitForSeconds(0.5f);
+                rutaActiva = StartCoroutine(Envolver(RutaPorNombre(escena)));
+                continue;
+            }
             if ((bool)Dato("nivelTerminado"))
             {
                 resultado = "GANADO estrellas=" + Dato("estrellasGanadas") + " muertes=" + DatoEstatico("muertesDelIntento") + " tiempo=" + ((float)Dato("cronometro")).ToString("0.0") + " gemasFuego=" + Dato("gemasFuegoRecogidas") + "/" + Dato("totalGemasFuego") + " gemasAgua=" + Dato("gemasAguaRecogidas") + "/" + Dato("totalGemasAgua");
@@ -309,13 +352,15 @@ public class BotPruebas : MonoBehaviour
                 {
                     rutaActiva = StartCoroutine(IrALasPuertasActuales());
                     float limitePuertas = Time.time + 12f;
-                    while (Time.time < limitePuertas && (bool)Dato("nivelTerminado") == false && (bool)Dato("reinicioEnCurso") == false) { yield return null; }
+                    while (Time.time < limitePuertas && GestorNivel.Instancia == gestorActual && (bool)Dato("nivelTerminado") == false && (bool)Dato("reinicioEnCurso") == false) { yield return null; }
                 }
                 continue;
             }
             if (rutaTerminada == true)
             {
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2.5f);
+                // Si la sala se repitió, la escena es otra: el bucle de arriba lo atiende.
+                if (GestorNivel.Instancia == null || GestorNivel.Instancia != gestorActual) { continue; }
                 if ((bool)Dato("nivelTerminado") == false)
                 {
                     resultado = "RUTA COMPLETA PERO SIN VICTORIA Inti=" + inti.cuerpo.position.ToString("F2") + " Killa=" + killa.cuerpo.position.ToString("F2");
@@ -326,7 +371,8 @@ public class BotPruebas : MonoBehaviour
             yield return null;
         }
 
-        StopCoroutine(rutaActiva);
+        // Corta la ruta y cualquier paso suelto que siga apretando teclas.
+        ejecutor.StopAllCoroutines();
         teclas.Clear();
         Log(escena + " RESULTADO: " + resultado);
         yield return new WaitForSeconds(0.8f);
@@ -2507,6 +2553,24 @@ public class BotPruebas : MonoBehaviour
         }
         if (modo == "" || modo == "65") { if (esperoFinal == true) { yield return new WaitForSeconds(5f); } Verificar("Después del jefe llega el Final", SceneManager.GetActiveScene().name == "Final" || esperoFinal == false); }
         if (modo == "fotos") { yield return FotosMundo56(); }
+        if (modo == "diag")
+        {
+            foreach (string escena in new string[] { "Mundo6_Nivel5", "Mundo6_Nivel4" })
+            {
+                yield return Cargar(escena);
+                yield return new WaitForSeconds(0.5f);
+                teclas.Add(killa.derecha);
+                teclas.Add(inti.izquierda);
+                yield return new WaitForSeconds(1.5f);
+                teclas.Clear();
+                Log(escena + " Inti=" + inti.cuerpo.position.ToString("F2") + " Killa=" + killa.cuerpo.position.ToString("F2"));
+                foreach (Collider2D choque in Physics2D.OverlapBoxAll(killa.cuerpo.position, new Vector2(2.5f, 1.6f), 0f))
+                {
+                    Log("  cerca de Killa: " + choque.name + " trigger=" + choque.isTrigger + " caja=" + choque.bounds.ToString());
+                }
+            }
+        }
+        if (modo == "psicologicas") { yield return ProbarPiezasPsicologicas(); Log("FALLOS EN PIEZAS PSICOLÓGICAS: " + fallos); }
         if (modo == "desafio") { yield return ProbarPiezasDesafio(); Log("FALLOS EN PIEZAS DEL DESAFÍO: " + fallos); }
         if (modo == "reinicio") { yield return ProbarReinicios(); Log("FALLOS EN REINICIO: " + fallos); }
         if (modo == "todos")
@@ -2530,6 +2594,83 @@ public class BotPruebas : MonoBehaviour
     }
 
     private bool esperoFinal = false;
+
+    // Espera hasta "segundos" y dice si en ese tiempo alguien murió.
+    private IEnumerator EsperarMuerte(float segundos, bool[] resultado)
+    {
+        float limite = Time.time + segundos;
+        resultado[0] = false;
+        while (Time.time < limite)
+        {
+            if (GestorNivel.Instancia != null && (bool)Dato("reinicioEnCurso") == true) { resultado[0] = true; yield break; }
+            yield return null;
+        }
+    }
+
+    private IEnumerator ProbarPiezasPsicologicas()
+    {
+        Log("===== PIEZAS PSICOLÓGICAS =====");
+        bool[] murio = new bool[1];
+
+        // Cartel que cae (4-4): quien se para bajo las letras, muere.
+        yield return Cargar("Mundo4_Nivel4");
+        Teletransportar(inti, -1f, 9.5f);
+        yield return EsperarMuerte(4f, murio);
+        Verificar("Cartel: las letras caen sobre quien se queda debajo", murio[0]);
+
+        // Nube asesina (1-5): quien se queda bajo la nube recibe el rayo.
+        yield return Cargar("Mundo1_Nivel5");
+        Teletransportar(inti, 6f, 6.25f);
+        yield return EsperarMuerte(3f, murio);
+        Verificar("Nube: el rayo alcanza a quien se queda debajo", murio[0]);
+
+        // Gema imán (2-1): quien la toma y se queda quieto, recibe las piedras.
+        yield return Cargar("Mundo2_Nivel1");
+        // La gema está en el aire: se toma con un salto y salen las piedras hacia ese punto.
+        Teletransportar(inti, 5.5f, 5.65f);
+        bool salieronPiedras = false;
+        float limitePiedras = Time.time + 1f;
+        while (Time.time < limitePiedras && salieronPiedras == false) { salieronPiedras = GameObject.Find("Piedra atraida") != null; yield return null; }
+        Verificar("Gema imán: al tomarla salen las piedras hacia ese lugar", salieronPiedras);
+
+        // Arbusto trampa (4-1): quien se acerca y se queda, es mordido.
+        yield return Cargar("Mundo4_Nivel1");
+        Teletransportar(inti, -13.3f, -0.25f);
+        yield return EsperarMuerte(3f, murio);
+        Verificar("Arbusto: muerde a quien se queda al lado", murio[0]);
+
+        // Trampolín catapulta (4-2): lanza contra las púas del techo.
+        yield return Cargar("Mundo4_Nivel2");
+        yield return Caminar(inti, 0f);
+        yield return EsperarMuerte(3f, murio);
+        Verificar("Catapulta: la hoja del centro lanza contra las púas", murio[0]);
+
+        // Arena movediza (5-3): quien se queda adentro, se hunde.
+        yield return Cargar("Mundo5_Nivel3");
+        Teletransportar(killa, 12.5f, -3.5f);
+        yield return EsperarMuerte(4f, murio);
+        Verificar("Arena movediza: se traga a quien se queda", murio[0]);
+
+        // Poción de peso (5-4): el piso se rompe y se cae, sin morir.
+        yield return Cargar("Mundo5_Nivel4");
+        Teletransportar(inti, -12.25f, 1.5f);
+        yield return new WaitForSeconds(0.4f);
+        yield return Caminar(inti, -11.5f);
+        yield return new WaitForSeconds(1.2f);
+        Verificar("Poción de peso: el piso se rompe y cae al suelo", inti.cuerpo.position.y < 0f && Vivo(inti));
+
+        // Púas de goma (6-3): rebotan hacia arriba sin matar.
+        yield return Cargar("Mundo6_Nivel3");
+        Teletransportar(inti, 13.5f, 1.5f);
+        float alturaMaxima = -10f;
+        float limiteGoma = Time.time + 1.5f;
+        while (Time.time < limiteGoma) { alturaMaxima = Mathf.Max(alturaMaxima, inti.cuerpo.position.y); yield return null; }
+        Verificar("Púas de goma: rebotan alto y no matan", alturaMaxima > 3f && Vivo(inti));
+
+        // Sala que se repite (5-1): la misma escena vuelve a empezar en la vuelta 2.
+        yield return Cargar("Mundo5_Nivel1");
+        Verificar("Bucle: empieza en la vuelta 1", SalaQueSeRepite.VueltaActual == 0);
+    }
 
     private IEnumerator ProbarPiezasDesafio()
     {
@@ -3098,6 +3239,11 @@ public class BotPruebas : MonoBehaviour
         if (carpeta == null || carpeta == "") { return; }
         ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(carpeta, nombre + ".png"));
     }
+}
+
+// Componente vacío donde corren las rutas del bot (ver BotPruebas.ejecutor).
+public class EjecutorDeRutasBot : MonoBehaviour
+{
 }
 
 #endif

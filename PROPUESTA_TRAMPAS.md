@@ -91,3 +91,28 @@ Para que las imágenes encajen directo en el juego:
 - **Estilo:** colores planos y vivos, contorno suave, el mismo estilo que Inti y Killa.
 - **Dónde ponerlas:** `ArteOriginal/Mundos/MundoN/`, con nombres simples (`Plataforma.png`, `Decoracion1.png`, …).
 - **Licencia:** revisar que el plan de Leonardo AI permita publicar en itch.io y anotarlo en los créditos.
+
+## 8. Versión psicológica (20 de noviembre)
+
+Pedido nuevo, a partir de dos videos de referencia: que pasar los niveles sea más "psicológico" y confuso, con un bucle. Del 1-1 al 1-3 siguen siendo fáciles; desde el 1-4 sube la confusión.
+
+**Sala que se repite (el bucle).** Al llegar los dos a sus puertas, el nivel no termina: la pantalla parpadea, aparece "¿Otra vez?" y la misma sala vuelve a empezar con una regla cambiada. Vuelta 2: las puertas se cambian de lugar al acercarse (en 4-2 y 5-1 la vuelta 2 queda igual, porque cruzar obligaría a pasar por un peligro imposible de esquivar). Vuelta 3: aparece una neblina que invierte los controles cerca de la salida. Morir no hace perder las vueltas ganadas. Niveles: 2-3, 3-2, 4-2, 5-1 y 6-4.
+
+**Trampas nuevas** (componentes `SalaQueSeRepite`, `VariantePorVuelta`, `NubeAsesina`, `GemaIman`, `PocionDePeso`, `ArbustoTrampa`, `CartelQueCae`, `ArenaMovediza`, `PuasDeGoma`, `PuasFijas`, `EnemigoEscalera`, `RocaGiganteQueRueda`; el trampolín catapulta es una `HojaTrampolin` con más fuerza):
+
+| Trampa | Dónde | Aviso justo |
+|---|---|---|
+| Nube con rayo | 1-5, 3-1 | Se oscurece y tiembla antes del rayo |
+| Gema imán | 2-1, 6-1 | Anillo gris que late; las piedras caen donde se tomó |
+| Antorcha que dispara | 2-2 | Tiembla y se pone roja antes de disparar |
+| Arbusto con dientes | 4-1 | Dos puntitos brillantes (ojos) y se sacude |
+| Trampolín catapulta | 4-2 | Vena roja en la hoja; púas visibles en el techo |
+| Cartel que cae | 4-4 | Las letras tiemblan; caen detrás de quien pasa |
+| Arena movediza | 5-3 | Puntitos de arena en el "agua" |
+| Poción de peso | 5-4 | Botella gris sobre un piso agrietado |
+| Púas de goma | 6-3 | Se mueven como gelatina |
+| Púas que caen del techo | 6-3 | Sombra en el piso antes de cada púa |
+
+Programados pero todavía sin colocar: enemigo escalera y roca gigante que rueda.
+
+**Pruebas:** piezas psicológicas 0 fallos, piezas del desafío 0 fallos y el bot gana los 30 niveles (las salas que se repiten, en sus 3 vueltas).

@@ -38,6 +38,19 @@ public class LluviaDeRocas : TrampaActivable
         cantidadDeRocas = nuevaCantidad;
     }
 
+    public void ConfigurarRitmo(float nuevosSegundosEntreRocas)
+    {
+        segundosEntreRocas = nuevosSegundosEntreRocas;
+    }
+
+    // Con esto la misma trampa sirve para rocas o para púas que caen del techo.
+    public void ConfigurarAspecto(Color nuevoColor, float nuevoTamano, string nuevoMensaje)
+    {
+        colorRoca = nuevoColor;
+        tamanoRoca = nuevoTamano;
+        mensajeDeMuerte = nuevoMensaje;
+    }
+
     private void Update()
     {
         if (SeActivaSola == false || YaActivada == true)

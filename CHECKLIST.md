@@ -71,6 +71,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Colocar en los niveles el suelo que desaparece al saltar (salida del 1-2) y el sensor con el bloque que cierra el regreso (1-1); probados por separado y con los 30 niveles otra vez ganados seguidos
 - [x] Animar la lava y el agua (que fluyan como un río)
 - [ ] Plataformas de roca flotante y decoración como en las imágenes de referencia (imágenes de Leonardo AI, ver PROPUESTA_TRAMPAS.md)
+- [x] Arte con IA (20 nov): puerta de fuego y de agua, franjas de lava, agua y veneno, y un bloque por mundo (mina, Yungas, Trópico, Aiquile, Isla del Sol) en las plataformas. Originales en `ArteOriginal/Gemini`
+- [ ] Volver a generar el bloque de Aiquile sin la palabra "AIQUILE" escrita
 
 ## Versión engañosa (ver PROPUESTA_TRAMPAS.md, aprobada el 11 nov)
 - [x] Pruebas del punto de partida: 30 de 30 niveles cargan, el bot gana los 30, sistema y piezas del desafío sin fallos
@@ -82,6 +84,14 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Etapa 3: Mundos 3 y 4 (8 y 9 trampas por nivel)
 - [ ] Etapa 4: Mundos 5 y 6 (10 y 11-12 trampas por nivel)
 - [ ] Bot sobre los 30 niveles y partida de prueba después de cada etapa
+
+## Versión psicológica (pedido del 20 nov: ideas de los videos)
+- [x] Sala que se repite (bucle de 3 vueltas, cada vuelta cambia una regla) en 2-3, 3-2, 4-2, 5-1 y 6-4
+- [x] Trampas nuevas colocadas: nube con rayo (1-5, 3-1), gema imán (2-1, 6-1), antorcha que dispara (2-2), arbusto con dientes (4-1), trampolín catapulta (4-2), cartel que cae (4-4), arena movediza (5-3), poción de peso (5-4), púas de goma y púas que caen del techo (6-3)
+- [x] Los proyectiles ya no dañan a quien espera adentro de su puerta (regla de justicia)
+- [x] Prueba automática: piezas psicológicas 0 fallos, piezas del desafío 0 fallos, 30 de 30 niveles ganados por el bot
+- [ ] Colocar en algún nivel el enemigo escalera y la roca gigante que rueda (ya programados)
+- [ ] Partida de prueba con personas (Mayerli y el ingeniero)
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)

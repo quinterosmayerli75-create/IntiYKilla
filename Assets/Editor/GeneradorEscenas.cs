@@ -1042,6 +1042,7 @@ public static partial class GeneradorEscenas
         // puede pisar para aturdirlo. Y en el piso alto las puertas se cambian.
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo del piso 1", new Vector2(-9.5f, pisoUno), trampas);
 
+
         string ruta = RutaNivel(1, 4);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -1159,6 +1160,10 @@ public static partial class GeneradorEscenas
         // DESAFÍO: camino a la palanca, una mancha en el techo es un bicho. Al pasar
         // debajo se asoma temblando y se deja caer: quien no se detiene, pasa.
         HerramientasEscena.CrearEnemigoQueCaeDelTecho("Bicho del techo", new Vector2(-4f, pisoTres + 2.9f), pisoTres, new Color(0.55f, 0.42f, 0.6f), trampas);
+
+        // PSICOLÓGICA: una nube "de adorno" sobre el veneno de arriba. Si alguien
+        // pasa debajo, se oscurece y suelta un rayo: hay que seguir de largo.
+        HerramientasEscena.CrearNubeAsesina("Nube del salar", new Vector2(6f, pisoTres + 3.6f), pisoTres, trampas);
 
         string ruta = RutaNivel(1, 5);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1279,6 +1284,10 @@ public static partial class GeneradorEscenas
         // una tras otra, hacia donde se camina. Las sombras avisan dónde caerá cada una.
         HerramientasEscena.CrearLluviaDeRocas("Derrumbe", -5f, -8f, pisoAlto + 3.5f, pisoAlto, 3, true, trampas);
 
+        // PSICOLÓGICA: una gema de más, con un anillo gris. Es un imán: al tomarla
+        // llegan piedras desde los dos lados hacia donde estaba el jugador.
+        HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Fuego, new Vector2(5.5f, pisoAlto + 2.2f), trampas);
+
         string ruta = RutaNivel(2, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -1357,6 +1366,11 @@ public static partial class GeneradorEscenas
         // DESAFÍO: un tramo del piso 2 es una cinta de la mina que arrastra hacia
         // atrás, justo bajo el murciélago. Las marcas muestran hacia dónde corre.
         HerramientasEscena.CrearSueloEnContra("Cinta de la mina", -6f, 3f, pisoDos, 2.2f, trampas);
+
+        // PSICOLÓGICA: una antorcha de la pared, junto a las puertas. Parece luz
+        // del fondo, pero tiembla y escupe fuego a quien camina cerca (a quien ya
+        // espera en su puerta no le dispara).
+        HerramientasEscena.CrearAntorchaQueDispara("Antorcha de la galeria", new Vector2(-14.6f, pisoDos + 2.2f), 3f, 3.5f, trampas);
 
         string ruta = RutaNivel(2, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1442,6 +1456,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema fuego 3", TipoElemento.Fuego, new Vector2(13.5f, 2.1f), new Vector2(11f, 5.4f), gemas);
         // DESAFÍO: una mancha en el techo del piso final es un bicho de la mina.
         HerramientasEscena.CrearEnemigoQueCaeDelTecho("Bicho de la mina", new Vector2(-5.5f, pisoFinal + 2.8f), pisoFinal, new Color(0.5f, 0.45f, 0.4f), trampas);
+
+        // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
+        ConvertirEnSalaQueSeRepite(trampas, new Vector2(-7f, pisoFinal + 1.2f), new Vector2(3f, 2.4f));
 
         string ruta = RutaNivel(2, 3);
         EditorSceneManager.SaveScene(escena, ruta);

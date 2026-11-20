@@ -83,6 +83,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Borde que se inunda", TipoZona.Agua, -10.6f, 1.2f, pisoUnoYungas, trampas);
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(11.6f, 1f), new Vector2(1.6f, 2.2f), trampas);
 
+        // PSICOLÓGICA: un arbusto de adorno junto a la pared tiene ojos y muerde.
+        HerramientasEscena.CrearArbustoTrampa("Arbusto de la rama", -14.6f, pisoUnoYungas, trampas);
+
         string ruta = RutaNivel(4, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -157,6 +160,13 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema agua 4", TipoElemento.Agua, new Vector2(4f, 5.5f), new Vector2(7.25f, 4.1f), gemas);
         HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena izquierda", TipoZona.Veneno, -8.5f, 1.2f, pisoAlto, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Copa que se envenena derecha", TipoZona.Veneno, 8.5f, 1.2f, pisoAlto, trampas);
+
+        // PSICOLÓGICA: una hoja en el centro, igual a las demás, es una catapulta
+        // que lanza contra las púas escondidas bajo la copa.
+        HerramientasEscena.CrearTrampolinCatapulta("Hoja del centro", 0f, 1.4f, suelo, pisoAlto - 0.5f, trampas);
+        // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
+        // (Sin cambio de puertas: cruzar obligaría a pasar por el mono de la copa.)
+        ConvertirEnSalaQueSeRepite(trampas, new Vector2(0f, pisoAlto + 1.2f), new Vector2(6f, 2.4f), false);
 
         string ruta = RutaNivel(4, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -292,6 +302,10 @@ public static partial class GeneradorEscenas
         // DESAFÍO: un mono escondido en la copa se deja caer al paso.
         HerramientasEscena.CrearEnemigoQueCaeDelTecho("Mono que cae", new Vector2(-4f, pisoTresYungas + 2.8f), pisoTresYungas, new Color(0.72f, 0.48f, 0.26f), trampas);
         HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(5.8f, 8.3f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloTropico, escenario);
+
+        // PSICOLÓGICA: un cartel de "META" sobre el piso 4, camino a las puertas.
+        // Sus letras caen detrás de quien pasa: hay que seguir sin detenerse.
+        HerramientasEscena.CrearCartelQueCae("Cartel de meta", "META", new Vector2(-1f, pisoCuatro + 3.4f), pisoCuatro, trampas);
 
         string ruta = RutaNivel(4, 4);
         EditorSceneManager.SaveScene(escena, ruta);

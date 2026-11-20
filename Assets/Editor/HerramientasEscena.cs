@@ -48,6 +48,8 @@ public static partial class HerramientasEscena
     public static readonly Color colorAgua = new Color(0.00f, 0.25f, 0.80f);
     public static readonly Color colorVeneno = new Color(0.35f, 0.85f, 0.20f);
     public static readonly Color colorCristal = new Color(0.90f, 0.95f, 1.00f);
+    // Mismo color que el suelo de las minas (GeneradorEscenas): sirve para elegir su bloque.
+    public static readonly Color colorSueloMina = new Color(0.68f, 0.52f, 0.38f);
     private static readonly Color colorMonticulo = new Color(1.00f, 0.92f, 0.86f);
     private static readonly Color colorCordillera = new Color(0.30f, 0.18f, 0.34f);
     private static readonly Color colorSol = new Color(1.00f, 0.88f, 0.55f, 0.95f);
@@ -76,6 +78,14 @@ public static partial class HerramientasEscena
     public static Sprite imagenCristales;
     public static Sprite imagenGema;
     public static Sprite imagenPuertaSalida;
+    // Una puerta para cada elemento y un bloque por mundo (imágenes hechas con IA).
+    public static Sprite imagenPuertaFuego;
+    public static Sprite imagenPuertaAgua;
+    public static Sprite imagenBloqueMina;
+    public static Sprite imagenBloqueYungas;
+    public static Sprite imagenBloqueTropico;
+    public static Sprite imagenBloqueAiquile;
+    public static Sprite imagenBloqueIsla;
     public static Sprite imagenBotonPresion;
     public static Sprite imagenPalanca;
     public static Sprite imagenAltar;
@@ -167,6 +177,13 @@ public static partial class HerramientasEscena
         imagenCristales = CargarImagenArte(carpetaSpritesNiveles, "Cristales");
         imagenGema = CargarImagenArte(carpetaSpritesNiveles, "Gema");
         imagenPuertaSalida = CargarImagenArte(carpetaSpritesNiveles, "PuertaSalida");
+        imagenPuertaFuego = CargarImagenArte(carpetaSpritesNiveles, "PuertaFuego");
+        imagenPuertaAgua = CargarImagenArte(carpetaSpritesNiveles, "PuertaAgua");
+        imagenBloqueMina = CargarImagenArte(carpetaSpritesNiveles, "BloqueMina");
+        imagenBloqueYungas = CargarImagenArte(carpetaSpritesNiveles, "BloqueYungas");
+        imagenBloqueTropico = CargarImagenArte(carpetaSpritesNiveles, "BloqueTropico");
+        imagenBloqueAiquile = CargarImagenArte(carpetaSpritesNiveles, "BloqueAiquile");
+        imagenBloqueIsla = CargarImagenArte(carpetaSpritesNiveles, "BloqueIsla");
         imagenBotonPresion = CargarImagenArte(carpetaSpritesNiveles, "Boton");
         imagenPalanca = CargarImagenArte(carpetaSpritesNiveles, "Palanca");
         imagenAltar = CargarImagenArte(carpetaSpritesNiveles, "Altar");
@@ -769,7 +786,25 @@ public static partial class HerramientasEscena
             return CrearPlataformaDeSal(nombre, posicion, tamano, padre);
         }
 
-        return CrearBloque(nombre, posicion, tamano, colorRespaldo, imagenPlataforma, padre);
+        return CrearBloque(nombre, posicion, tamano, colorRespaldo, ObtenerImagenDeBloque(colorRespaldo), padre);
+    }
+
+    // Cada mundo tiene su propio bloque; se reconoce por el color de su suelo.
+    // Si falta la imagen, se usa la plataforma general (o el color de respaldo).
+    private static Sprite ObtenerImagenDeBloque(Color colorRespaldo)
+    {
+        Sprite imagen = null;
+        if (colorRespaldo == colorSueloMina) { imagen = imagenBloqueMina; }
+        else if (colorRespaldo == colorSueloYungas) { imagen = imagenBloqueYungas; }
+        else if (colorRespaldo == colorSueloTropico) { imagen = imagenBloqueTropico; }
+        else if (colorRespaldo == colorSueloAiquile) { imagen = imagenBloqueAiquile; }
+        else if (colorRespaldo == colorSueloIsla) { imagen = imagenBloqueIsla; }
+
+        if (imagen == null)
+        {
+            imagen = imagenPlataforma;
+        }
+        return imagen;
     }
 
     // Charco sobre el suelo: centroX y ancho, a la altura del suelo.
@@ -855,8 +890,20 @@ public static partial class HerramientasEscena
         puerta.GetComponent<SpriteRenderer>().sortingOrder = -1;
         puerta.GetComponent<BoxCollider2D>().isTrigger = true;
 
+        // Con imagen propia de cada elemento: se usa tal cual, sin teñir.
+        Sprite imagenDelElemento = imagenPuertaAgua;
+        if (elemento == TipoElemento.Fuego)
+        {
+            imagenDelElemento = imagenPuertaFuego;
+        }
+        if (imagenDelElemento != null)
+        {
+            AplicarImagenAjustada(puerta, imagenDelElemento, tamanoPuerta);
+            puerta.GetComponent<SpriteRenderer>().color = Color.white;
+            AjustarCajaDeColision(puerta, tamanoPuerta);
+        }
         // Con imagen: una sola puerta para los dos, teñida con el color del elemento.
-        if (imagenPuertaSalida != null)
+        else if (imagenPuertaSalida != null)
         {
             AplicarImagenAjustada(puerta, imagenPuertaSalida, tamanoPuerta);
             puerta.GetComponent<SpriteRenderer>().color = colorElemento;

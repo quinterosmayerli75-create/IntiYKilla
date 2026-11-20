@@ -254,6 +254,13 @@ public class GestorNivel : MonoBehaviour
             }
         }
 
+        // Sala que se repite: si quedan vueltas, la sala vuelve a empezar
+        // con una regla cambiada en vez de terminar el nivel.
+        if (SalaQueSeRepite.Instancia != null && SalaQueSeRepite.Instancia.AtrapaLaVictoria() == true)
+        {
+            return;
+        }
+
         TerminarNivel();
     }
 

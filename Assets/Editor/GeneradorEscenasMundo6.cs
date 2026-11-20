@@ -94,6 +94,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa", new Vector2(-12f, 4.2f), new Vector2(3f, 2.4f), trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo del piso 1", new Vector2(12f, pisoUnoYungas), trampas);
 
+        // PSICOLÓGICA: una gema de más con anillo gris: es un imán de piedras.
+        HerramientasEscena.CrearGemaIman("Gema del templo", TipoElemento.Agua, new Vector2(-12f, pisoDosYungas + 2.4f), trampas);
+
         string ruta = RutaNivel(6, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -239,6 +242,11 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Piso 2 que se envenena", TipoZona.Veneno, 8.2f, 1f, pisoDosYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Piso 3 que se envenena", TipoZona.Veneno, -0.8f, 1f, pisoTresYungas, trampas);
 
+        // PSICOLÓGICA: púas que parecen mortales al final del piso 1, pero son
+        // de goma. Y en el piso 3, púas que caen del techo en fila (con sombra).
+        HerramientasEscena.CrearPuasDeGoma("Puas raras", 13.5f, 1.5f, pisoUnoYungas, trampas);
+        HerramientasEscena.CrearPuasQueCaenDelTecho("Puas del techo", -1f, -5f, pisoTresYungas + 3.2f, pisoTresYungas, 3, trampas);
+
         string ruta = RutaNivel(6, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -315,6 +323,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Rama que se calienta", TipoZona.Lava, 7f, 1.2f, pisoDosYungas, trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama izquierda", new Vector2(-10f, pisoDosYungas), trampas);
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo de la rama derecha", new Vector2(10f, pisoDosYungas), trampas);
+
+        // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
+        ConvertirEnSalaQueSeRepite(trampas, new Vector2(0f, pisoTresYungas + 1.2f), new Vector2(5f, 2.4f));
 
         string ruta = RutaNivel(6, 4);
         EditorSceneManager.SaveScene(escena, ruta);

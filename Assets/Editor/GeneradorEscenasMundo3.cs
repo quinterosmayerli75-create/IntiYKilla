@@ -103,6 +103,9 @@ public static partial class GeneradorEscenas
         // DESAFÍO: derrumbe en la ladera. Las sombras avisan dónde cae cada roca.
         HerramientasEscena.CrearLluviaDeRocas("Derrumbe de la ladera", 10f, 12.5f, pisoUnoYungas + 3f, pisoUnoYungas, 2, true, trampas);
 
+        // PSICOLÓGICA: una nube de la niebla que suelta un rayo sobre el agua.
+        HerramientasEscena.CrearNubeAsesina("Nube de lluvia", new Vector2(4.25f, pisoUnoYungas + 3.2f), pisoUnoYungas, trampas);
+
         string ruta = RutaNivel(3, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -178,6 +181,9 @@ public static partial class GeneradorEscenas
         // altura para saltarlas y la trampa no se podía superar (regla de justicia).
         // DESAFÍO: entre las hojas mojadas se esconde un bicho que se deja caer.
         HerramientasEscena.CrearEnemigoQueCaeDelTecho("Bicho de las hojas", new Vector2(-1f, pisoDosYungas + 2.8f), pisoDosYungas, new Color(0.35f, 0.5f, 0.3f), trampas);
+
+        // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
+        ConvertirEnSalaQueSeRepite(trampas, new Vector2(-10f, pisoTresYungas + 1.2f), new Vector2(4f, 2.4f));
 
         string ruta = RutaNivel(3, 2);
         EditorSceneManager.SaveScene(escena, ruta);

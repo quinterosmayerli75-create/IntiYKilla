@@ -20,6 +20,13 @@ public class HojaTrampolin : MonoBehaviour
     private Vector3 escalaNormal;
     private float tiempoAplastada = 0f;
 
+    // La usa el trampolín catapulta: una hoja igual a las demás que lanza
+    // con demasiada fuerza (contra las púas del techo).
+    public void ConfigurarFuerza(float nuevaFuerza)
+    {
+        fuerzaRebote = nuevaFuerza;
+    }
+
     public void Configurar(Vector2 nuevoTamanoZona)
     {
         tamanoZona = nuevoTamanoZona;

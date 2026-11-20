@@ -92,6 +92,10 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Cima que se inunda", TipoZona.Agua, -4.2f, 1.2f, pisoAltoAiquile, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Cima que se calienta", TipoZona.Lava, 4.2f, 1.2f, pisoAltoAiquile, trampas);
 
+        // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
+        // (Sin cambio de puertas: cruzar obligaría a pisar la gema trampa del centro.)
+        ConvertirEnSalaQueSeRepite(trampas, new Vector2(0f, pisoAltoAiquile + 1.2f), new Vector2(7f, 2.4f), false);
+
         string ruta = RutaNivel(5, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -223,6 +227,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se inunda", TipoZona.Agua, -3.6f, 0.8f, pisoDosYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 3.6f, 0.8f, pisoDosYungas, trampas);
 
+        // PSICOLÓGICA: a la derecha, un "charco de agua" que es arena movediza.
+        HerramientasEscena.CrearArenaMovediza("Charco raro", 12.5f, 2f, suelo, trampas);
+
         string ruta = RutaNivel(5, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -284,6 +291,10 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearGemaQueHuye("Gema agua 3", TipoElemento.Agua, new Vector2(-5.5f, 3.5f), new Vector2(-4f, 2.5f), gemas);
         HerramientasEscena.CrearPuasOcultas("Piso tranquilo", 0.8f, 1f, suelo, true, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 9.5f, 0.8f, pisoDosYungas, trampas);
+
+        // PSICOLÓGICA: una botella gris "de fuerza" sobre un piso agrietado: al
+        // tomarla, el que la toma pesa tanto que el piso se rompe.
+        HerramientasEscena.CrearPocionDePeso("Pocion de fuerza", new Vector2(-11.5f, 1.25f), new Vector2(2f, 0.5f), HerramientasEscena.colorSueloAiquile, trampas);
 
         string ruta = RutaNivel(5, 4);
         EditorSceneManager.SaveScene(escena, ruta);

@@ -16,6 +16,14 @@ public static class LanzadorBotPruebas
 {
     private const string escenaInicial = "Assets/_Proyecto/00_Scenes/MenuPrincipal.unity";
 
+    // Modo batch: vuelve a generar todas las escenas desde los generadores
+    // (lo mismo que el menú "Generar todas las escenas") y guarda.
+    public static void GenerarEscenas()
+    {
+        GeneradorEscenas.GenerarTodas();
+        AssetDatabase.SaveAssets();
+    }
+
     // Modo batch: las variables PRUEBA_BOT y SOLO_NIVEL ya vienen de la consola.
     public static void Ejecutar()
     {
