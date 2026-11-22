@@ -22,12 +22,12 @@ public class PeligroQueCae : MonoBehaviour
     [Header("Cuerpo y caída")]
     [SerializeField] private Vector2 tamano = new Vector2(1f, 1f);
     [SerializeField] private float alturaDelPiso = -3.5f;
-    [SerializeField] private float velocidadCaida = 32f;
+    [SerializeField] private float velocidadCaida = 42f;
 
     [Header("Tiempos del ciclo")]
     [SerializeField] private float segundosDeEspera = 2.5f;
-    [SerializeField] private float segundosDeTemblor = 0.35f;
-    [SerializeField] private float segundosParaReaparecer = 0.5f;
+    [SerializeField] private float segundosDeTemblor = 0.25f;
+    [SerializeField] private float segundosParaReaparecer = 0.3f;
     [SerializeField] private float intensidadTemblor = 0.08f;
 
     [SerializeField] private string mensajeDeMuerte = "Una roca de Potosí le cayó encima a {0}.";

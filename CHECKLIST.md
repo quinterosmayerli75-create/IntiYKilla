@@ -93,6 +93,20 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Colocar en algún nivel el enemigo escalera y la roca gigante que rueda (ya programados)
 - [ ] Partida de prueba con personas (Mayerli y el ingeniero)
 
+## Ajustes tras la partida de Mayerli (22 nov)
+- [x] Lo que cae va más rápido: bloques del techo (aviso de 0,4 s y caída a 45), rocas de la mina, lluvia de rocas, púas y bichos que caen
+- [x] Guardián del 6-5 más rápido (dispara cada 1,4 s y sus bolas vuelan más rápido)
+- [x] Pantalla negra con "Intento N" al morir, para que se note el reinicio
+- [x] Gemas con forma de estrella (dibujo propio, teñido por elemento)
+- [x] Luces de la melodía con colores vivos (las notas que faltan, más chicas)
+- [x] Monos con más alcance hacia abajo y más seguidos
+- [x] Historia nueva: los hermanos perdidos que vuelven a casa (Intro, Final y GDD)
+- [x] Tiempo límite de 1 minuto en 6-4 y 6-5; si pierden en el 6-5, vuelven al 6-1
+- [x] Más trampas en los Mundos 5 y 6 (nubes, arbustos, gemas imán, púas de goma) y atajo que se rompe en el 4-1
+- [x] Prueba automática: sistema, piezas, desafío y reinicio sin fallos; 30 de 30 niveles ganados
+- [ ] Dibujos para lo que sigue geométrico (prompts entregados: botón, palanca, altar, compuerta, cristales, mono, serpiente, murciélago, remolino, nube, hoja, cristal de luz, caja, vagoneta, roca, Guardián, arbusto)
+- [ ] Más plataformas que se mueven o desaparecen en los niveles
+
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)

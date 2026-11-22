@@ -134,6 +134,14 @@ public class BotPruebas : MonoBehaviour
 
                 yield return null;
                 yield return null;
+
+                // Nivel final: al perder no se repite, se vuelve al 6-1 (pedido del 22 nov).
+                if (escena == "Mundo6_Nivel5")
+                {
+                    Verificar(escena + ": al perder se vuelve al 6-1", SceneManager.GetActiveScene().name == "Mundo6_Nivel1");
+                    continue;
+                }
+
                 inti = Crear("Inti", Key.A, Key.D, Key.W, Key.S);
                 killa = Crear("Killa", Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow);
                 yield return new WaitForSeconds(0.3f);
@@ -765,7 +773,7 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(inti, 1.8f);
         yield return Caminar(inti, 2.7f);
         yield return Salto(inti, 6f);
-        yield return Caminar(inti, 6.9f);
+        yield return Caminar(inti, 6.6f);
         // Salta más lejos para no pisar el tramo falso.
         yield return Salto(inti, 11.5f);
         yield return new WaitForSeconds(3.5f);
@@ -785,7 +793,7 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(killa, -1.8f);
         yield return Caminar(killa, -2.7f);
         yield return Salto(killa, -6f);
-        yield return Caminar(killa, -6.9f);
+        yield return Caminar(killa, -6.6f);
         yield return Salto(killa, -10.2f);
         yield return Caminar(killa, -11.5f);
     }
@@ -1372,6 +1380,9 @@ public class BotPruebas : MonoBehaviour
         yield return SaltoRodeando(inti, 11.3f, 5.2f);
         yield return Caminar(inti, 9.6f);
         yield return Salto(inti, 6.9f);
+        // El murciélago vuela bajo en sus extremos y alto en el centro: se cruza
+        // cuando sale del extremo izquierdo, para pasar bajo él cuando va alto.
+        yield return EsperarMurcielagoEnExtremo("Murcielago", -3f);
         yield return Caminar(inti, -2f);
         yield return Caminar(inti, -11f);
         Log("Inti cruzó el río");
@@ -3164,23 +3175,17 @@ public class BotPruebas : MonoBehaviour
         yield return CaminarJuntos(-5f, 5f);
         for (int golpe = 0; golpe < 3; golpe++)
         {
-            // Salen justo después de un disparo: la bola cae donde estaban.
-            if (guardian.SegundosDesdeDisparo >= 0.9f)
-            {
-                yield return EsperarDisparoDelGuardian(guardian);
-            }
+            // Cada bola cae donde estaba el jugador al lanzarla. Se sale justo después
+            // de un disparo y se avanza siempre en la misma dirección: las bolas caen
+            // detrás. En la pared se espera el siguiente disparo y se vuelve enseguida.
+            yield return EsperarDisparoDelGuardian(guardian);
             yield return CaminarJuntos(-6.6f, 6.6f);
             // El tramo que se envenena se salta.
             yield return SaltarJuntos(-10f, 10f);
             yield return CaminarJuntos(-12.5f, 12.5f);
             Log("En los botones t=" + Time.time.ToString("F2") + " desdeDisparo=" + guardian.SegundosDesdeDisparo.ToString("F2"));
-            // Si acaba de disparar, la bola viene a los botones: se van ya. Si no,
-            // esperan ese disparo y se van enseguida (la bola cae cuando ya no están).
-            // Se apartan hacia la pared (la bola puede venir a los botones) y vuelven
-            // cuando la bola ya cayó y antes del siguiente disparo.
             yield return CaminarJuntos(-14.2f, 14.2f);
-            float limiteEspera = Time.time + 5f;
-            while ((guardian.SegundosDesdeDisparo < 1.3f || guardian.SegundosDesdeDisparo > 1.6f) && Time.time < limiteEspera) { yield return null; }
+            yield return EsperarDisparoDelGuardian(guardian);
             yield return CaminarJuntos(-10f, 10f);
             yield return SaltarJuntos(-6.6f, 6.6f);
             yield return CaminarJuntos(-5f, 5f);

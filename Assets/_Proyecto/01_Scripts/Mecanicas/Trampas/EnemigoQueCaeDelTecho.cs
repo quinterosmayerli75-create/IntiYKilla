@@ -20,7 +20,7 @@ public class EnemigoQueCaeDelTecho : TrampaActivable
     [SerializeField] private Vector2 tamano = new Vector2(0.8f, 0.8f);
     [SerializeField] private float anchoDeDeteccion = 1.2f;
     [SerializeField] private float segundosDeAviso = 0.4f;
-    [SerializeField] private float velocidadCaida = 14f;
+    [SerializeField] private float velocidadCaida = 24f;
     [SerializeField] private float velocidadCarrera = 3f;
     [SerializeField] private float distanciaARecorrer = 2.5f;
     [SerializeField] private string mensajeDeMuerte = "Algo cayó del techo encima de {0}.";

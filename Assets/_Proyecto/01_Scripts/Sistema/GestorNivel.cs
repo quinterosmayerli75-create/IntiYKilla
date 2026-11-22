@@ -29,7 +29,7 @@ public class GestorNivel : MonoBehaviour
     }
 
     // Reinicio casi instantáneo: morir es parte del juego y no debe aburrir.
-    [SerializeField] private float tiempoEsperaReinicio = 0.4f;
+    [SerializeField] private float tiempoEsperaReinicio = 0.7f;
     [SerializeField] private float duracionMensajeDeMuerte = 2.5f;
 
     [Header("Pista que aparece al empezar el nivel")]
@@ -235,6 +235,15 @@ public class GestorNivel : MonoBehaviour
         muertesDelIntento = muertesDelIntento + 1;
         mensajeCentral = mensajeDeMuerte;
         mensajeDeLaUltimaMuerte = mensajeDeMuerte;
+        // La pantalla se oscurece mientras se espera: así se nota el reinicio.
+        if (VolverAlPerder.Instancia != null)
+        {
+            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, VolverAlPerder.Instancia.Mensaje);
+        }
+        else
+        {
+            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "Intento " + (muertesDelIntento + 1));
+        }
         Invoke(nameof(ReiniciarNivel), tiempoEsperaReinicio);
     }
 
@@ -327,6 +336,13 @@ public class GestorNivel : MonoBehaviour
 
     public void ReiniciarNivel()
     {
+        // Nivel final: al perder no se repite, se vuelve a otra escena (el 6-1).
+        if (VolverAlPerder.Instancia != null)
+        {
+            SceneManager.LoadScene(VolverAlPerder.Instancia.EscenaDestino);
+            return;
+        }
+
         Scene escenaActual = SceneManager.GetActiveScene();
         SceneManager.LoadScene(escenaActual.name);
     }

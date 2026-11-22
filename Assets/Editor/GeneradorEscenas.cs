@@ -931,9 +931,10 @@ public static partial class GeneradorEscenas
         // a que caiga y recién entonces se para en la placa.
         HerramientasEscena.CrearTechoQueCae("Bloque sobre la placa", new Vector2(10.5f, pisoTres - grosor - mitadGrosor), new Vector2(1.5f, grosor), pisoDos, true, HerramientasEscena.colorSal, escenario);
         // DESAFÍO: al llegar al piso 3 empiezan a caer rocas del cielo, de a una y
-        // hacia donde se camina. Cada roca muestra antes su sombra en el piso:
-        // quien mira el piso se detiene y deja que caigan.
-        HerramientasEscena.CrearLluviaDeRocas("Lluvia de rocas", 8f, 10.5f, pisoTres + 4f, pisoTres, 3, true, trampas);
+        // desde donde se aterriza hacia donde se camina (van detrás del jugador). Cada
+        // roca muestra antes su sombra en el piso: quien sigue caminando se salva;
+        // quien se detiene a mirar, no.
+        HerramientasEscena.CrearLluviaDeRocas("Lluvia de rocas", 10.5f, 8f, pisoTres + 4f, pisoTres, 3, true, trampas);
 
         string ruta = RutaNivel(1, 3);
         EditorSceneManager.SaveScene(escena, ruta);

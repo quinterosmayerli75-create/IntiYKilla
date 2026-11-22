@@ -18,12 +18,12 @@ public class GuardianEclipse : MonoBehaviour
     [Header("Movimiento")]
     [SerializeField] private float limiteIzquierdo = -10f;
     [SerializeField] private float limiteDerecho = 10f;
-    [SerializeField] private float velocidad = 3f;
+    [SerializeField] private float velocidad = 4.2f;
     [SerializeField] private float aumentoDeVelocidadPorGolpe = 1.3f;
 
     [Header("Ataque")]
-    [SerializeField] private float segundosEntreDisparos = 1.8f;
-    [SerializeField] private float segundosDeVuelo = 1.2f;
+    [SerializeField] private float segundosEntreDisparos = 1.4f;
+    [SerializeField] private float segundosDeVuelo = 0.95f;
     // Antes de cada disparo brilla del color de la bola (regla de justicia).
     [SerializeField] private float segundosDeAviso = 0.5f;
     [SerializeField] private float gravedadProyectil = 12f;

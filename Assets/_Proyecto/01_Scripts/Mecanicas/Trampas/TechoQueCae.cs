@@ -15,8 +15,8 @@ using UnityEngine;
 public class TechoQueCae : TrampaActivable
 {
     [SerializeField] private float alturaDelPiso = -3.5f;
-    [SerializeField] private float retardoAntesDeCaer = 0.35f;
-    [SerializeField] private float velocidadCaida = 24f;
+    [SerializeField] private float retardoAntesDeCaer = 0.4f;
+    [SerializeField] private float velocidadCaida = 45f;
     [SerializeField] private string mensajeDeMuerte = "¿Mirabas al techo? Yo tampoco.";
 
     private BoxCollider2D colisionador;

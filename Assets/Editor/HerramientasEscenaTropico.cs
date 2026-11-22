@@ -84,7 +84,10 @@ public static partial class HerramientasEscena
         dibujo.sortingOrder = 8;
 
         LanzadorProyectiles lanzador = mono.AddComponent<LanzadorProyectiles>();
-        lanzador.Configurar(alcance, segundosEntreLanzamientos, spriteCirculo);
+        lanzador.Configurar(alcance, segundosEntreLanzamientos * 0.8f, spriteCirculo);
+        // Desde los árboles ven hacia abajo: tiran cocos a quien pasa por los pisos
+        // de más abajo (antes solo a quien estaba a su misma altura).
+        lanzador.ConfigurarAlcanceVertical(8f);
         lanzador.ConfigurarMensaje("Un mono atrapó a {0} por la oreja.");
     }
 

@@ -97,6 +97,9 @@ public static partial class GeneradorEscenas
         // PSICOLÓGICA: una gema de más con anillo gris: es un imán de piedras.
         HerramientasEscena.CrearGemaIman("Gema del templo", TipoElemento.Agua, new Vector2(-12f, pisoDosYungas + 2.4f), trampas);
 
+        // MÁS TRAMPAS: una nube del templo sobre la salida del agua.
+        HerramientasEscena.CrearNubeAsesina("Nube del templo", new Vector2(11f, pisoUnoYungas + 3f), pisoUnoYungas, trampas);
+
         string ruta = RutaNivel(6, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -172,6 +175,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearZonaControlesInvertidos("Neblina engañosa derecha", new Vector2(6f, 4.2f), new Vector2(3f, 2.4f), trampas);
         HerramientasEscena.CrearPuasOcultas("Cima tranquila", 0f, 1.2f, pisoAltoAiquile, true, trampas);
 
+        // MÁS TRAMPAS: una gema imán sobre la cima.
+        HerramientasEscena.CrearGemaIman("Gema de la cima", TipoElemento.Fuego, new Vector2(0f, pisoAltoAiquile + 2.4f), trampas);
+
         string ruta = RutaNivel(6, 2);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -246,6 +252,7 @@ public static partial class GeneradorEscenas
         // de goma. Y en el piso 3, púas que caen del techo en fila (con sombra).
         HerramientasEscena.CrearPuasDeGoma("Puas raras", 13.5f, 1.5f, pisoUnoYungas, trampas);
         HerramientasEscena.CrearPuasQueCaenDelTecho("Puas del techo", -1f, -5f, pisoTresYungas + 3.2f, pisoTresYungas, 3, trampas);
+
 
         string ruta = RutaNivel(6, 3);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -327,6 +334,12 @@ public static partial class GeneradorEscenas
         // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
         ConvertirEnSalaQueSeRepite(trampas, new Vector2(0f, pisoTresYungas + 1.2f), new Vector2(5f, 2.4f));
 
+        // PRESIÓN: 1 minuto para pasar cada vuelta de la sala.
+        HerramientasEscena.CrearTiempoLimite(60f);
+
+        // MÁS TRAMPAS: púas de goma en el centro del suelo (parecen mortales).
+        HerramientasEscena.CrearPuasDeGoma("Puas raras", 0f, 1.5f, suelo, trampas);
+
         string ruta = RutaNivel(6, 4);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -378,6 +391,13 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Camino izquierdo que se envenena", TipoZona.Veneno, -8f, 1f, suelo, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Camino derecho que se envenena", TipoZona.Veneno, 8f, 1f, suelo, trampas);
         CambiarPuertasDeLugar(trampas);
+
+        // PRESIÓN: 1 minuto para vencer al Guardián, y si pierden, vuelven al 6-1.
+        HerramientasEscena.CrearTiempoLimite(60f);
+        HerramientasEscena.CrearVolverAlPerder("Mundo6_Nivel1", "El eclipse los devolvió al comienzo de la Isla del Sol.");
+
+        // MÁS TRAMPAS: una nube sobre el centro de la arena del Guardián.
+        HerramientasEscena.CrearNubeAsesina("Nube del eclipse", new Vector2(0f, suelo + 5f), suelo, trampas);
 
         string ruta = RutaNivel(6, 5);
         EditorSceneManager.SaveScene(escena, ruta);

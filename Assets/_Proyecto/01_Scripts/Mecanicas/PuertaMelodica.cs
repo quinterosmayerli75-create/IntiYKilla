@@ -19,7 +19,12 @@ public class PuertaMelodica : MonoBehaviour
     [SerializeField] private Rigidbody2D[] barras;
     [SerializeField] private Vector2 desplazamientoAlAbrir = new Vector2(0f, -7f);
     [SerializeField] private float velocidad = 5f;
-    [SerializeField] private float transparenciaApagada = 0.25f;
+    // Las notas que faltan se ven con su color vivo (para reconocerlas bien),
+    // pero más chicas; las ya tocadas crecen a su tamaño completo.
+    [SerializeField] private float transparenciaApagada = 0.9f;
+    [SerializeField] private float tamanoApagada = 0.65f;
+
+    private Vector3[] escalasOriginales;
 
     private Vector2[] posicionesCerradas;
     private int notasAcertadas = 0;
@@ -112,14 +117,26 @@ public class PuertaMelodica : MonoBehaviour
 
     private void ActualizarLuces()
     {
+        if (escalasOriginales == null || escalasOriginales.Length != luces.Length)
+        {
+            escalasOriginales = new Vector3[luces.Length];
+            for (int indice = 0; indice < luces.Length; indice++)
+            {
+                escalasOriginales[indice] = luces[indice].transform.localScale;
+            }
+        }
+
         for (int indice = 0; indice < luces.Length; indice++)
         {
             Color color = CuerdaCharango.ObtenerColorNota(melodia[indice]);
+            Vector3 escala = escalasOriginales[indice];
             if (indice >= notasAcertadas)
             {
                 color.a = transparenciaApagada;
+                escala = escala * tamanoApagada;
             }
             luces[indice].color = color;
+            luces[indice].transform.localScale = escala;
         }
     }
 

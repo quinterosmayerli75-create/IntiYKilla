@@ -35,7 +35,7 @@ Plus diferenciadores:
 
 - Ambos mueren con veneno verde y al caer al vacío.
 - Si uno muere, el nivel se reinicia para los dos.
-- Historia: un eclipse rompió el equilibrio entre día y noche; deben reunir las gemas de luz desde Uyuni hasta la Isla del Sol.
+- Historia: Inti y Killa son hermanos (él lleva el fuego del Sol; ella, el agua de la Luna). Viajaban por Bolivia cuando un eclipse oscureció el cielo y se perdieron; para volver a casa, en la Isla del Sol, deben cruzar el salar, las minas, los Yungas, el trópico y Aiquile, y vencer al Guardián del Eclipse. (Cambiada el 22 nov a pedido de Mayerli.)
 
 ## 4. Controles
 | Acción | Inti | Killa |

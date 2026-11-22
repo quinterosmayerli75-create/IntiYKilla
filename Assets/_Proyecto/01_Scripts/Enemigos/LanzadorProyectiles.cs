@@ -44,6 +44,12 @@ public class LanzadorProyectiles : EnemigoBase
         spriteProyectil = nuevoSprite;
     }
 
+    // Los monos de la copa miran hacia abajo: alcanzan varios pisos.
+    public void ConfigurarAlcanceVertical(float nuevoAlcance)
+    {
+        alcanceVertical = nuevoAlcance;
+    }
+
     // Para que el mismo lanzador sirva para monos con cocos y llamas que escupen.
     public void ConfigurarProyectil(Color nuevoColor, float nuevoTamano, string nuevoMensaje)
     {

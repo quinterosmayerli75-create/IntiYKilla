@@ -17,9 +17,10 @@ public static partial class GeneradorEscenas
     {
         string[] paginas = new string[]
         {
-            "Hace mucho tiempo, Inti, el Sol, y Killa, la Luna, cuidaban juntos el equilibrio entre el día y la noche.",
-            "Pero un eclipse sin fin rompió ese equilibrio, y las gemas de luz se esparcieron por toda Bolivia.",
-            "Desde el Salar de Uyuni hasta la Isla del Sol, Inti y Killa deberán recuperarlas... juntos.",
+            "Inti y Killa son hermanos. Él lleva el fuego del Sol; ella, el agua de la Luna.",
+            "Viajaban juntos por Bolivia cuando un eclipse oscureció el cielo... y se perdieron lejos de casa.",
+            "Para volver a la Isla del Sol deberán cruzar el salar, las minas, los Yungas, el trópico y Aiquile.",
+            "Solo podrán llegar si se ayudan: lo que a uno lo salva, al otro lo puede destruir.",
             "Un consejo antes de empezar: no confíes en nada... ni en tu compañero."
         };
         return GenerarPantallaHistoria(DatosJuego.escenaIntro, 1, paginas, DatosJuego.escenaMenuPrincipal);
@@ -30,7 +31,7 @@ public static partial class GeneradorEscenas
         string[] paginas = new string[]
         {
             "El Guardián del Eclipse fue vencido, y el sol volvió a salir sobre el lago Titicaca.",
-            "Inti y Killa devolvieron el equilibrio entre el día y la noche. Ninguno lo habría logrado solo.",
+            "Después de cruzar toda Bolivia, los dos hermanos por fin llegaron a casa. Ninguno lo habría logrado solo.",
             "Estrellas conseguidas: {estrellas}.",
             "Inti y Killa\nUn juego de Mayerli Quinteros Silva\n\n¡Gracias por jugar!"
         };

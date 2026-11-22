@@ -30,6 +30,25 @@ public static partial class HerramientasEscena
         variante.Configurar(vueltas);
     }
 
+    // ---------- Presión de tiempo y castigo del final ----------
+
+    public static TiempoLimite CrearTiempoLimite(float segundos)
+    {
+        GameObject objeto = new GameObject("Tiempo limite");
+        TiempoLimite tiempo = objeto.AddComponent<TiempoLimite>();
+        tiempo.Configurar(segundos);
+        return tiempo;
+    }
+
+    // Al perder en este nivel se vuelve a otra escena en vez de repetirlo.
+    public static VolverAlPerder CrearVolverAlPerder(string escenaDestino, string mensaje)
+    {
+        GameObject objeto = new GameObject("Volver al perder");
+        VolverAlPerder volver = objeto.AddComponent<VolverAlPerder>();
+        volver.Configurar(escenaDestino, mensaje);
+        return volver;
+    }
+
     // ---------- Objetos de ayuda disfrazados ----------
 
     // Igual a una hoja trampolín, pero lanza contra las púas del techo. La pista:

@@ -86,6 +86,9 @@ public static partial class GeneradorEscenas
         // PSICOLÓGICA: un arbusto de adorno junto a la pared tiene ojos y muerde.
         HerramientasEscena.CrearArbustoTrampa("Arbusto de la rama", -14.6f, pisoUnoYungas, trampas);
 
+        // DESAFÍO: sobre el río flota un "atajo" que se rompe apenas alguien lo pisa.
+        HerramientasEscena.CrearPlataformaQuebradiza("Atajo sobre el rio", new Vector2(0f, -1.25f), new Vector2(2f, 0.5f), trampas);
+
         string ruta = RutaNivel(4, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;

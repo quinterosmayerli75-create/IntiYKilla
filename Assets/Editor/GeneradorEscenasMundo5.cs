@@ -96,6 +96,10 @@ public static partial class GeneradorEscenas
         // (Sin cambio de puertas: cruzar obligaría a pisar la gema trampa del centro.)
         ConvertirEnSalaQueSeRepite(trampas, new Vector2(0f, pisoAltoAiquile + 1.2f), new Vector2(7f, 2.4f), false);
 
+        // MÁS TRAMPAS: en el borde de cada loma, un arbusto que muerde si uno se queda.
+        HerramientasEscena.CrearArbustoTrampa("Arbusto de la loma izquierda", -14.6f, pisoDosYungas, trampas);
+        HerramientasEscena.CrearArbustoTrampa("Arbusto de la loma derecha", 14.6f, pisoDosYungas, trampas);
+
         string ruta = RutaNivel(5, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -157,6 +161,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearBloqueInvisible("Bloque escondido", new Vector2(8f, 2.5f), new Vector2(1f, 0.5f), HerramientasEscena.colorSueloAiquile, escenario);
         // (El enemigo sorpresa que había en la salida se quitó: salía justo donde se
         // aterriza y no daba tiempo a esquivarlo. Regla de justicia.)
+
+        // MÁS TRAMPAS: una nube sobre el camino a las puertas suelta un rayo.
+        HerramientasEscena.CrearNubeAsesina("Nube del camino", new Vector2(10.5f, pisoDosYungas + 3.4f), pisoDosYungas, trampas);
 
         string ruta = RutaNivel(5, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -230,6 +237,9 @@ public static partial class GeneradorEscenas
         // PSICOLÓGICA: a la derecha, un "charco de agua" que es arena movediza.
         HerramientasEscena.CrearArenaMovediza("Charco raro", 12.5f, 2f, suelo, trampas);
 
+        // MÁS TRAMPAS: una gema imán en el aire, sobre el muro central.
+        HerramientasEscena.CrearGemaIman("Gema del concierto", TipoElemento.Fuego, new Vector2(0f, 5.5f), trampas);
+
         string ruta = RutaNivel(5, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -296,6 +306,9 @@ public static partial class GeneradorEscenas
         // tomarla, el que la toma pesa tanto que el piso se rompe.
         HerramientasEscena.CrearPocionDePeso("Pocion de fuerza", new Vector2(-11.5f, 1.25f), new Vector2(2f, 0.5f), HerramientasEscena.colorSueloAiquile, trampas);
 
+        // MÁS TRAMPAS: una gema imán flotando sobre el camino del medio.
+        HerramientasEscena.CrearGemaIman("Gema de la serenata", TipoElemento.Agua, new Vector2(1f, 3.2f), trampas);
+
         string ruta = RutaNivel(5, 4);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -360,6 +373,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se inunda", TipoZona.Agua, -3.6f, 0.8f, pisoDosYungas, trampas);
         HerramientasEscena.CrearPisoQueSeCalienta("Salida que se calienta", TipoZona.Lava, 3.6f, 0.8f, pisoDosYungas, trampas);
         CambiarPuertasDeLugar(trampas);
+
+        // MÁS TRAMPAS: una nube sobre el centro.
+        HerramientasEscena.CrearNubeAsesina("Nube del gran concierto", new Vector2(0f, pisoDosYungas + 3.6f), pisoDosYungas, trampas);
 
         string ruta = RutaNivel(5, 5);
         EditorSceneManager.SaveScene(escena, ruta);
