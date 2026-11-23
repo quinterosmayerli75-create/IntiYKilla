@@ -23,7 +23,8 @@ public static partial class GeneradorEscenas
             "Solo podrán llegar si se ayudan: lo que a uno lo salva, al otro lo puede destruir.",
             "Un consejo antes de empezar: no confíes en nada... ni en tu compañero."
         };
-        return GenerarPantallaHistoria(DatosJuego.escenaIntro, 1, paginas, DatosJuego.escenaMenuPrincipal);
+        // Se llega a la historia desde "Jugar": al terminarla se eligen los mundos.
+        return GenerarPantallaHistoria(DatosJuego.escenaIntro, 1, paginas, DatosJuego.escenaSeleccionMundo);
     }
 
     private static string GenerarFinal()

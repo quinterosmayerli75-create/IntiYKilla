@@ -135,13 +135,6 @@ public class BotPruebas : MonoBehaviour
                 yield return null;
                 yield return null;
 
-                // Nivel final: al perder no se repite, se vuelve al 6-1 (pedido del 22 nov).
-                if (escena == "Mundo6_Nivel5")
-                {
-                    Verificar(escena + ": al perder se vuelve al 6-1", SceneManager.GetActiveScene().name == "Mundo6_Nivel1");
-                    continue;
-                }
-
                 inti = Crear("Inti", Key.A, Key.D, Key.W, Key.S);
                 killa = Crear("Killa", Key.LeftArrow, Key.RightArrow, Key.UpArrow, Key.DownArrow);
                 yield return new WaitForSeconds(0.3f);
@@ -2678,6 +2671,21 @@ public class BotPruebas : MonoBehaviour
         while (Time.time < limiteGoma) { alturaMaxima = Mathf.Max(alturaMaxima, inti.cuerpo.position.y); yield return null; }
         Verificar("Púas de goma: rebotan alto y no matan", alturaMaxima > 3f && Vivo(inti));
 
+        // Vidas (6-5): las dos primeras muertes repiten el nivel; con la tercera
+        // se vuelve al comienzo del mundo (6-1).
+        yield return Cargar("Mundo6_Nivel5");
+        for (int muerte = 1; muerte <= 3; muerte++)
+        {
+            yield return new WaitForSeconds(0.5f);
+            GameObject.Find("Inti").GetComponent<ControladorJugador>().Morir("Prueba de vidas");
+            yield return new WaitForSeconds(2f);
+            if (muerte < 3)
+            {
+                Verificar("Vidas: la muerte " + muerte + " en el final repite el 6-5", SceneManager.GetActiveScene().name == "Mundo6_Nivel5");
+            }
+        }
+        Verificar("Vidas: al perder las 3 en el final se vuelve al 6-1", SceneManager.GetActiveScene().name == "Mundo6_Nivel1");
+
         // Sala que se repite (5-1): la misma escena vuelve a empezar en la vuelta 2.
         yield return Cargar("Mundo5_Nivel1");
         Verificar("Bucle: empieza en la vuelta 1", SalaQueSeRepite.VueltaActual == 0);
@@ -2810,7 +2818,7 @@ public class BotPruebas : MonoBehaviour
             yield return Tecla(Key.Enter);
             yield return new WaitForSeconds(0.1f);
         }
-        Verificar("La Intro lleva al menú", SceneManager.GetActiveScene().name == "MenuPrincipal");
+        Verificar("La Intro lleva a elegir mundo", SceneManager.GetActiveScene().name == "SeleccionMundo");
 
         // Cuerdas y melodía
         yield return Cargar("Mundo5_Nivel2");

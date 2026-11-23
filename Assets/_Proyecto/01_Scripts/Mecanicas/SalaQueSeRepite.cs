@@ -50,6 +50,12 @@ public class SalaQueSeRepite : MonoBehaviour
         }
     }
 
+    // Al quedarse sin vidas, la sala vuelve a empezar desde la primera vuelta.
+    public static void VolverALaPrimeraVuelta()
+    {
+        vueltaGuardada = 0;
+    }
+
     public int VueltasTotales
     {
         get { return vueltasTotales; }

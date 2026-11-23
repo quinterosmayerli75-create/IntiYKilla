@@ -567,8 +567,24 @@ public static partial class HerramientasEscena
     }
 
     // Suelo de lado a lado + paredes invisibles para no salirse de la pantalla.
+    // Color del suelo del nivel que se está armando: dice de qué mundo es y, con
+    // eso, qué bloque dibujado usan sus muros, compuertas y plataformas especiales.
+    public static Color colorSueloDelMundo = Color.white;
+
+    // El bloque dibujado del mundo actual (null en el Salar o si falta la imagen).
+    public static Sprite ObtenerBloqueDelMundo()
+    {
+        Sprite imagen = ObtenerImagenDeBloque(colorSueloDelMundo);
+        if (imagen == imagenPlataforma)
+        {
+            return null;
+        }
+        return imagen;
+    }
+
     public static Transform CrearSueloYParedes(Color colorSuelo)
     {
+        colorSueloDelMundo = colorSuelo;
         GameObject escenario = new GameObject("Escenario");
         CrearSuelo(colorSuelo, escenario.transform);
         CrearParedLateral("Pared izquierda", -15.5f, colorSuelo, escenario.transform);
@@ -586,7 +602,12 @@ public static partial class HerramientasEscena
 
         if (usarTilesetSal == false || bloquesSueloSal.Count == 0)
         {
-            CrearBloque("Suelo", centro, tamano, colorRespaldo, imagenSuelo, padre);
+            Sprite imagenDelSuelo = imagenSuelo;
+            if (imagenDelSuelo == null)
+            {
+                imagenDelSuelo = ObtenerImagenDeBloque(colorRespaldo);
+            }
+            CrearBloque("Suelo", centro, tamano, colorRespaldo, imagenDelSuelo, padre);
             return;
         }
 
@@ -657,7 +678,7 @@ public static partial class HerramientasEscena
 
         if (usarTilesetSal == false || bloquesParedSal.Count == 0)
         {
-            CrearBloque(nombre, centro, tamano, colorRespaldo, padre);
+            CrearBloque(nombre, centro, tamano, colorRespaldo, ObtenerImagenDeBloque(colorRespaldo), padre);
             return;
         }
 
@@ -1457,7 +1478,17 @@ public static partial class HerramientasEscena
 
     public static void CrearPlataformaQuebradiza(string nombre, Vector2 posicion, Vector2 tamano, Transform padre)
     {
-        GameObject plataforma = CrearPlataforma(nombre, posicion, tamano, colorSalQuebradiza, padre);
+        // Fuera del Salar se usa el bloque dibujado del mundo (un poco rojizo).
+        GameObject plataforma;
+        Sprite bloqueDelMundo = ObtenerBloqueDelMundo();
+        if (HayPlataformasDeSal() == false && bloqueDelMundo != null)
+        {
+            plataforma = CrearBloque(nombre, posicion, tamano, colorSalQuebradiza, bloqueDelMundo, padre);
+            plataforma.GetComponent<SpriteRenderer>().color = new Color(1f, 0.72f, 0.66f);
+            plataforma.AddComponent<PlataformaQuebradiza>();
+            return;
+        }
+        plataforma = CrearPlataforma(nombre, posicion, tamano, colorSalQuebradiza, padre);
 
         // Usa la misma imagen que las plataformas normales, pero un poco rojiza
         // para que los jugadores sepan que se va a romper. La forma de respaldo
@@ -1477,8 +1508,20 @@ public static partial class HerramientasEscena
     // Compuerta de piedra que se abre con botones o palancas.
     public static PuertaMecanica CrearPuertaMecanica(string nombre, Vector2 posicion, Vector2 tamano, Vector2 desplazamientoAlAbrir, int senalesNecesarias, Transform padre)
     {
-        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorPiedra, imagenCompuerta, padre);
+        // Sin imagen propia de compuerta, se usa el bloque del mundo un poco oscuro.
+        Sprite imagenDeLaCompuerta = imagenCompuerta;
+        bool usaBloqueDelMundo = false;
+        if (imagenDeLaCompuerta == null && ObtenerBloqueDelMundo() != null)
+        {
+            imagenDeLaCompuerta = ObtenerBloqueDelMundo();
+            usaBloqueDelMundo = true;
+        }
+        GameObject bloque = CrearBloque(nombre, posicion, tamano, colorPiedra, imagenDeLaCompuerta, padre);
         bloque.GetComponent<SpriteRenderer>().sortingOrder = 2;
+        if (usaBloqueDelMundo == true)
+        {
+            bloque.GetComponent<SpriteRenderer>().color = new Color(0.75f, 0.72f, 0.8f);
+        }
 
         Rigidbody2D cuerpo = bloque.AddComponent<Rigidbody2D>();
         cuerpo.bodyType = RigidbodyType2D.Kinematic;
@@ -1886,8 +1929,9 @@ public static partial class HerramientasEscena
     {
         List<EditorBuildSettingsScene> listaEscenas = new List<EditorBuildSettingsScene>();
 
-        AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaIntro + ".unity");
+        // El juego abre en el menú; la historia se cuenta al apretar "Jugar".
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaMenuPrincipal + ".unity");
+        AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaIntro + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionMundo + ".unity");
         AgregarSiExiste(listaEscenas, carpetaEscenas + "/" + DatosJuego.escenaSeleccionNivel + ".unity");
 

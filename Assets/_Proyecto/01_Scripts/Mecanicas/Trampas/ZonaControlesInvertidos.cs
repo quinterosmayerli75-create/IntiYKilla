@@ -16,8 +16,8 @@ public class ZonaControlesInvertidos : TrampaBase
 {
     [SerializeField] private Vector2 tamanoZona = new Vector2(4f, 3f);
     [SerializeField] private SpriteRenderer neblina;
-    [SerializeField] private float opacidadEnReposo = 0.12f;
-    [SerializeField] private float opacidadConAlguien = 0.35f;
+    [SerializeField] private float opacidadEnReposo = 0.2f;
+    [SerializeField] private float opacidadConAlguien = 0.55f;
 
     // Solo se devuelven los controles a quien esta zona se los invirtió:
     // así dos zonas juntas no se pisan entre sí.
@@ -47,6 +47,12 @@ public class ZonaControlesInvertidos : TrampaBase
             {
                 jugador.InvertirControles(true);
                 jugadoresInvertidos.Add(jugador);
+
+                // Aviso claro: sin él, el jugador no entiende por qué camina al revés.
+                if (GestorNivel.Instancia != null)
+                {
+                    GestorNivel.Instancia.MostrarAviso("¡Neblina mágica! " + jugador.NombreJugador + " tiene izquierda y derecha al revés mientras esté adentro.", 2f);
+                }
             }
             else if (estaDentro == false && yaLoInverti == true)
             {

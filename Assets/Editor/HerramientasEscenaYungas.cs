@@ -68,7 +68,18 @@ public static partial class HerramientasEscena
             color = colorPlataformaDia;
         }
 
-        GameObject plataforma = CrearBloque(nombre, posicion, tamano, color, padre);
+        // Con el bloque dibujado del mundo, teñido: cálido de día y azul de noche.
+        Sprite bloqueDelMundo = ObtenerBloqueDelMundo();
+        GameObject plataforma = CrearBloque(nombre, posicion, tamano, color, bloqueDelMundo, padre);
+        if (bloqueDelMundo != null)
+        {
+            Color tinte = new Color(0.55f, 0.72f, 1f);
+            if (existeDeDia == true)
+            {
+                tinte = new Color(1f, 0.88f, 0.5f);
+            }
+            plataforma.GetComponent<SpriteRenderer>().color = tinte;
+        }
         plataforma.GetComponent<SpriteRenderer>().sortingOrder = 1;
         PlataformaDiaNoche componente = plataforma.AddComponent<PlataformaDiaNoche>();
         componente.Configurar(existeDeDia);
@@ -125,6 +136,7 @@ public static partial class HerramientasEscena
         CrearDibujoHijo("Marca", piedra.transform, new Vector2(0.2f, 0f), new Vector2(0.3f, 0.12f), new Color(0.25f, 0.22f, 0.20f), 8);
 
         PiedraRodante componente = piedra.AddComponent<PiedraRodante>();
-        componente.Configurar(distancia, velocidad, segundosDeEspera);
+        // Ruedan un 25 % más rápido que lo indicado: así presionan más (pedido del 23 nov).
+        componente.Configurar(distancia, velocidad * 1.25f, segundosDeEspera);
     }
 }

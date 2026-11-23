@@ -729,6 +729,9 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearSensorTrampa("Sensor junto a la puerta", new Vector2(-10.8f, pisoTres + 0.6f), new Vector2(1.2f, 1.2f), CondicionSensor.AlEntrar, 0f, trampasDelSensor, trampas);
         HerramientasEscena.CrearPuasOcultas("Piso tranquilo", -6f, 1f, pisoUno, true, trampas);
 
+        // MÁS TRAMPAS: una nube "de adorno" sobre el piso 1 de Inti suelta un rayo.
+        HerramientasEscena.CrearNubeAsesina("Nube del salar", new Vector2(-11f, pisoUno + 3f), pisoUno, trampas);
+
         string ruta = RutaNivel(1, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -936,6 +939,9 @@ public static partial class GeneradorEscenas
         // quien se detiene a mirar, no.
         HerramientasEscena.CrearLluviaDeRocas("Lluvia de rocas", 10.5f, 8f, pisoTres + 4f, pisoTres, 3, true, trampas);
 
+        // MÁS TRAMPAS: una gema imán flotando sobre el camino de arriba.
+        HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Agua, new Vector2(-8f, pisoTres + 2.4f), trampas);
+
         string ruta = RutaNivel(1, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -1043,6 +1049,9 @@ public static partial class GeneradorEscenas
         // puede pisar para aturdirlo. Y en el piso alto las puertas se cambian.
         HerramientasEscena.CrearEnemigoSorpresa("Enemigo del piso 1", new Vector2(-9.5f, pisoUno), trampas);
 
+
+        // MÁS TRAMPAS: una gema imán sobre la placa del centro, entre las puertas.
+        HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Fuego, new Vector2(0f, pisoTres + 2.4f), trampas);
 
         string ruta = RutaNivel(1, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1372,6 +1381,9 @@ public static partial class GeneradorEscenas
         // del fondo, pero tiembla y escupe fuego a quien camina cerca (a quien ya
         // espera en su puerta no le dispara).
         HerramientasEscena.CrearAntorchaQueDispara("Antorcha de la galeria", new Vector2(-14.6f, pisoDos + 2.2f), 3f, 3.5f, trampas);
+
+        // MÁS TRAMPAS: una gema imán en lo alto de la galería.
+        HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Agua, new Vector2(-1f, pisoDos + 2.4f), trampas);
 
         string ruta = RutaNivel(2, 2);
         EditorSceneManager.SaveScene(escena, ruta);

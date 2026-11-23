@@ -321,7 +321,8 @@ public static partial class HerramientasEscena
     {
         LluviaDeRocas trampa = CrearLluviaDeRocas(nombre, inicioX, finX, alturaTecho, alturaPiso, cantidad, true, padre);
         trampa.ConfigurarAspecto(new Color(0.85f, 0.85f, 0.92f), 0.6f, "Las púas del techo cayeron sobre {0}. ¡Miren las sombras!");
-        trampa.ConfigurarRitmo(0.3f);
+        // Una púa cada 0,6 s: la "ola" avanza más lento que quien sigue caminando.
+        trampa.ConfigurarRitmo(0.6f);
         return trampa;
     }
 }

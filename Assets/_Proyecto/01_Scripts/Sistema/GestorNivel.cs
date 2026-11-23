@@ -46,6 +46,14 @@ public class GestorNivel : MonoBehaviour
     // Son estáticos porque la escena se recarga al morir y borraría lo demás:
     // las muertes y el último mensaje deben sobrevivir a ese reinicio.
     private static int muertesDelIntento = 0;
+
+    // Tres vidas por nivel: al perder la tercera, el nivel empieza de cero
+    // (con 3 vidas otra vez y, si es una sala que se repite, desde la vuelta 1).
+    private const int vidasPorNivel = 3;
+    private static int vidasRestantes = vidasPorNivel;
+
+    // En el nivel final, al perder las 3 vidas se vuelve al comienzo del mundo.
+    private bool volverAlDestinoAlReiniciar = false;
     private static string escenaDelContador = "";
     private static string mensajeDeLaUltimaMuerte = "";
 
@@ -92,6 +100,7 @@ public class GestorNivel : MonoBehaviour
         {
             escenaDelContador = nombreEscena;
             muertesDelIntento = 0;
+            vidasRestantes = vidasPorNivel;
             mensajeDeLaUltimaMuerte = "";
         }
 
@@ -235,14 +244,26 @@ public class GestorNivel : MonoBehaviour
         muertesDelIntento = muertesDelIntento + 1;
         mensajeCentral = mensajeDeMuerte;
         mensajeDeLaUltimaMuerte = mensajeDeMuerte;
+        vidasRestantes = vidasRestantes - 1;
+
         // La pantalla se oscurece mientras se espera: así se nota el reinicio.
-        if (VolverAlPerder.Instancia != null)
+        // Nivel final: solo al perder las 3 vidas se vuelve al comienzo del mundo.
+        if (VolverAlPerder.Instancia != null && vidasRestantes <= 0)
         {
+            vidasRestantes = vidasPorNivel;
+            volverAlDestinoAlReiniciar = true;
             TransicionReinicio.Oscurecer(tiempoEsperaReinicio, VolverAlPerder.Instancia.Mensaje);
+        }
+        else if (vidasRestantes <= 0)
+        {
+            // Sin vidas: el nivel empieza de cero, también las vueltas de la sala.
+            vidasRestantes = vidasPorNivel;
+            SalaQueSeRepite.VolverALaPrimeraVuelta();
+            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "¡Sin vidas! El nivel empieza de cero");
         }
         else
         {
-            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "Intento " + (muertesDelIntento + 1));
+            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "Te quedan " + vidasRestantes + " vidas");
         }
         Invoke(nameof(ReiniciarNivel), tiempoEsperaReinicio);
     }
@@ -336,9 +357,10 @@ public class GestorNivel : MonoBehaviour
 
     public void ReiniciarNivel()
     {
-        // Nivel final: al perder no se repite, se vuelve a otra escena (el 6-1).
-        if (VolverAlPerder.Instancia != null)
+        // Nivel final: al perder las 3 vidas no se repite, se vuelve al 6-1.
+        if (VolverAlPerder.Instancia != null && volverAlDestinoAlReiniciar == true)
         {
+            volverAlDestinoAlReiniciar = false;
             SceneManager.LoadScene(VolverAlPerder.Instancia.EscenaDestino);
             return;
         }
@@ -419,7 +441,7 @@ public class GestorNivel : MonoBehaviour
     // Muertes de este intento, las permitidas para la estrella y el récord guardado.
     private string ObtenerTextoMuertes()
     {
-        string texto = "Muertes: " + muertesDelIntento + "   (estrella con " + muertesPermitidas + " o menos)";
+        string texto = "Vidas: " + vidasRestantes + " de " + vidasPorNivel + "     Muertes: " + muertesDelIntento + "   (estrella con " + muertesPermitidas + " o menos)";
 
         if (datosNivel != null)
         {

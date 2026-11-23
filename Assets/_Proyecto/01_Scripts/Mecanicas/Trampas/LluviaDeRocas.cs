@@ -24,8 +24,8 @@ public class LluviaDeRocas : TrampaActivable
     [SerializeField] private int cantidadDeRocas = 4;
     [SerializeField] private float tamanoRoca = 0.8f;
     [SerializeField] private float segundosEntreRocas = 0.45f;
-    [SerializeField] private float segundosDeSombra = 0.45f;
-    [SerializeField] private float velocidadCaida = 28f;
+    [SerializeField] private float segundosDeSombra = 0.38f;
+    [SerializeField] private float velocidadCaida = 40f;
     [SerializeField] private Color colorRoca = new Color(0.45f, 0.38f, 0.32f);
     [SerializeField] private string mensajeDeMuerte = "Una roca del techo le cayó a {0}. ¡Miren las sombras!";
 

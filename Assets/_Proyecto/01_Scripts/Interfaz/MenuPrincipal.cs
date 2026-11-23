@@ -36,8 +36,19 @@ public class MenuPrincipal : MonoBehaviour
         }
     }
 
+    // La historia de los hermanos se cuenta la primera vez que se juega en cada
+    // sesión (se puede saltar con Esc); después se va directo a los mundos.
+    private static bool yaSeContoLaHistoria = false;
+
     public void Jugar()
     {
+        if (yaSeContoLaHistoria == false && Application.CanStreamedLevelBeLoaded(DatosJuego.escenaIntro) == true)
+        {
+            yaSeContoLaHistoria = true;
+            SceneManager.LoadScene(DatosJuego.escenaIntro);
+            return;
+        }
+
         SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
     }
 

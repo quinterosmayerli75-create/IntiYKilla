@@ -107,6 +107,16 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [ ] Dibujos para lo que sigue geométrico (prompts entregados: botón, palanca, altar, compuerta, cristales, mono, serpiente, murciélago, remolino, nube, hoja, cristal de luz, caja, vagoneta, roca, Guardián, arbusto)
 - [ ] Más plataformas que se mueven o desaparecen en los niveles
 
+## Ajustes del 23 nov
+- [x] 3 vidas por nivel, visibles en pantalla; al perder las 3, el nivel empieza de cero (y la sala que se repite vuelve a la vuelta 1). En el 6-5, al perder las 3 vidas se vuelve al 6-1
+- [x] La historia de los hermanos aparece al apretar "Jugar" (antes solo en el juego exportado)
+- [x] Aviso claro al entrar a la neblina ("izquierda y derecha al revés") y neblina más visible
+- [x] Rocas y piedras más rápidas (lluvia de rocas, rocas de la mina, piedras que ruedan)
+- [x] Bloques dibujados del mundo también en el suelo, muros, compuertas, bloques de día y noche y plataformas que se rompen
+- [x] Más trampas en los Mundos 1 y 2 (nube en el 1-1, gemas imán en 1-3, 1-4 y 2-2)
+- [x] Guía para pasar cada nivel: `GUIA_DE_NIVELES.md`
+- [x] Prueba automática: sistema, piezas, desafío y reinicio sin fallos; 30 de 30 niveles ganados
+
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)
