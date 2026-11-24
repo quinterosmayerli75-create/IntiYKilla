@@ -325,4 +325,88 @@ public static partial class HerramientasEscena
         trampa.ConfigurarRitmo(0.6f);
         return trampa;
     }
+
+    // ----- Trampas al estilo de los juegos "troll" de plataformas -----
+
+    // Bloque dorado con un "?": invita a golpearlo de cabeza, pero suelta un
+    // bichito que camina hacia "direccion" (1 derecha, -1 izquierda).
+    public static BloqueSorpresa CrearBloqueSorpresa(string nombre, Vector2 posicion, float direccion, Transform padre)
+    {
+        GameObject bloque = CrearBloque(nombre, posicion, new Vector2(0.9f, 0.9f), new Color(0.95f, 0.72f, 0.18f), padre);
+        bloque.GetComponent<SpriteRenderer>().sortingOrder = 4;
+
+        // Borde oscuro para que se lea como un bloque y no como una moneda.
+        CrearDibujoHijo("Borde", bloque.transform, Vector2.zero, new Vector2(1.08f, 1.08f), new Color(0.45f, 0.28f, 0.05f), 3);
+
+        Font fuente = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        GameObject textoObjeto = new GameObject("Signo");
+        textoObjeto.transform.SetParent(bloque.transform);
+        textoObjeto.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+        textoObjeto.transform.localScale = Vector3.one;
+        TextMesh malla = textoObjeto.AddComponent<TextMesh>();
+        malla.text = "?";
+        malla.font = fuente;
+        malla.characterSize = 0.14f;
+        malla.fontSize = 48;
+        malla.fontStyle = FontStyle.Bold;
+        malla.anchor = TextAnchor.MiddleCenter;
+        malla.color = new Color(0.4f, 0.2f, 0.02f);
+        MeshRenderer renderizador = textoObjeto.GetComponent<MeshRenderer>();
+        renderizador.sharedMaterial = fuente.material;
+        renderizador.sortingOrder = 5;
+
+        BloqueSorpresa trampa = bloque.AddComponent<BloqueSorpresa>();
+        trampa.Configurar(direccion, 7f, spriteCirculo);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
+
+    // Criatura que vive en un charco o un hueco y salta cuando hay alguien cerca.
+    // alturaSuperficie: el borde de arriba del charco.
+    public static CriaturaQueSalta CrearCriaturaQueSalta(string nombre, float centroX, float alturaSuperficie, TipoZona tipoCharco, float alturaDelSalto, Transform padre)
+    {
+        GameObject criatura = new GameObject(nombre);
+        criatura.transform.SetParent(padre);
+        criatura.transform.position = new Vector3(centroX, alturaSuperficie, 0f);
+
+        // El color dice de qué charco sale: rojo de lava, azul de agua, verde de veneno.
+        Color colorCuerpo = new Color(0.45f, 0.2f, 0.55f);
+        if (tipoCharco == TipoZona.Lava)
+        {
+            colorCuerpo = new Color(0.85f, 0.25f, 0.05f);
+        }
+        else if (tipoCharco == TipoZona.Agua)
+        {
+            colorCuerpo = new Color(0.1f, 0.3f, 0.75f);
+        }
+        else if (tipoCharco == TipoZona.Veneno)
+        {
+            colorCuerpo = new Color(0.25f, 0.6f, 0.15f);
+        }
+
+        GameObject cuerpo = CrearDibujoHijo("Criatura", criatura.transform, Vector2.zero, new Vector2(0.8f, 0.8f), colorCuerpo, 8);
+        cuerpo.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        GameObject ojoUno = CrearDibujoHijo("Ojo 1", cuerpo.transform, new Vector2(-0.15f, 0.12f), new Vector2(0.18f, 0.24f), Color.white, 9);
+        GameObject ojoDos = CrearDibujoHijo("Ojo 2", cuerpo.transform, new Vector2(0.15f, 0.12f), new Vector2(0.18f, 0.24f), Color.white, 9);
+        ojoUno.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        ojoDos.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        // Aleta de arriba: lo hace ver como un pez y no como una gema.
+        CrearDibujoHijo("Aleta", cuerpo.transform, new Vector2(0f, 0.45f), new Vector2(0.18f, 0.25f), colorCuerpo * 0.8f, 7);
+
+        GameObject burbujas = new GameObject("Burbujas");
+        burbujas.transform.SetParent(criatura.transform);
+        burbujas.transform.localPosition = Vector3.zero;
+        for (int indice = 0; indice < 3; indice++)
+        {
+            float x = -0.35f + indice * 0.35f;
+            float tamano = 0.18f + 0.06f * (indice % 2);
+            GameObject burbuja = CrearDibujoHijo("Burbuja " + indice, burbujas.transform, new Vector2(x, 0.15f + 0.1f * (indice % 2)), new Vector2(tamano, tamano), new Color(1f, 1f, 1f, 0.85f), 9);
+            burbuja.GetComponent<SpriteRenderer>().sprite = spriteCirculo;
+        }
+
+        CriaturaQueSalta trampa = criatura.AddComponent<CriaturaQueSalta>();
+        trampa.Configurar(alturaDelSalto, 4.5f);
+        trampa.ConfigurarSpriteBase(spriteCuadrado);
+        return trampa;
+    }
 }

@@ -757,6 +757,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(inti, -13f);
         yield return Salto(inti, -10f);
         yield return Caminar(inti, -9.6f);
+        yield return EsperarCriatura("Bicho del agua");
         // Aterriza junto al borde y salta enseguida: las púas tardan en salir.
         yield return Salto(inti, -5.25f);
         yield return Salto(inti, -2.2f);
@@ -777,6 +778,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(killa, 13f);
         yield return Salto(killa, 10f);
         yield return Caminar(killa, 9.6f);
+        yield return EsperarCriatura("Bicho de la lava");
         yield return Salto(killa, 6.2f);
         yield return Caminar(killa, 5.3f);
         yield return Salto(killa, 2.2f);
@@ -811,18 +813,24 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(inti, -2f);
         yield return Caminar(inti, -3.2f);
         yield return Salto(inti, -6.5f);
+        yield return Caminar(inti, -7.3f);
+        yield return EsperarCriatura("Bicho de la lava");
         yield return Caminar(inti, -11.5f);
         yield return TocarHabilidad(inti);
         yield return Caminar(killa, 5.3f);
         yield return Salto(killa, 2f);
         yield return Caminar(killa, 3.2f);
         yield return Salto(killa, 6.5f);
+        yield return Caminar(killa, 7.3f);
+        yield return EsperarCriatura("Bicho del agua");
         yield return Caminar(killa, 11.5f);
         yield return TocarHabilidad(killa);
         yield return new WaitForSeconds(1f);
+        yield return EsperarCriatura("Bicho de la lava");
         yield return Caminar(inti, -5.3f);
         yield return Salto(inti, -2f);
         yield return Caminar(inti, 1.2f);
+        yield return EsperarCriatura("Bicho del agua");
         yield return Caminar(killa, 5.3f);
         yield return Salto(killa, 2.4f);
         // En el piso de la salida no se salta: se camina hasta la puerta.
@@ -859,6 +867,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(inti, 3.5f);
         yield return Salto(inti, 0f);
         yield return Caminar(inti, -0.5f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(inti, -3.9f);
         yield return Caminar(inti, -4.3f);
         yield return Salto(inti, -7.6f);
@@ -870,6 +879,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(killa, 7.7f);
         yield return Salto(killa, 4f);
         yield return Caminar(killa, -0.4f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(killa, -3.9f);
         yield return Caminar(killa, -4.3f);
         yield return Salto(killa, -7.6f);
@@ -903,15 +913,19 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(inti, -8.5f);
         yield return new WaitForSeconds(1.2f);
         Log("Inti esquivó la lava del botón de traición");
+        yield return EsperarCriatura("Bicho del veneno izquierdo");
         yield return Salto(inti, -6.1f);
         yield return Caminar(inti, -5f);
         yield return Caminar(inti, -6.1f);
+        yield return EsperarCriatura("Bicho del veneno izquierdo");
         yield return Salto(inti, -8.5f);
         yield return Caminar(inti, -11.9f);
         yield return Salto(inti, -10f);
+        yield return EsperarCriatura("Bicho del veneno derecho");
         yield return Salto(killa, 6.1f);
         yield return Caminar(killa, 5f);
         yield return Caminar(killa, 6.1f);
+        yield return EsperarCriatura("Bicho del veneno derecho");
         yield return Salto(killa, 8.5f);
         yield return Caminar(killa, 11.9f);
         yield return Salto(killa, 10f);
@@ -975,6 +989,7 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(killa, 11.2f);
         // Salta a Inti, y después el botón de traición y el veneno de un solo salto.
         yield return Salto(killa, 9.3f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(killa, 4.3f);
         Log("Killa saltó el botón de traición");
         yield return Caminar(killa, 2.5f);
@@ -983,6 +998,7 @@ public class BotPruebas : MonoBehaviour
         yield return TocarHabilidad(killa);
         yield return Caminar(killa, -11f);
         yield return Caminar(inti, 9.3f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(inti, 4.3f);
         yield return Caminar(inti, 2.6f);
         yield return Salto(inti, -0.5f);
@@ -1041,6 +1057,7 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(inti, 3f);
 
         yield return Salto(inti, 0f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(inti, -2f);
         yield return Salto(inti, -4f);
         // El derrumbe: Inti lo provoca, retrocede y deja caer las tres rocas.
@@ -1052,6 +1069,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(killa, 3f);
         yield return new WaitForSeconds(0.5f);
         yield return Salto(killa, 0f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(killa, -2f);
         yield return Salto(inti, -7.5f);
         yield return Salto(killa, -4f);
@@ -1090,6 +1108,22 @@ public class BotPruebas : MonoBehaviour
     private IEnumerator NivelM2(string escena, IEnumerator ruta)
     {
         yield return Nivel(escena, ruta);
+    }
+
+    // El bicho del charco salta con ritmo fijo: se espera a que vuelva a caer y
+    // se cruza en ese momento (tiene casi 2 s de calma hasta el próximo salto).
+    private IEnumerator EsperarCriatura(string nombre)
+    {
+        GameObject objeto = GameObject.Find(nombre);
+        if (objeto == null) { Log("No existe la criatura " + nombre); yield break; }
+        CriaturaQueSalta criatura = objeto.GetComponent<CriaturaQueSalta>();
+        float limite = Time.time + 7f;
+        while (Time.time < limite)
+        {
+            if (criatura.EstaEnElAire == false && criatura.SegundosDesdeLaUltimaCaida < 0.15f) { break; }
+            yield return null;
+        }
+        if (Time.time >= limite) { Log("La criatura " + nombre + " no saltó (nadie cerca)"); }
     }
 
     private IEnumerator EsperarRocaCaida(string nombre)
@@ -1437,6 +1471,7 @@ public class BotPruebas : MonoBehaviour
 
         yield return Salto(inti, 2f);
         yield return Salto(inti, -1f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(inti, -4f);
         teclas.Add(inti.habilidad);
         yield return new WaitForSeconds(0.5f);
@@ -1446,6 +1481,7 @@ public class BotPruebas : MonoBehaviour
         yield return Salto(killa, -1f);
         yield return Salto(inti, -6.5f);
         yield return Caminar(inti, -6.8f);
+        yield return EsperarCriatura("Bicho del veneno");
         yield return Salto(killa, -4f);
         yield return Caminar(inti, -8f);
         yield return Salto(killa, -6f);
@@ -1508,6 +1544,7 @@ public class BotPruebas : MonoBehaviour
         // Cristales: Inti va delante alumbrando.
         yield return Caminar(inti, -5.4f);
         yield return Salto(inti, -2.8f);
+        yield return EsperarCriatura("Bicho del hueco");
         yield return Salto(inti, 0f);
         teclas.Add(inti.habilidad);
         yield return new WaitForSeconds(0.5f);
@@ -1516,6 +1553,7 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(killa, -5.4f);
         yield return Salto(killa, -2.8f);
         yield return Salto(inti, 2.6f);
+        yield return EsperarCriatura("Bicho del hueco");
         yield return Salto(killa, 0f);
         yield return Salto(inti, 4.6f);
         yield return Salto(killa, 2.6f);
@@ -2865,11 +2903,19 @@ public class BotPruebas : MonoBehaviour
 
     private IEnumerator RutaM5N1()
     {
-        Coroutine subeInti = StartCoroutine(RebotarHacia(inti, -10f, -13.5f, 3f));
-        yield return RebotarHacia(killa, 10f, 13.5f, 3f);
-        yield return subeInti;
+        // Los peces del charco cruzan el camino a las cuerdas: se espera cada salto.
+        yield return Caminar(inti, -4.2f);
+        yield return EsperarCriatura("Pez de la lava");
+        // En la loma se aterriza lejos del arbusto que muerde (junto a la pared).
+        yield return RebotarHacia(inti, -10f, -12.5f, 3f);
+        yield return Caminar(killa, 4.2f);
+        yield return EsperarCriatura("Pez del agua");
+        yield return RebotarHacia(killa, 10f, 12.5f, 3f);
         Log("Llegaron a las lomas");
-        yield return SaltarJuntos(-6.8f, 6.8f);
+        yield return EsperarCriatura("Pez de la lava");
+        yield return Salto(inti, -6.8f);
+        yield return EsperarCriatura("Pez del agua");
+        yield return Salto(killa, 6.8f);
         Coroutine cimaInti = StartCoroutine(RebotarHacia(inti, -5.3f, -4f, 9.5f));
         yield return RebotarHacia(killa, 5.3f, 4f, 9.5f);
         yield return cimaInti;

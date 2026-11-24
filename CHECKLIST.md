@@ -117,6 +117,13 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Guía para pasar cada nivel: `GUIA_DE_NIVELES.md`
 - [x] Prueba automática: sistema, piezas, desafío y reinicio sin fallos; 30 de 30 niveles ganados
 
+## Ajustes del 24 nov (trampas al estilo "Gato Bros")
+- [x] Trampa nueva: bicho que salta de los charcos (`CriaturaQueSalta`), con burbujas de aviso
+- [x] Trampa nueva: bloque "?" que suelta un bichito al golpearlo de cabeza (`BloqueSorpresa`)
+- [x] Mundos 1 y 2 más difíciles: bichos en los charcos de 1-1 a 1-5, 2-1, 2-4 y 2-5; bloques "?" en 1-1, 2-2 y 2-3
+- [x] Mundo 5 con más estructura: repisas, balcones que se rompen, gemas nuevas y bloques "?"; peces que saltan hasta las lomas en el 5-1
+- [x] Guía de niveles: explicación más clara del 5-2 (puerta melódica) y del 6-2 (escalinatas)
+
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)

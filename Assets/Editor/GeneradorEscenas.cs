@@ -732,6 +732,15 @@ public static partial class GeneradorEscenas
         // MÁS TRAMPAS: una nube "de adorno" sobre el piso 1 de Inti suelta un rayo.
         HerramientasEscena.CrearNubeAsesina("Nube del salar", new Vector2(-11f, pisoUno + 3f), pisoUno, trampas);
 
+        // ESTILO "GATO TROLL": en el agua y la lava del piso 1 vive un bicho que salta cuando
+        // alguien se acerca. Antes de saltar salen burbujas: hay que esperar a que
+        // vuelva a caer y recién cruzar.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del agua", -8f, pisoUno, TipoZona.Agua, 3.4f, trampas);
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho de la lava", 8f, pisoUno, TipoZona.Lava, 3.4f, trampas);
+        // Un bloque "?" sobre las gemas del bloque que se rompe: quien salta a buscarlas
+        // se golpea la cabeza y suelta un bichito.
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa", new Vector2(0f, pisoTres + 3.6f), 1f, trampas);
+
         string ruta = RutaNivel(1, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -854,6 +863,11 @@ public static partial class GeneradorEscenas
         // un premio, pero marea: 4 segundos con izquierda y derecha al revés.
         HerramientasEscena.CrearPocionEnganosa("Pocion brillante", new Vector2(0f, pisoDos + 1.9f), trampas);
 
+        // ESTILO "GATO TROLL": en la lava y el agua del piso 3 (donde está cada palanca)
+        // vive un bicho que salta. Hay que cruzar después de que caiga.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho de la lava", -9f, pisoTres, TipoZona.Lava, 3.4f, trampas);
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del agua", 9f, pisoTres, TipoZona.Agua, 3.4f, trampas);
+
         string ruta = RutaNivel(1, 2);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -941,6 +955,10 @@ public static partial class GeneradorEscenas
 
         // MÁS TRAMPAS: una gema imán flotando sobre el camino de arriba.
         HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Agua, new Vector2(-8f, pisoTres + 2.4f), trampas);
+
+        // ESTILO "GATO TROLL": del veneno final salta un bicho justo cuando uno quiere
+        // saltarlo. Las burbujas avisan: se salta cuando ya cayó.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno", -2f, pisoTres, TipoZona.Veneno, 3.6f, trampas);
 
         string ruta = RutaNivel(1, 3);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1052,6 +1070,11 @@ public static partial class GeneradorEscenas
 
         // MÁS TRAMPAS: una gema imán sobre la placa del centro, entre las puertas.
         HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Fuego, new Vector2(0f, pisoTres + 2.4f), trampas);
+
+        // ESTILO "GATO TROLL": los charquitos de veneno del piso 1 tienen bicho. Para
+        // subir y bajar del piso 2 hay que saltarlos cuando el bicho ya cayó.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno izquierdo", -7.3f, pisoUno, TipoZona.Veneno, 2.4f, trampas);
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno derecho", 7.3f, pisoUno, TipoZona.Veneno, 2.4f, trampas);
 
         string ruta = RutaNivel(1, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1174,6 +1197,9 @@ public static partial class GeneradorEscenas
         // PSICOLÓGICA: una nube "de adorno" sobre el veneno de arriba. Si alguien
         // pasa debajo, se oscurece y suelta un rayo: hay que seguir de largo.
         HerramientasEscena.CrearNubeAsesina("Nube del salar", new Vector2(6f, pisoTres + 3.6f), pisoTres, trampas);
+
+        // ESTILO "GATO TROLL": del veneno de arriba salta un bicho, bajo la nube.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno", 6f, pisoTres, TipoZona.Veneno, 3.4f, trampas);
 
         string ruta = RutaNivel(1, 5);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1298,6 +1324,10 @@ public static partial class GeneradorEscenas
         // llegan piedras desde los dos lados hacia donde estaba el jugador.
         HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Fuego, new Vector2(5.5f, pisoAlto + 2.2f), trampas);
 
+        // ESTILO "GATO TROLL": del veneno alto salta un bicho entre dos cristales.
+        // Se cruza al cristal siguiente cuando el bicho ya cayó.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno", -1f, pisoAlto, TipoZona.Veneno, 3.4f, trampas);
+
         string ruta = RutaNivel(2, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -1384,6 +1414,9 @@ public static partial class GeneradorEscenas
 
         // MÁS TRAMPAS: una gema imán en lo alto de la galería.
         HerramientasEscena.CrearGemaIman("Gema brillante", TipoElemento.Agua, new Vector2(-1f, pisoDos + 2.4f), trampas);
+
+        // ESTILO "GATO TROLL": un bloque "?" sobre la cinta de la mina. Tienta...
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa", new Vector2(-4.6f, pisoDos + 3.9f), -1f, trampas);
 
         string ruta = RutaNivel(2, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1473,6 +1506,9 @@ public static partial class GeneradorEscenas
         // BUCLE: la sala se repite tres veces y cada vez cambia una regla.
         ConvertirEnSalaQueSeRepite(trampas, new Vector2(-7f, pisoFinal + 1.2f), new Vector2(3f, 2.4f));
 
+        // ESTILO "GATO TROLL": un bloque "?" sobre la gema del río de lava. Es tentador...
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa", new Vector2(-2f, pisoFinal + 4.4f), 1f, trampas);
+
         string ruta = RutaNivel(2, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -1559,6 +1595,9 @@ public static partial class GeneradorEscenas
         // DESAFÍO: un bloque del techo baja de golpe a aplastar. Tiembla antes: quien
         // sigue corriendo pasa; quien se detiene debajo, no. Después sube despacio.
         HerramientasEscena.CrearParedAplastadora("Bloque que aplasta", new Vector2(-6.5f, pisoDos + 3.2f), new Vector2(1.4f, 1f), new Vector2(0f, -2.65f), true, colorSueloMina, trampas);
+
+        // ESTILO "GATO TROLL": del veneno alto salta un bicho entre dos cristales.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del veneno", -2.5f, pisoDos, TipoZona.Veneno, 3.4f, trampas);
 
         string ruta = RutaNivel(2, 4);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -1658,6 +1697,10 @@ public static partial class GeneradorEscenas
         // ===== VERSIÓN DIFÍCIL =====
         // Final del mundo: las puertas de la salida se cambian de lugar justo al final.
         CambiarPuertasDeLugar(trampas);
+
+        // ESTILO "GATO TROLL": desde el hueco de los cristales sube un bicho. Se salta al
+        // cristal siguiente cuando ya volvió a bajar.
+        HerramientasEscena.CrearCriaturaQueSalta("Bicho del hueco", -1.4f, pisoDos, TipoZona.CristalesSal, 4.6f, trampas);
 
         string ruta = RutaNivel(2, 5);
         EditorSceneManager.SaveScene(escena, ruta);

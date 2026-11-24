@@ -100,6 +100,20 @@ public static partial class GeneradorEscenas
         HerramientasEscena.CrearArbustoTrampa("Arbusto de la loma izquierda", -14.6f, pisoDosYungas, trampas);
         HerramientasEscena.CrearArbustoTrampa("Arbusto de la loma derecha", 14.6f, pisoDosYungas, trampas);
 
+        // ESTILO "GATO TROLL": en la lava y el agua vive un pez que salta muy alto,
+        // hasta la altura de las lomas. Antes salen burbujas: se salta de la loma al
+        // escalón cuando el pez ya volvió a caer.
+        HerramientasEscena.CrearCriaturaQueSalta("Pez de la lava", -8f, suelo, TipoZona.Lava, 6.9f, trampas);
+        HerramientasEscena.CrearCriaturaQueSalta("Pez del agua", 8f, suelo, TipoZona.Agua, 6.9f, trampas);
+        // ESTRUCTURA: una repisa alta junto a cada pared, con una gema y un bloque
+        // "?" encima que tienta a saltar.
+        CrearPisoAiquile("Repisa alta izquierda", -14.25f, 1.5f, 6.5f, escenario);
+        CrearPisoAiquile("Repisa alta derecha", 14.25f, 1.5f, 6.5f, escenario);
+        HerramientasEscena.CrearGema("Gema fuego 4", TipoElemento.Fuego, new Vector2(-14.25f, 7.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 4", TipoElemento.Agua, new Vector2(14.25f, 7.4f), gemas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa izquierdo", new Vector2(-14.25f, 9.7f), 1f, trampas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa derecho", new Vector2(14.25f, 9.7f), -1f, trampas);
+
         string ruta = RutaNivel(5, 1);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -164,6 +178,13 @@ public static partial class GeneradorEscenas
 
         // MÁS TRAMPAS: una nube sobre el camino a las puertas suelta un rayo.
         HerramientasEscena.CrearNubeAsesina("Nube del camino", new Vector2(10.5f, pisoDosYungas + 3.4f), pisoDosYungas, trampas);
+
+        // ESTRUCTURA: sobre la salida hay dos balcones del pueblo. El de arriba se
+        // rompe al pisarlo y guarda una gema; un bloque "?" tienta en el camino.
+        CrearPisoAiquile("Balcon de la salida", 13.3f, 2.8f, 6.25f, escenario);
+        HerramientasEscena.CrearPlataformaQuebradiza("Balcon que se rompe", new Vector2(9f, 9.25f), new Vector2(2.4f, 0.5f), escenario);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(9f, 10.4f), gemas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa del balcon", new Vector2(11.3f, 9.7f), -1f, trampas);
 
         string ruta = RutaNivel(5, 2);
         EditorSceneManager.SaveScene(escena, ruta);
@@ -240,6 +261,15 @@ public static partial class GeneradorEscenas
         // MÁS TRAMPAS: una gema imán en el aire, sobre el muro central.
         HerramientasEscena.CrearGemaIman("Gema del concierto", TipoElemento.Fuego, new Vector2(0f, 5.5f), trampas);
 
+        // ESTRUCTURA: una repisa en cada orilla, con una gema y un bloque "?" encima.
+        // Se llega rebotando en la cuerda de la orilla.
+        CrearPisoAiquile("Repisa izquierda", -14.15f, 1.7f, 3.5f, escenario);
+        CrearPisoAiquile("Repisa derecha", 14.15f, 1.7f, 3.5f, escenario);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(-14.15f, 4.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(14.15f, 4.4f), gemas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa izquierdo", new Vector2(-14.15f, 6.7f), 1f, trampas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa derecho", new Vector2(14.15f, 6.7f), -1f, trampas);
+
         string ruta = RutaNivel(5, 3);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -309,6 +339,13 @@ public static partial class GeneradorEscenas
         // MÁS TRAMPAS: una gema imán flotando sobre el camino del medio.
         HerramientasEscena.CrearGemaIman("Gema de la serenata", TipoElemento.Agua, new Vector2(1f, 3.2f), trampas);
 
+        // ESTRUCTURA: sobre la salida hay dos balcones del pueblo. El de arriba se
+        // rompe al pisarlo y guarda una gema; un bloque "?" tienta en el camino.
+        CrearPisoAiquile("Balcon de la salida", 13.3f, 2.8f, 6.25f, escenario);
+        HerramientasEscena.CrearPlataformaQuebradiza("Balcon que se rompe", new Vector2(9f, 9.25f), new Vector2(2.4f, 0.5f), escenario);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(9f, 10.4f), gemas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa del balcon", new Vector2(11.3f, 9.7f), -1f, trampas);
+
         string ruta = RutaNivel(5, 4);
         EditorSceneManager.SaveScene(escena, ruta);
         return ruta;
@@ -376,6 +413,15 @@ public static partial class GeneradorEscenas
 
         // MÁS TRAMPAS: una nube sobre el centro.
         HerramientasEscena.CrearNubeAsesina("Nube del gran concierto", new Vector2(0f, pisoDosYungas + 3.6f), pisoDosYungas, trampas);
+
+        // ESTRUCTURA: una repisa en cada orilla, con una gema y un bloque "?" encima.
+        // Se llega rebotando en la cuerda de la orilla.
+        CrearPisoAiquile("Repisa izquierda", -14.15f, 1.7f, 3.5f, escenario);
+        CrearPisoAiquile("Repisa derecha", 14.15f, 1.7f, 3.5f, escenario);
+        HerramientasEscena.CrearGema("Gema fuego 3", TipoElemento.Fuego, new Vector2(-14.15f, 4.4f), gemas);
+        HerramientasEscena.CrearGema("Gema agua 3", TipoElemento.Agua, new Vector2(14.15f, 4.4f), gemas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa izquierdo", new Vector2(-14.15f, 6.7f), 1f, trampas);
+        HerramientasEscena.CrearBloqueSorpresa("Bloque sorpresa derecho", new Vector2(14.15f, 6.7f), -1f, trampas);
 
         string ruta = RutaNivel(5, 5);
         EditorSceneManager.SaveScene(escena, ruta);
