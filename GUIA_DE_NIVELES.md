@@ -6,7 +6,7 @@ Reglas que valen en todo el juego:
 
 - **Elementos:** Inti (fuego) puede pisar lava pero muere en el agua; Killa (agua) al revés. El **veneno verde** mata a los dos.
 - **Eclipse:** al pararse cada uno en una placa del mismo color, los poderes se cambian. Al final, cada uno entra por la puerta **del poder que tiene en ese momento**.
-- **3 vidas por nivel.** Al perderlas, el nivel empieza de cero. En el 6-5, al perderlas se vuelve al 6-1.
+- **3 vidas por nivel.** Si las pierdes todas, vuelves al **nivel 1 de ese mundo** (si estabas en el nivel 1, empieza de cero). En el 6-5 también se vuelve al 6-1.
 - **Logros:** si pasas un nivel **sin perder ninguna vida** (3 de 3), es un "nivel perfecto". Hay logros por el primer nivel perfecto, por cada mundo con sus 5 niveles perfectos y por los 30 niveles. Se ven en el botón **Logros** del menú principal.
 - **Bloque invisible:** si al saltar te golpeas con algo que no se veía, era un bloque invisible. Desaparece de nuevo a los 3 segundos: espera y salta desde más lejos.
 - **Las trampas siempre avisan:** tiemblan, parpadean, muestran una sombra o tienen una marquita. Si algo tiembla, ¡muévete!

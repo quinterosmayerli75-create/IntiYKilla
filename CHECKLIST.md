@@ -130,6 +130,8 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] El bloque invisible se vuelve a esconder a los 3 segundos (ya no deja a nadie atascado, como pasaba en el 2-1)
 - [x] Farol junto al botón derecho del 2-2 (no se veía en la oscuridad)
 - [x] Guía: cómo pasar el 2-1, 2-2 y 2-4
+- [x] Al perder las 3 vidas en los niveles 2 a 5 de un mundo, se vuelve al nivel 1 de ese mundo
+- [x] Bloque del techo más rápido (cae a 60) y tiembla antes de caer; el que suelta un botón o una gema cae a los 0,3 s
 
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)

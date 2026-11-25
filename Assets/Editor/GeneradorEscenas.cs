@@ -807,7 +807,7 @@ public static partial class GeneradorEscenas
 
         // TRAMPA: un botón en el camino de Inti que parece abrir su compuerta, pero
         // suelta el bloque de arriba. Quien sigue corriendo se salva.
-        TechoQueCae bloqueDelBoton = HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(-11f, pisoUno - grosor - mitadGrosor), new Vector2(1.5f, grosor), suelo, false, HerramientasEscena.colorSal, escenario);
+        TechoQueCae bloqueDelBoton = HerramientasEscena.CrearTechoQueCae("Bloque del techo", new Vector2(-11.6f, pisoUno - grosor - mitadGrosor), new Vector2(1.5f, grosor), suelo, false, HerramientasEscena.colorSal, escenario);
         List<TrampaActivable> trampasDelBoton = new List<TrampaActivable>();
         trampasDelBoton.Add(bloqueDelBoton);
         HerramientasEscena.CrearBotonEnganoso("Boton de Inti falso", new Vector2(-11f, suelo), trampasDelBoton, mecanismos);

@@ -54,6 +54,8 @@ public class GestorNivel : MonoBehaviour
 
     // En el nivel final, al perder las 3 vidas se vuelve al comienzo del mundo.
     private bool volverAlDestinoAlReiniciar = false;
+    // Al perder las 3 vidas en los niveles 2 a 5 de un mundo, se vuelve al nivel 1 de ese mundo.
+    private bool volverAlNivelUnoAlReiniciar = false;
     private static string escenaDelContador = "";
     private static string mensajeDeLaUltimaMuerte = "";
 
@@ -256,9 +258,17 @@ public class GestorNivel : MonoBehaviour
             volverAlDestinoAlReiniciar = true;
             TransicionReinicio.Oscurecer(tiempoEsperaReinicio, VolverAlPerder.Instancia.Mensaje);
         }
+        else if (vidasRestantes <= 0 && datosNivel != null && datosNivel.numeroEnMundo > 1)
+        {
+            // Sin vidas: se vuelve a empezar el mundo desde su nivel 1.
+            vidasRestantes = vidasPorNivel;
+            SalaQueSeRepite.VolverALaPrimeraVuelta();
+            volverAlNivelUnoAlReiniciar = true;
+            TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "¡Sin vidas! Vuelven al nivel 1 del mundo");
+        }
         else if (vidasRestantes <= 0)
         {
-            // Sin vidas: el nivel empieza de cero, también las vueltas de la sala.
+            // Sin vidas en el nivel 1: el nivel empieza de cero, también las vueltas de la sala.
             vidasRestantes = vidasPorNivel;
             SalaQueSeRepite.VolverALaPrimeraVuelta();
             TransicionReinicio.Oscurecer(tiempoEsperaReinicio, "¡Sin vidas! El nivel empieza de cero");
@@ -368,6 +378,17 @@ public class GestorNivel : MonoBehaviour
             volverAlDestinoAlReiniciar = false;
             SceneManager.LoadScene(VolverAlPerder.Instancia.EscenaDestino);
             return;
+        }
+
+        if (volverAlNivelUnoAlReiniciar == true && datosNivel != null)
+        {
+            volverAlNivelUnoAlReiniciar = false;
+            string escenaNivelUno = "Mundo" + datosNivel.numeroMundo + "_Nivel1";
+            if (Application.CanStreamedLevelBeLoaded(escenaNivelUno) == true)
+            {
+                SceneManager.LoadScene(escenaNivelUno);
+                return;
+            }
         }
 
         Scene escenaActual = SceneManager.GetActiveScene();

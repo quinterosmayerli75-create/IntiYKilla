@@ -2725,6 +2725,16 @@ public class BotPruebas : MonoBehaviour
         }
         Verificar("Vidas: al perder las 3 en el final se vuelve al 6-1", SceneManager.GetActiveScene().name == "Mundo6_Nivel1");
 
+        // Vidas (1-2): al perder las 3 se vuelve al nivel 1 del mundo.
+        yield return Cargar("Mundo1_Nivel2");
+        for (int muerte = 1; muerte <= 3; muerte++)
+        {
+            yield return new WaitForSeconds(0.5f);
+            GameObject.Find("Inti").GetComponent<ControladorJugador>().Morir("Prueba de vidas");
+            yield return new WaitForSeconds(2f);
+        }
+        Verificar("Vidas: al perder las 3 en el 1-2 se vuelve al 1-1", SceneManager.GetActiveScene().name == "Mundo1_Nivel1");
+
         // Sala que se repite (5-1): la misma escena vuelve a empezar en la vuelta 2.
         yield return Cargar("Mundo5_Nivel1");
         Verificar("Bucle: empieza en la vuelta 1", SalaQueSeRepite.VueltaActual == 0);

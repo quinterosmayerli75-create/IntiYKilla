@@ -15,8 +15,11 @@ using UnityEngine;
 public class TechoQueCae : TrampaActivable
 {
     [SerializeField] private float alturaDelPiso = -3.5f;
+    // Si cae sola al pasar por debajo, espera más (hay que cruzar todo el bloque);
+    // si la suelta un botón o una gema, cae casi enseguida, después de temblar.
     [SerializeField] private float retardoAntesDeCaer = 0.4f;
-    [SerializeField] private float velocidadCaida = 45f;
+    [SerializeField] private float retardoSiLoSueltaOtraPieza = 0.3f;
+    [SerializeField] private float velocidadCaida = 60f;
     [SerializeField] private string mensajeDeMuerte = "¿Mirabas al techo? Yo tampoco.";
 
     private BoxCollider2D colisionador;
@@ -72,7 +75,22 @@ public class TechoQueCae : TrampaActivable
 
     private IEnumerator Caer()
     {
-        yield return new WaitForSeconds(retardoAntesDeCaer);
+        // Aviso: tiembla mientras espera.
+        float espera = retardoAntesDeCaer;
+        if (SeActivaSola == false)
+        {
+            espera = retardoSiLoSueltaOtraPieza;
+        }
+        Vector3 posicionOriginal = transform.position;
+        float tiempo = 0f;
+        while (tiempo < espera)
+        {
+            tiempo = tiempo + Time.deltaTime;
+            float temblor = Mathf.Sin(tiempo * 60f) * 0.06f;
+            transform.position = posicionOriginal + new Vector3(temblor, 0f, 0f);
+            yield return null;
+        }
+        transform.position = posicionOriginal;
 
         // Sin collider mientras cae: mata por contacto, pero no empuja a nadie.
         colisionador.enabled = false;
