@@ -15,16 +15,24 @@ using UnityEngine.UI;
 public class MenuPrincipal : MonoBehaviour
 {
     [SerializeField] private Text textoMensaje;
+    [SerializeField] private PantallaLogros pantallaLogros;
 
-    public void Configurar(Text nuevoTextoMensaje)
+    public void Configurar(Text nuevoTextoMensaje, PantallaLogros nuevaPantallaLogros)
     {
         textoMensaje = nuevoTextoMensaje;
+        pantallaLogros = nuevaPantallaLogros;
     }
 
     private void Update()
     {
         Keyboard teclado = Keyboard.current;
         if (teclado == null)
+        {
+            return;
+        }
+
+        // Con la ventana de logros abierta, Enter no debe empezar el juego.
+        if (pantallaLogros != null && pantallaLogros.EstaAbierta == true)
         {
             return;
         }
@@ -50,6 +58,14 @@ public class MenuPrincipal : MonoBehaviour
         }
 
         SceneManager.LoadScene(DatosJuego.escenaSeleccionMundo);
+    }
+
+    public void AbrirLogros()
+    {
+        if (pantallaLogros != null)
+        {
+            pantallaLogros.Abrir();
+        }
     }
 
     public void BorrarProgreso()

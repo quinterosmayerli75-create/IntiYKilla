@@ -65,6 +65,8 @@ public class GestorNivel : MonoBehaviour
 
     private float cronometro = 0f;
     private bool nivelTerminado = false;
+    private bool nivelPerfecto = false;
+    private List<string> logrosNuevos = new List<string>();
     private bool reinicioEnCurso = false;
     private int estrellasGanadas = 0;
 
@@ -306,6 +308,9 @@ public class GestorNivel : MonoBehaviour
         {
             GestorProgreso.GuardarResultado(datosNivel.numeroMundo, datosNivel.numeroEnMundo, estrellasGanadas);
             GestorProgreso.GuardarRecordMuertes(datosNivel.numeroMundo, datosNivel.numeroEnMundo, muertesDelIntento);
+            // Logros: el nivel cuenta como perfecto si no se perdió ninguna vida.
+            nivelPerfecto = vidasRestantes == vidasPorNivel;
+            logrosNuevos = GestorLogros.RegistrarVictoria(datosNivel.numeroMundo, datosNivel.numeroEnMundo, nivelPerfecto);
             mundoCompletado = datosNivel.numeroEnMundo == DatosJuego.nivelesPorMundo;
         }
 
@@ -490,7 +495,13 @@ public class GestorNivel : MonoBehaviour
     private void DibujarVentanaVictoria(float anchoVirtual, float altoVirtual, GUIStyle estiloCentral, GUIStyle estiloAyuda)
     {
         float anchoVentana = 900f;
-        float altoVentana = 330f;
+        // La ventana crece si hay que mostrar el premio de las vidas o logros nuevos.
+        float altoExtra = 0f;
+        if (nivelPerfecto == true)
+        {
+            altoExtra = 50f + logrosNuevos.Count * 45f;
+        }
+        float altoVentana = 330f + altoExtra;
         Rect ventana = new Rect((anchoVirtual - anchoVentana) / 2f, altoVirtual / 2f - 120f, anchoVentana, altoVentana);
         Color colorAnterior = GUI.color;
         GUI.color = new Color(0f, 0f, 0f, 0.8f);
@@ -515,7 +526,18 @@ public class GestorNivel : MonoBehaviour
         {
             textoOpciones = "Enter: continuar";
         }
-        GUI.Label(new Rect(ventana.x, ventana.y + 255f, anchoVentana, 50f), textoOpciones, estiloDatos);
+        if (nivelPerfecto == true)
+        {
+            GUIStyle estiloLogro = new GUIStyle(estiloDatos);
+            estiloLogro.normal.textColor = new Color(1f, 0.85f, 0.3f);
+            estiloLogro.fontStyle = FontStyle.Bold;
+            GUI.Label(new Rect(ventana.x, ventana.y + 245f, anchoVentana, 45f), "¡Nivel perfecto: las 3 vidas intactas!", estiloLogro);
+            for (int indice = 0; indice < logrosNuevos.Count; indice++)
+            {
+                GUI.Label(new Rect(ventana.x, ventana.y + 290f + indice * 45f, anchoVentana, 45f), "Logro desbloqueado: " + logrosNuevos[indice], estiloLogro);
+            }
+        }
+        GUI.Label(new Rect(ventana.x, ventana.y + 255f + altoExtra, anchoVentana, 50f), textoOpciones, estiloDatos);
     }
 
     private void OnGUI()

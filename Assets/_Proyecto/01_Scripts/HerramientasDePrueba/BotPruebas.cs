@@ -332,6 +332,7 @@ public class BotPruebas : MonoBehaviour
             if ((bool)Dato("nivelTerminado"))
             {
                 resultado = "GANADO estrellas=" + Dato("estrellasGanadas") + " muertes=" + DatoEstatico("muertesDelIntento") + " tiempo=" + ((float)Dato("cronometro")).ToString("0.0") + " gemasFuego=" + Dato("gemasFuegoRecogidas") + "/" + Dato("totalGemasFuego") + " gemasAgua=" + Dato("gemasAguaRecogidas") + "/" + Dato("totalGemasAgua");
+                resultado = resultado + " perfecto=" + Dato("nivelPerfecto") + " logros=" + GestorLogros.CantidadDesbloqueados();
                 break;
             }
             if ((bool)Dato("reinicioEnCurso"))
@@ -2757,6 +2758,17 @@ public class BotPruebas : MonoBehaviour
         yield return Caminar(killa, -10.9f);
         yield return new WaitForSeconds(1f);
         Verificar("Al pasar por el sensor el bloque sube y cierra el regreso", bloque.enabled == true && Vivo(killa));
+        // Bloque invisible (2-1): aparece al saltar debajo y se esconde a los 3 s.
+        yield return Cargar("Mundo2_Nivel1");
+        Teletransportar(inti, 10.2f, 1.7f);
+        yield return new WaitForSeconds(0.5f);
+        teclas.Add(inti.salto);
+        yield return new WaitForSeconds(0.1f);
+        teclas.Remove(inti.salto);
+        yield return new WaitForSeconds(0.4f);
+        Verificar("El bloque invisible aparece al saltar debajo", ColliderActivo("Bloque escondido"));
+        yield return new WaitForSeconds(3f);
+        Verificar("El bloque invisible se vuelve a esconder (nadie queda atascado)", ColliderActivo("Bloque escondido") == false);
     }
 
     private IEnumerator RutaPorNombre(string escena)

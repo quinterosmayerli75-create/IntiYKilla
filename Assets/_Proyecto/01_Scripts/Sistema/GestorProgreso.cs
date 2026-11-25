@@ -198,6 +198,8 @@ public static class GestorProgreso
             }
         }
 
+        // Los logros también son progreso: se borran junto con lo demás.
+        GestorLogros.BorrarLogros();
         PlayerPrefs.Save();
     }
 }

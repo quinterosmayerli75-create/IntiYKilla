@@ -491,15 +491,19 @@ public static partial class GeneradorEscenas
         botonJugar.gameObject.AddComponent<EscalaAlPasarMouse>();
         Button botonBorrar = HerramientasEscena.CrearBoton(canvas, "Boton Borrar progreso", "Borrar progreso", new Vector2(680f, -420f), new Vector2(380f, 80f), colorBotonSecundario, 34);
         Button botonSalir = HerramientasEscena.CrearBoton(canvas, "Boton Salir", "Salir", new Vector2(-680f, -420f), new Vector2(380f, 80f), colorBotonSalir, 34);
+        // Logros: premian pasar los niveles con las 3 vidas intactas.
+        Button botonLogros = HerramientasEscena.CrearBoton(canvas, "Boton Logros", "Logros", new Vector2(0f, -200f), new Vector2(380f, 80f), colorBotonSecundario, 38);
+        PantallaLogros pantallaLogros = objetoMenu.AddComponent<PantallaLogros>();
 
         // Conexiones guardadas en la escena (se ven en el Inspector, sección On Click).
         UnityEventTools.AddPersistentListener(botonJugar.onClick, new UnityAction(menu.Jugar));
         UnityEventTools.AddPersistentListener(botonBorrar.onClick, new UnityAction(menu.BorrarProgreso));
         UnityEventTools.AddPersistentListener(botonSalir.onClick, new UnityAction(menu.Salir));
+        UnityEventTools.AddPersistentListener(botonLogros.onClick, new UnityAction(menu.AbrirLogros));
 
         Text textoMensaje = HerramientasEscena.CrearTexto(canvas, "Mensaje", "", 30, new Vector2(0f, -120f), new Vector2(1200f, 50f), new Color(1f, 1f, 0.8f));
         textoMensaje.raycastTarget = false;
-        menu.Configurar(textoMensaje);
+        menu.Configurar(textoMensaje, pantallaLogros);
 
         HerramientasInterfaz.CrearFranjaAyuda(canvas, "2 jugadores en el mismo teclado     Inti: A D W + S     Killa: Flechas + Flecha abajo");
 
@@ -1381,6 +1385,8 @@ public static partial class GeneradorEscenas
         Transform faroles = HerramientasEscena.CrearGrupo("Faroles");
         HerramientasEscena.CrearFarol("Farol de la entrada", new Vector2(-12f, 1.5f), 4f, faroles);
         HerramientasEscena.CrearFarol("Farol de la salida", new Vector2(-11f, 8f), 4f, faroles);
+        // El botón derecho estaba a oscuras y no se veía: este farol lo alumbra.
+        HerramientasEscena.CrearFarol("Farol del boton derecho", new Vector2(13.5f, 0.5f), 3.5f, faroles);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(-8f, 4.1f), gemas);

@@ -124,6 +124,13 @@ Marca cada tarea con [x] al terminarla. Orden según el cronograma del GDD. Plaz
 - [x] Mundo 5 con más estructura: repisas, balcones que se rompen, gemas nuevas y bloques "?"; peces que saltan hasta las lomas en el 5-1
 - [x] Guía de niveles: explicación más clara del 5-2 (puerta melódica) y del 6-2 (escalinatas)
 
+## Ajustes del 25 nov
+- [x] Logros (`GestorLogros`): nivel perfecto = pasarlo con las 3 vidas intactas; logros por el primero, por cada mundo perfecto y por los 30 niveles
+- [x] Botón "Logros" en el menú principal (`PantallaLogros`) y aviso de logro nuevo en la ventana de victoria
+- [x] El bloque invisible se vuelve a esconder a los 3 segundos (ya no deja a nadie atascado, como pasaba en el 2-1)
+- [x] Farol junto al botón derecho del 2-2 (no se veía en la oscuridad)
+- [x] Guía: cómo pasar el 2-1, 2-2 y 2-4
+
 ## Semana 5: Mundos 5 y 6 e interfaz (25 nov – 1 dic)
 - [x] Armar los niveles 5-1 a 5-5 con más trampas (Aiquile; traición en 5-4 y 5-5)
 - [x] Armar los niveles 6-1 a 6-5 (Isla del Sol; traición en 6-4; jefe en 6-5)
