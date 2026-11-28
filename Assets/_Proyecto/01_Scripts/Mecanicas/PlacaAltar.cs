@@ -19,6 +19,12 @@ public class PlacaAltar : MonoBehaviour
 
     private List<ControladorJugador> jugadoresEncima = new List<ControladorJugador>();
 
+    // Cuando el compañero ya está en la otra placa, esta parpadea y su símbolo
+    // late: así se ve claramente adónde hay que ir.
+    private bool llamandoAlCompanero = false;
+    private Transform simbolo;
+    private Vector3 escalaSimbolo;
+
     // El primer personaje que está encima (o null si está vacía).
     public ControladorJugador Ocupante
     {
@@ -43,7 +49,43 @@ public class PlacaAltar : MonoBehaviour
 
     private void Start()
     {
+        simbolo = transform.Find("Simbolo");
+        if (simbolo != null)
+        {
+            escalaSimbolo = simbolo.localScale;
+        }
         ActualizarDibujo();
+    }
+
+    public void LlamarAlCompanero(bool llamar)
+    {
+        if (llamandoAlCompanero == llamar)
+        {
+            return;
+        }
+        llamandoAlCompanero = llamar;
+        if (llamar == false)
+        {
+            if (simbolo != null)
+            {
+                simbolo.localScale = escalaSimbolo;
+            }
+            ActualizarDibujo();
+        }
+    }
+
+    private void Update()
+    {
+        if (llamandoAlCompanero == false || dibujoPlaca == null)
+        {
+            return;
+        }
+        float pulso = Mathf.Abs(Mathf.Sin(Time.time * 6f));
+        dibujoPlaca.color = Color.Lerp(colorVacia, Color.white, pulso);
+        if (simbolo != null)
+        {
+            simbolo.localScale = escalaSimbolo * (1f + 0.5f * pulso);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D otro)

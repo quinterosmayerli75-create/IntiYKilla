@@ -24,6 +24,7 @@ public class AltarEclipse : MonoBehaviour
 
     // Evita que el eclipse se repita en cada frame mientras siguen parados.
     private bool estaListo = true;
+    private float proximoAvisoDeEspera = 0f;
 
     public PlacaAltar PlacaUno
     {
@@ -57,10 +58,20 @@ public class AltarEclipse : MonoBehaviour
         ControladorJugador jugadorUno = placaUno.Ocupante;
         ControladorJugador jugadorDos = placaDos.Ocupante;
 
+        // Si solo una placa está ocupada, la otra llama al compañero.
+        placaUno.LlamarAlCompanero(jugadorUno == null && jugadorDos != null);
+        placaDos.LlamarAlCompanero(jugadorDos == null && jugadorUno != null);
+
         bool alguienSeBajo = jugadorUno == null || jugadorDos == null;
         if (alguienSeBajo == true)
         {
             estaListo = true;
+            bool hayUnoEsperando = jugadorUno != null || jugadorDos != null;
+            if (hayUnoEsperando == true && Time.time > proximoAvisoDeEspera && GestorNivel.Instancia != null)
+            {
+                GestorNivel.Instancia.MostrarAviso("Falta el compañero en la otra placa de este color (la que parpadea).", 2.5f);
+                proximoAvisoDeEspera = Time.time + 8f;
+            }
             return;
         }
 

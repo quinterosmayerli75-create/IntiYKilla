@@ -35,6 +35,8 @@ public static partial class GeneradorEscenas
     private static readonly Color colorBotonSalir = new Color(0.30f, 0.26f, 0.36f);
     private static readonly Color colorAltarUno = new Color(0.95f, 0.80f, 0.35f);
     private static readonly Color colorAltarDos = new Color(0.70f, 0.85f, 1.00f);
+    // Tercer color: en el 1-3 hay tres altares y dos del mismo color confundían.
+    private static readonly Color colorAltarTres = new Color(1.00f, 0.55f, 0.80f);
 
     // ================= Menús de Unity =================
 
@@ -927,7 +929,7 @@ public static partial class GeneradorEscenas
         Transform altares = HerramientasEscena.CrearGrupo("Altares");
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse 1", new Vector2(-12f, suelo), new Vector2(12f, suelo), colorAltarUno, altares);
         HerramientasEscena.CrearAltarEclipse("Altar de eclipse 2", new Vector2(10f, pisoUno), new Vector2(-10f, pisoUno), colorAltarDos, altares);
-        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 3", new Vector2(-9.5f, pisoDos), new Vector2(10f, pisoDos), colorAltarUno, altares);
+        HerramientasEscena.CrearAltarEclipse("Altar de eclipse 3", new Vector2(-9.5f, pisoDos), new Vector2(10f, pisoDos), colorAltarTres, altares);
 
         Transform gemas = HerramientasEscena.CrearGrupo("Gemas");
         HerramientasEscena.CrearGema("Gema fuego 1", TipoElemento.Fuego, new Vector2(0f, -2.4f), gemas);

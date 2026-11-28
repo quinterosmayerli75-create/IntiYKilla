@@ -303,9 +303,18 @@ public class BotPruebas : MonoBehaviour
         Coroutine rutaActiva = StartCoroutine(Envolver(ruta));
         float limite = Time.time + 150f;
         string resultado = "TIEMPO AGOTADO";
+        // Trabas: el cuadro más lento y cuántos tardaron más de 0,1 s.
+        float cuadroMasLento = 0f;
+        int cuadrosLentos = 0;
+        float inicioMedicion = Time.unscaledTime + 1f;
 
         while (Time.time < limite)
         {
+            if (Time.unscaledTime > inicioMedicion)
+            {
+                cuadroMasLento = Mathf.Max(cuadroMasLento, Time.unscaledDeltaTime);
+                if (Time.unscaledDeltaTime > 0.1f) { cuadrosLentos = cuadrosLentos + 1; }
+            }
             // Sala que se repite: la escena se recargó sin que nadie muriera.
             if (GestorNivel.Instancia == null)
             {
@@ -332,7 +341,7 @@ public class BotPruebas : MonoBehaviour
             if ((bool)Dato("nivelTerminado"))
             {
                 resultado = "GANADO estrellas=" + Dato("estrellasGanadas") + " muertes=" + DatoEstatico("muertesDelIntento") + " tiempo=" + ((float)Dato("cronometro")).ToString("0.0") + " gemasFuego=" + Dato("gemasFuegoRecogidas") + "/" + Dato("totalGemasFuego") + " gemasAgua=" + Dato("gemasAguaRecogidas") + "/" + Dato("totalGemasAgua");
-                resultado = resultado + " perfecto=" + Dato("nivelPerfecto") + " logros=" + GestorLogros.CantidadDesbloqueados();
+                resultado = resultado + " perfecto=" + Dato("nivelPerfecto") + " logros=" + GestorLogros.CantidadDesbloqueados() + " cuadroMasLento=" + cuadroMasLento.ToString("0.000") + " cuadrosLentos=" + cuadrosLentos;
                 break;
             }
             if ((bool)Dato("reinicioEnCurso"))
